@@ -75,8 +75,11 @@ update_system() {
 }
 
 update_archlinux() {
-  update_pacman "$*"
-  update_yay "$*"
+  if ! _exists yay; then
+    update_pacman "$*"
+  else
+    update_yay "$*"
+  fi
 }
 
 update_pacman() {
@@ -85,7 +88,6 @@ update_pacman() {
   fi
 
   pacman -Syu
-  pacman -Yc
 }
 
 update_yay() {
@@ -213,7 +215,7 @@ on_finish() {
 
 on_error() {
   error "Wow... Something serious happened!"
-  error "Though, I don't know what really happened :("
+  error "Though, I don't know what really what it was :("
   exit 1
 }
 
