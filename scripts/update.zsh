@@ -209,6 +209,18 @@ update_node() {
 
   finish
 }
+
+update_rust() {
+  if ! _exists rustup; then
+    return
+  fi
+
+  info "Updating Rust..."
+  rustup update
+
+  finish
+}
+
 on_finish() {
   success "Done!"
   success "Happy Coding!"
@@ -237,6 +249,7 @@ main() {
   on_start "$*"
   update_dotfiles "$*"
   update_system "$*"
+  update_rust "$*"
   update_all_node "$*"
   update_npm "$*"
   on_finish "$*"
