@@ -81,3 +81,25 @@ fi
 if _exists bat; then
   alias cat='bat'
 fi
+
+# Make ranger change to current directory on exit
+if _exists ranger; then
+  alias range='. ranger'
+fi
+
+# Byobu-tmux wrapper
+if _exists byobu && _exists tmux; then
+  alias tmux='byobu-tmux'
+fi
+
+# Neovide and Lunarvim aliases
+if _exists neovide;then
+  alias neovide='neovide --multigrid'
+
+  if _exists neovide-lunarvim; then
+    alias leovide='neovide-lunarvim'
+  elif _exists lvim; then
+    alias leovide='neovide --neovim-bin="lvim"'
+  fi
+
+fi
