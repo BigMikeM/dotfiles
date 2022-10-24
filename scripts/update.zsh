@@ -162,10 +162,10 @@ get_node_version() {
 }
 
 nvm_lts_versions() {
-  printf %s "$(nvm ls | grep lts | grep -v 'N/A' | cut -d' ' -f1)"
+  printf "%s\n" "$(nvm ls | grep "lts" | grep -Fv 'N/A' | grep -Fv '*' | cut -d'v' -f2 | cut -d'.' -f'1')"
 }
 
-update_node() {
+update_all_node() {
   if ! _exists nvm; then
     info "Node Version Manager (nvm) not found. Unable to automatically update NodeJS."
     return
@@ -178,7 +178,7 @@ update_node() {
   info "Updating current version of Node.js..."
   nvm install $current_version --latest-npm --reinstall-from=current
 
-  if [[ $default_node_version != $current_version ]]; then
+  if [[ "${default_node_version}" != "${current_version}" ]]; then
     info "Updating default version of Node.js..."
     nvm install $default_node_version
   fi
@@ -186,10 +186,11 @@ update_node() {
   info "Installing latest stable version of Node.js..."
   nvm install node
 
-  info "Updating installed Node LTS versions..."
+  info "Updating Node LTS..."
+  nvm install --lts
   nvm_lts_versions | while read lts_version; do
-    info "Installing [$lts_version]..."
-    nvm install $lts_version
+    info "Installing NodeJS v${lts_version}..."
+    nvm install "${lts_version}"
   done
 
   # Ensure we are using the version of node we started with
@@ -198,6 +199,16 @@ update_node() {
   finish
 }
 
+update_node() {
+  if ! _exists nvm; then
+    return
+  fi
+
+  info "Updating Node..."
+  nvm install node --latest-npm
+
+  finish
+}
 on_finish() {
   success "Done!"
   success "Happy Coding!"
@@ -226,8 +237,8 @@ main() {
   on_start "$*"
   update_dotfiles "$*"
   update_system "$*"
+  update_all_node "$*"
   update_npm "$*"
-  update_node "$*"
   on_finish "$*"
 }
 
