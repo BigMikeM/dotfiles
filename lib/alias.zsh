@@ -20,9 +20,6 @@ fi
 # Just bcoz clr shorter than clear
 alias clr='clear'
 
-# Go to the /home/$USER (~) directory and clears window of your terminal
-alias q="~ && clear"
-
 # Folders Shortcuts
 [ -d ~/Downloads ]                 && alias dl='cd ~/Downloads'
 [ -d ~/Desktop ]                   && alias dt='cd ~/Desktop'
@@ -49,7 +46,7 @@ alias update="source $DOTFILES/scripts/update"
 alias bootstap="source $DOTFILES/scripts/bootstrap"
 
 # Quick jump to dotfiles
-alias dotfiles="code $DOTFILES"
+alias dotfiles="e $DOTFILES"
 
 # Quick reload of zsh environment
 alias reload="source $HOME/.zshrc"
