@@ -1,3 +1,4 @@
+#! /usr/bin/env bash
 # Conditionally loads spaceship
 spaceship-loader() {
   local spaceship_project="$HOME/Projects/Repos/spaceship/spaceship-prompt"
