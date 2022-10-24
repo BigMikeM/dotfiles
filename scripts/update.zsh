@@ -84,7 +84,7 @@ update_pacman() {
     return
   fi
 
-  pacman -SYyu
+  pacman -Syu
   pacman -Yc
 }
 
@@ -93,7 +93,7 @@ update_yay() {
     return
   fi
 
-  yay -SYyu
+  yay -Syu
   yay -Yc
 }
 
