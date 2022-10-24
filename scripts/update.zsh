@@ -58,8 +58,8 @@ update_dotfiles() {
   info "Updating dotfiles..."
 
   cd "$DOTFILES" || exit
-  git pull origin master
-  ./install --except shell
+  git pull origin main
+  # ./install --except shell
   cd - > /dev/null 2>&1 || exit
 
   info "Updating Zsh plugins..."
