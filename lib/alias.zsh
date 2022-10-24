@@ -39,6 +39,8 @@ alias o='open'
 alias oo='open .'
 
 # Run scripts
+alias update="source $DOTFILES/scripts/update.zsh"
+alias bootstap="source $DOTFILES/scripts/bootstrap.zsh"
 
 # Quick jump to dotfiles
 alias dotfiles="e $DOTFILES"
