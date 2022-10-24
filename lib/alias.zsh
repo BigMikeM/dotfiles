@@ -1,3 +1,4 @@
+export DOTFILES="$HOME/.dotfiles"
 # Enable aliases to be sudo’ed
 #   http://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
 alias sudo='sudo '
@@ -38,8 +39,6 @@ alias o='open'
 alias oo='open .'
 
 # Run scripts
-alias update="source $DOTFILES/scripts/update"
-alias bootstap="source $DOTFILES/scripts/bootstrap"
 
 # Quick jump to dotfiles
 alias dotfiles="e $DOTFILES"
