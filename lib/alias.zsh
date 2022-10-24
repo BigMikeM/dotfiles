@@ -14,8 +14,8 @@ if _exists trash; then
   alias rm='trash'
 fi
 
-# Just bcoz clr shorter than clear
-alias clr='clear'
+# Just bcoz cls shorter than clear
+alias cls='clear'
 
 # Folders Shortcuts
 [ -d ~/Downloads ]                 && alias dl='cd ~/Downloads'
@@ -81,7 +81,7 @@ fi
 
 # Make ranger change to current directory on exit
 if _exists ranger; then
-  alias range='. ranger'
+  alias ranger='. ranger'
 fi
 
 # Byobu-tmux wrapper
