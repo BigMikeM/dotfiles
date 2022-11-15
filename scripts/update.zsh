@@ -40,7 +40,7 @@ finish() {
 }
 
 # Set directory
-export DOTFILES="~/.dotfiles/"
+export DOTFILES=${1:-"$HOME/.dotfiles"}
 
 on_start() {
   info '           __        __   ____ _  __            '
