@@ -1,4 +1,3 @@
-export DOTFILES="$HOME/.dotfiles"
 # Enable aliases to be sudo’ed
 #   http://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
 alias sudo='sudo '
@@ -40,7 +39,7 @@ alias oo='open .'
 
 # Run scripts
 alias update="source $DOTFILES/scripts/update.zsh"
-alias bootstap="source $DOTFILES/scripts/bootstrap.zsh"
+alias bootstrap="source $DOTFILES/scripts/bootstrap.zsh"
 
 # Quick jump to dotfiles
 alias dotfiles="e $DOTFILES"
@@ -91,12 +90,15 @@ fi
 
 # Neovide and Lunarvim aliases
 if _exists neovide;then
-  alias neovide='neovide --multigrid'
+
+  if ! _exists lvim; then
+    alias neovide='neovide --multigrid'
+  else
+    alias neovide='neovide --multigrid --neovim-bin="/usr/bin/lvim"'
+  fi
 
   if _exists neovide-lunarvim; then
-    alias leovide='neovide-lunarvim'
-  elif _exists lvim; then
-    alias leovide='neovide --neovim-bin="lvim"'
+    alias neovide='neovide-lunarvim --multigrid'
   fi
 
 fi
