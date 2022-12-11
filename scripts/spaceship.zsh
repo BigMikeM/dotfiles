@@ -1,13 +1,13 @@
 #! /usr/bin/env bash
 # Conditionally loads spaceship
 spaceship-loader() {
-  local spaceship_project="$HOME/Projects/Repos/spaceship/spaceship-prompt"
-  local spaceship_entry_file="spaceship.zsh"
+	local spaceship_project="$HOME/Projects/Repos/spaceship/spaceship-prompt"
+	local spaceship_entry_file="spaceship.zsh"
 
-  if [[ -d "$spaceship_project" ]]; then
-    source "$spaceship_project/$spaceship_entry_file"
-    return 0
-  fi
+	if [[ -d "$spaceship_project" ]]; then
+		source "$spaceship_project/$spaceship_entry_file"
+		return 0
+	fi
 
-  source "$1/$spaceship_entry_file"
+	source "$1/$spaceship_entry_file"
 }

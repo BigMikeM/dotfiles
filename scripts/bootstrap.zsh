@@ -15,29 +15,29 @@ YELLOW="${e}[0;93m"
 GREEN="${e}[0;92m"
 
 _exists() {
-  command -v "$1" > /dev/null 2>&1
+	command -v "$1" >/dev/null 2>&1
 }
 
 # Success reporter
 info() {
-  echo -e "${CYAN}${*}${RESET}"
+	echo -e "${CYAN}${*}${RESET}"
 }
 
 # Error reporter
 error() {
-  echo -e "${RED}${*}${RESET}"
+	echo -e "${RED}${*}${RESET}"
 }
 
 # Success reporter
 success() {
-  echo -e "${GREEN}${*}${RESET}"
+	echo -e "${GREEN}${*}${RESET}"
 }
 
 # End section
 finish() {
-  success "Done!"
-  echo
-  sleep 1
+	success "Done!"
+	echo
+	sleep 1
 }
 
 # Set directory
@@ -46,199 +46,199 @@ GITHUB_REPO_URL_BASE="https://github.com/bigmikem/dotfiles"
 HOMEBREW_INSTALLER_URL="https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
 
 on_start() {
-  info "           __        __   ____ _  __           "
-  info "      ____/ /____   / /_ / __/(_)/ /___   _____"
-  info "     / __  // __ \ / __// /_ / // // _ \ / ___/"
-  info "  _ / /_/ // /_/ // /_ / __// // //  __/(__  ) "
-  info " (_)\__,_/ \____/ \__//_/  /_//_/ \___//____/  "
-  info "                                               "
-  info "           created by @denysdovhan             "
-  info "             edited by @bigmikem               "
-  info "                                               "
+	info "           __        __   ____ _  __           "
+	info "      ____/ /____   / /_ / __/(_)/ /___   _____"
+	info "     / __  // __ \ / __// /_ / // // _ \ / ___/"
+	info "  _ / /_/ // /_/ // /_ / __// // //  __/(__  ) "
+	info " (_)\__,_/ \____/ \__//_/  /_//_/ \___//____/  "
+	info "                                               "
+	info "           created by @denysdovhan             "
+	info "             edited by @bigmikem               "
+	info "                                               "
 
-  info "This script will guide you through installing git, zsh and dofiles itself."
-  echo "It will not install anything without your direct agreement!"
-  echo
-  read -p "Do you want to proceed with installation? [y/N] " -n 1 answer
-  echo
-  if [ "${answer}" != "y" ]; then
-    exit 1
-  fi
+	info "This script will guide you through installing git, zsh and dofiles itself."
+	echo "It will not install anything without your direct agreement!"
+	echo
+	read -p "Do you want to proceed with installation? [y/N] " -n 1 answer
+	echo
+	if [ "${answer}" != "y" ]; then
+		exit 1
+	fi
 }
 
 install_homebrew() {
-  info "Trying to detect installed Homebrew..."
+	info "Trying to detect installed Homebrew..."
 
-  if ! _exists brew; then
-    echo "Seems like you don't have Homebrew installed!"
-    read -p "Do you agree to proceed with Homebrew installation? [y/N] " -n 1 answer
-    echo
-    if [ "${answer}" != "y" ]; then
-      exit 1
-    fi
+	if ! _exists brew; then
+		echo "Seems like you don't have Homebrew installed!"
+		read -p "Do you agree to proceed with Homebrew installation? [y/N] " -n 1 answer
+		echo
+		if [ "${answer}" != "y" ]; then
+			exit 1
+		fi
 
-    info "Installing Homebrew..."
-    bash -c "$(curl -fsSL ${HOMEBREW_INSTALLER_URL})"
-  else
-    success "You already have Homebrew installed. Skipping..."
-  fi
+		info "Installing Homebrew..."
+		bash -c "$(curl -fsSL ${HOMEBREW_INSTALLER_URL})"
+	else
+		success "You already have Homebrew installed. Skipping..."
+	fi
 
-  finish
+	finish
 }
 
 install_git() {
-  info "Trying to detect installed Git..."
+	info "Trying to detect installed Git..."
 
-  if ! _exists git; then
-    echo "Seems like you don't have Git installed!"
-    read -p "Would you like to proceed with Git installation? [y/N] " -n 1 answer
-    echo
-    if [ "${answer}" != "y" ]; then
-      exit 1
-    fi
+	if ! _exists git; then
+		echo "Seems like you don't have Git installed!"
+		read -p "Would you like to proceed with Git installation? [y/N] " -n 1 answer
+		echo
+		if [ "${answer}" != "y" ]; then
+			exit 1
+		fi
 
-    info "Installing Git..."
+		info "Installing Git..."
 
-    if [ "$(uname)" != "Darwin" ]; then
-      brew install git
-    elif [ "$(uname)" != "Linux" ]; then
-      if _exists apt-get; then
-        sudo apt-get install git
-      elif _exists pacman; then
-        pacman -S git
-      fi
-    else
-      error "Error: Failed to install Git!"
-      exit 1
-    fi
-  else
-    success "You already have Git installed. Skipping..."
-  fi
+		if [ "$(uname)" != "Darwin" ]; then
+			brew install git
+		elif [ "$(uname)" != "Linux" ]; then
+			if _exists apt-get; then
+				sudo apt-get install git
+			elif _exists pacman; then
+				pacman -S git
+			fi
+		else
+			error "Error: Failed to install Git!"
+			exit 1
+		fi
+	else
+		success "You already have Git installed. Skipping..."
+	fi
 
-  finish
+	finish
 }
 
 install_zsh() {
-  info "Trying to detect installed Zsh..."
+	info "Trying to detect installed Zsh..."
 
-  if ! _exists zsh; then
-    echo "Seems like you don't have Zsh installed!"
-    read -p "Do you agree to proceed with Zsh installation? [y/N] " -n 1 answer
-    echo
-    if [ "${answer}" != "y" ]; then
-      exit 1
-    fi
+	if ! _exists zsh; then
+		echo "Seems like you don't have Zsh installed!"
+		read -p "Do you agree to proceed with Zsh installation? [y/N] " -n 1 answer
+		echo
+		if [ "${answer}" != "y" ]; then
+			exit 1
+		fi
 
-    info "Installing Zsh..."
+		info "Installing Zsh..."
 
-    if [ "$(uname)" != "Darwin" ]; then
-      brew install zsh zsh-completions
-    elif [ "$(uname)" != "Linux" ]; then
-      if _exists apt-get; then
-        sudo apt-get install zsh
-      elif _exists pacman; then
-        pacman -S zsh 
-      fi
-    else
-      error "Error: Failed to install Zsh!"
-      exit 1
-    fi
-  else
-    success "You already have Zsh installed. Skipping..."
-  fi
+		if [ "$(uname)" == "Darwin" ]; then
+			brew install zsh zsh-completions
+		elif [ "$(uname)" == "Linux" ]; then
+			if _exists apt-get; then
+				sudo apt-get install zsh
+			elif _exists pacman; then
+				pacman -S zsh
+			fi
+		else
+			error "Error: Failed to install Zsh!"
+			exit 1
+		fi
+	else
+		success "You already have Zsh installed. Skipping..."
+	fi
 
-  if _exists zsh && [[ -z "$ZSH_VERSION" ]]; then
-    info "Setting up Zsh as default shell..."
+	if _exists zsh && [[ -z "$ZSH_VERSION" ]]; then
+		info "Setting up Zsh as default shell..."
 
-    echo "The script will ask you the password for sudo:"
-    echo
-    echo "1) When changing your default shell via chsh -s"
-    echo
+		echo "The script will ask you the password for sudo:"
+		echo
+		echo "1) When changing your default shell via chsh -s"
+		echo
 
-    chsh -s "$(command -v zsh)" || error "Error: Cannot set Zsh as default shell!"
-  fi
+		chsh -s "$(command -v zsh)" || error "Error: Cannot set Zsh as default shell!"
+	fi
 
-  finish
+	finish
 }
 
 install_software() {
-  if [ "$(uname)" != "Darwin" ]; then
-    return
-  fi
+	if [ "$(uname)" != "Darwin" ]; then
+		return
+	fi
 
-  info "Installing software..."
+	info "Installing software..."
 
-  cd "$DOTFILES"
+	cd "$DOTFILES"
 
-  # Homebrew Bundle
-  if _exists brew; then
-    brew bundle
-  else
-    error "Error: Brew is not available"
-  fi
+	# Homebrew Bundle
+	if _exists brew; then
+		brew bundle
+	else
+		error "Error: Brew is not available"
+	fi
 
-  cd -
+	cd -
 
-  finish
+	finish
 }
 
 install_npm() {
-  # Do not instal npm on non-macOS machines
-  # if [ "$(uname)" != "Darwin" ]; then
-  #   return
-  # fi
 
-  info "Installing global npm packages..."
+	info "Installing global npm packages..."
 
-  packages=(
-    commitizen
-    npkill
-    fkill-cli
-    cz-conventional-changelog
-  )
+	packages=(
+		commitizen
+		npkill
+		fkill-cli
+		cz-conventional-changelog
+	)
 
-  echo "Installing: ${packages[*]}"
+	echo "Installing: ${packages[*]}"
 
-  npm install -g "${packages[@]}"
+	npm install -g "${packages[@]}"
 
-  finish
+	finish
+}
+
+symlink_configs() {
+	ln whatever wherever
 }
 
 on_finish() {
-  echo
-  success "Setup was successfully done!"
-  success "Happy Coding!"
-  echo
-  echo -ne "$RED"'-_-_-_-_-_-_-_-_-_-_-_-_-_-_'
-  echo -e  "$RESET""$BOLD"',------,'"$RESET"
-  echo -ne "$YELLOW"'-_-_-_-_-_-_-_-_-_-_-_-_-_-_'
-  echo -e  "$RESET""$BOLD"'|   /\_/\\'"$RESET"
-  echo -ne "$GREEN"'-_-_-_-_-_-_-_-_-_-_-_-_-_-'
-  echo -e  "$RESET""$BOLD"'~|__( ^ .^)'"$RESET"
-  echo -ne "$CYAN"'-_-_-_-_-_-_-_-_-_-_-_-_-_-_'
-  echo -e  "$RESET""$BOLD"'""  ""'"$RESET"
-  echo
-  info "Don't forget to restart your terminal!"
-  echo
+	echo
+	success "Setup was successfully done!"
+	success "Happy Coding!"
+	echo
+	echo -ne "$RED"'-_-_-_-_-_-_-_-_-_-_-_-_-_-_'
+	echo -e "$RESET""$BOLD"',------,'"$RESET"
+	echo -ne "$YELLOW"'-_-_-_-_-_-_-_-_-_-_-_-_-_-_'
+	echo -e "$RESET""$BOLD"'|   /\_/\\'"$RESET"
+	echo -ne "$GREEN"'-_-_-_-_-_-_-_-_-_-_-_-_-_-'
+	echo -e "$RESET""$BOLD"'~|__( ^ .^)'"$RESET"
+	echo -ne "$CYAN"'-_-_-_-_-_-_-_-_-_-_-_-_-_-_'
+	echo -e "$RESET""$BOLD"'""  ""'"$RESET"
+	echo
+	info "Don't forget to restart your terminal!"
+	echo
 }
 
 on_error() {
-  echo
-  error "Wow... Something serious happened!"
-  error "Though, I don't really know what :("
-  error "If you would like to help me fix this problem, raise an issue here -> ${CYAN}${GITHUB_REPO_URL_BASE}issues/new${RESET}"
-  echo
-  exit 1
+	echo
+	error "Wow... Something serious happened!"
+	error "Though, I don't really know what :("
+	error "If you would like to help me fix this problem, raise an issue here -> ${CYAN}${GITHUB_REPO_URL_BASE}issues/new${RESET}"
+	echo
+	exit 1
 }
 
 main() {
-  on_start "$*"
-  # install_homebrew "$*"
-  install_git "$*"
-  install_zsh "$*"
-  install_software "$*"
-  install_npm "$*"
-  on_finish "$*"
+	on_start "$*"
+	install_homebrew "$*"
+	install_git "$*"
+	install_zsh "$*"
+	install_software "$*"
+	install_npm "$*"
+	on_finish "$*"
 }
 
 main "$*"
