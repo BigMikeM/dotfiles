@@ -4,10 +4,9 @@
 # USAGE: git-fork <original-author>
 
 user=$1
-if [[ "$user" == "" ]]
-then
-  echo "Usage: git-fork <original-author>"
+if [[ "$user" == "" ]]; then
+	echo "Usage: git-fork <original-author>"
 else
-  repo=$(basename "$(pwd)")
-  git remote add upstream "https://github.com/$user/$repo.git"
+	repo=$(basename "$(pwd)")
+	git remote add upstream "https://github.com/$user/$repo.git"
 fi
