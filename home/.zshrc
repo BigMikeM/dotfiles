@@ -76,6 +76,7 @@ plugins=(
 	common-aliases
 	command-not-found
 	docker
+  ssh-agent
 )
 
 # Autoload node version when changing cwd
