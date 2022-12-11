@@ -2,7 +2,7 @@
 export DOTFILES=${DOTFILES:="$HOME/.dotfiles"}
 
 # Spaceship custom config file
-export SPACESHIP_CONFIG="$DOTFILES/home/.spaceshiprc.zsh"
+export SPACESHIP_CONFIG="$DOTFILES/home/spaceshiprc.zsh"
 
 # Locale
 export LC_ALL=en_US.UTF-8
