@@ -14,7 +14,7 @@ export MANPATH="/usr/local/man:$MANPATH"
 COMPLETION_WAITING_DOTS="true"
 
 # nnn plugins
-# export NNN_PLUG='f:finder;o:fzopen;d:diffs;t:nmount;v:imgview;Alt+c:x2sel;Alt+e:suedit'
+export NNN_PLUG='f:finder;o:fzopen;d:diffs;t:nmount;v:imgview'
 
 # Extend $PATH without duplicates
 _extend_path() {
