@@ -256,7 +256,7 @@ main() {
 	sudo -v
 
 	on_start "$*"
-	update_dotfiles "$*"
+	# update_dotfiles "$*"
 	update_system "$*"
 	update_rust "$*"
 	update_all_node "$*"
