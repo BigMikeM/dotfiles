@@ -25,16 +25,16 @@ _extend_path() {
 	fi
 }
 
-# Add custom bin to $PATH
 _extend_path "$HOME/.local/bin"
 _extend_path "$DOTFILES/bin"
+_extend_path "$HOME/perl5/bin"
 _extend_path "$HOME/.npm-global/bin"
 _extend_path "$HOME/.rvm/bin"
 _extend_path "$HOME/.yarn/bin"
 _extend_path "$HOME/.config/yarn/global/node_modules/.bin"
 _extend_path "$HOME/.bun/bin"
-_extend_path "$HOME/.cargo/bin"
 _extend_path "$HOME/bin"
+_extend_path "$HOME/.cargo/bin"
 
 # Extend $NODE_PATH
 if [ -d ~/.npm-global ]; then
@@ -113,5 +113,4 @@ fi
 if [[ -f "$HOME/.zshlocal" ]]; then
 	source "$HOME/.zshlocal"
 fi
-
 # ------------------------------------------------------------------------------
