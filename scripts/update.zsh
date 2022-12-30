@@ -70,7 +70,7 @@ update_dotfiles() {
 
 update_system() {
 	update_brew "$*"
-	update_apt_get "$*"
+	update_apt "$*"
 	update_archlinux "$*"
 }
 
@@ -113,17 +113,26 @@ update_brew() {
 	finish
 }
 
-update_apt_get() {
-	if ! _exists apt-get; then
+update_apt() {
+	if _exists apt; then
+
+		info "Updating Pop_OS! and installed packages..."
+
+		sudo apt update
+		sudo apt upgrade -y
+		sudo apt autoremove -y
+		sudo apt autoclean -y
+
+	elif _exists apt-get; then
+		info "Updating Pop_OS! and installed packages..."
+
+		sudo apt-get update
+		sudo apt-get upgrade -y
+		sudo apt-get autoremove -y
+		sudo apt-get autoclean -y
+	else
 		return
 	fi
-
-	info "Updating Pop_OS! and installed packages..."
-
-	sudo apt-get update
-	sudo apt-get upgrade -y
-	sudo apt-get autoremove -y
-	sudo apt-get autoclean -y
 
 	finish
 }
