@@ -1,0 +1,20 @@
+- defaults:
+    link:
+      relink: true
+
+- clean: ['~']
+
+- link:
+    ~/.zshrc: home/.zshrc
+    ~/.zprofile: home/.zprofile
+    ~/.config/lvim/config.lua: home/config/lvim/config.lua
+    ~/.config/sheldon/plugins.toml: home/config/sheldon/plugins.toml
+
+- create:
+    - ~/.config/kitty/
+    - ~/.config/nvim/
+    - ~/.config/sheldon/
+    - ~/.config/lvim/
+
+- shell:
+  - [git submodule update --init --recursive, Installing submodules]
