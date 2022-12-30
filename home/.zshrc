@@ -41,6 +41,11 @@ if [ -d ~/.npm-global ]; then
 	export NODE_PATH="$NODE_PATH:$HOME/.npm-global/lib/node_modules"
 fi
 
+# Load nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+
 # Default editor for local and remote sessions
 if [[ -n "$SSH_CONNECTION" ]]; then
 	# on the server
