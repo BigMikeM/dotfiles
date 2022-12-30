@@ -99,9 +99,9 @@ install_git() {
 
 		info "Installing Git..."
 
-		if [ "$(uname)" != "Darwin" ]; then
+		if [ "$(uname)" == "Darwin" ]; then
 			brew install git
-		elif [ "$(uname)" != "Linux" ]; then
+		elif [ "$(uname)" == "Linux" ]; then
 			if _exists apt-get; then
 				sudo apt-get install git
 			elif _exists pacman; then
