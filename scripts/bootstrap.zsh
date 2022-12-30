@@ -67,6 +67,11 @@ on_start() {
 }
 
 install_homebrew() {
+
+  if _exists pacman; then
+    return
+  fi
+
 	info "Trying to detect installed Homebrew..."
 
 	if ! _exists brew; then
@@ -106,6 +111,8 @@ install_git() {
 				sudo apt-get install git
 			elif _exists pacman; then
 				pacman -S git
+      elif _exists brew; then
+        brew install git
 			fi
 		else
 			error "Error: Failed to install Git!"
@@ -138,6 +145,8 @@ install_zsh() {
 				sudo apt-get install zsh
 			elif _exists pacman; then
 				pacman -S zsh
+			elif _exists brew; then
+				brew install zsh zsh-completions
 			fi
 		else
 			error "Error: Failed to install Zsh!"
