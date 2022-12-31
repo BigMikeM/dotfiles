@@ -100,7 +100,9 @@ if command -v direnv >/dev/null 2>&1; then
 fi
 
 # Start homebrew
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+if [[ -e "/home/linuxbrew/.linuxbrew/bin" ]]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi 
 
 # ------------------------------------------------------------------------------
 # Overrides
