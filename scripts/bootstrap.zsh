@@ -104,16 +104,14 @@ install_git() {
 
 		info "Installing Git..."
 
-		if [ "$(uname)" == "Darwin" ]; then
-			brew install git
-		elif [ "$(uname)" == "Linux" ]; then
 			if _exists apt-get; then
 				sudo apt-get install git
+      elif _exists yay; then
+        yay -S git
 			elif _exists pacman; then
-				pacman -S git
+				sudo pacman -S git
       elif _exists brew; then
         brew install git
-			fi
 		else
 			error "Error: Failed to install Git!"
 			exit 1
@@ -138,16 +136,14 @@ install_zsh() {
 
 		info "Installing Zsh..."
 
-		if [ "$(uname)" == "Darwin" ]; then
-			brew install zsh zsh-completions
-		elif [ "$(uname)" == "Linux" ]; then
-			if _exists apt-get; then
-				sudo apt-get install zsh
-			elif _exists pacman; then
-				pacman -S zsh
-			elif _exists brew; then
-				brew install zsh zsh-completions
-			fi
+    if _exists apt-get; then
+      sudo apt-get install zsh
+    elif _exists yay; then
+      yay -S zsh
+    elif _exists pacman; then
+      sudo pacman -S zsh
+    elif _exists brew; then
+      brew install zsh zsh-completions
 		else
 			error "Error: Failed to install Zsh!"
 			exit 1
@@ -171,9 +167,6 @@ install_zsh() {
 }
 
 install_software() {
-	if [ "$(uname)" != "Darwin" ]; then
-		return
-	fi
 
 	info "Installing software..."
 
@@ -182,8 +175,24 @@ install_software() {
 	# Homebrew Bundle
 	if _exists brew; then
 		brew bundle
+  elif _exists yay; then
+    software=(
+      sheldon
+      tree
+      lsd
+      bat
+      tldr
+      gh
+      nnn
+      lazygit
+      trash-cli 
+      )
+
+    echo "Installing: ${packages[*]}"
+
+    yay -S "${software[@]}"
 	else
-		error "Error: Brew is not available"
+		error "Error: Brew or Yay is not available. Skipping software install"
 	fi
 
 	cd -
@@ -207,10 +216,6 @@ install_npm() {
 	npm install -g "${packages[@]}"
 
 	finish
-}
-
-symlink_configs() {
-	ln whatever wherever
 }
 
 on_finish() {
