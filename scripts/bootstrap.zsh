@@ -68,9 +68,9 @@ on_start() {
 
 install_homebrew() {
 
-  if _exists pacman; then
-    return
-  fi
+	if _exists pacman; then
+		return
+	fi
 
 	info "Trying to detect installed Homebrew..."
 
@@ -91,6 +91,22 @@ install_homebrew() {
 	finish
 }
 
+install_yay() {
+	if ! _exists pacman; then
+		return
+	fi
+
+	info "Trying to install Yay: Yet Another Yogurt"
+
+	mkdir -p "~/build/"
+	pacman -S --needed git base-devel
+	git clone https://aur.archlinux.org/yay.git
+	cd yay
+	makepkg -si
+	rm -rf "~/build/"
+
+}
+
 install_git() {
 	info "Trying to detect installed Git..."
 
@@ -104,14 +120,14 @@ install_git() {
 
 		info "Installing Git..."
 
-			if _exists apt-get; then
-				sudo apt-get install git
-      elif _exists yay; then
-        yay -S git
-			elif _exists pacman; then
-				sudo pacman -S git
-      elif _exists brew; then
-        brew install git
+		if _exists apt-get; then
+			sudo apt-get install git
+		elif _exists yay; then
+			yay -S git
+		elif _exists pacman; then
+			sudo pacman -S git
+		elif _exists brew; then
+			brew install git
 		else
 			error "Error: Failed to install Git!"
 			exit 1
@@ -136,14 +152,14 @@ install_zsh() {
 
 		info "Installing Zsh..."
 
-    if _exists apt-get; then
-      sudo apt-get install zsh
-    elif _exists yay; then
-      yay -S zsh
-    elif _exists pacman; then
-      sudo pacman -S zsh
-    elif _exists brew; then
-      brew install zsh zsh-completions
+		if _exists apt-get; then
+			sudo apt-get install zsh
+		elif _exists yay; then
+			yay -S zsh
+		elif _exists pacman; then
+			sudo pacman -S zsh
+		elif _exists brew; then
+			brew install zsh zsh-completions
 		else
 			error "Error: Failed to install Zsh!"
 			exit 1
@@ -175,22 +191,22 @@ install_software() {
 	# Homebrew Bundle
 	if _exists brew; then
 		brew bundle
-  elif _exists yay; then
-    software=(
-      sheldon
-      tree
-      lsd
-      bat
-      tldr
-      gh
-      nnn
-      lazygit
-      trash-cli 
-      )
+	elif _exists yay; then
+		software=(
+			sheldon
+			tree
+			lsd
+			bat
+			tldr
+			gh
+			nnn
+			lazygit
+			trash-cli
+		)
 
-    echo "Installing: ${packages[*]}"
+		echo "Installing: ${packages[*]}"
 
-    yay -S "${software[@]}"
+		yay -S "${software[@]}"
 	else
 		error "Error: Brew or Yay is not available. Skipping software install"
 	fi
@@ -248,6 +264,7 @@ on_error() {
 main() {
 	on_start "$*"
 	install_homebrew "$*"
+	install_yay "$*"
 	install_git "$*"
 	install_zsh "$*"
 	install_software "$*"
