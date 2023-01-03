@@ -15,6 +15,15 @@
     - ~/.config/nvim/
     - ~/.config/sheldon/
     - ~/.config/lvim/
+    - ~/Notes/
+    - ~/Downloads
+    - ~/Desktop
+    - ~/Projects
+    - ~/Projects/Forks
+    - ~/Projects/Work 
+    - ~/Projects/Playground
+    - ~/Projects/Repos
+    - ~/Projects/Learning
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]

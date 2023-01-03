@@ -17,15 +17,15 @@ fi
 alias cls='clear'
 
 # Folders Shortcuts
-# [ -d ~/Downloads ] && alias dl='cd ~/Downloads'
-# [ -d ~/Desktop ] && alias dt='cd ~/Desktop'
-# [ -d ~/code ] && alias pc='cd ~/code'
-# [ -d ~/Notes ] && alias pn='cd ~/Notes'
-# [ -d ~/Projects/Code ] && alias pc='cd ~/Projects/Code'
-# [ -d ~/Projects/Code/Forks ] && alias pcf='cd ~/Projects/Code/Forks'
-# [ -d ~/Projects/Code/Work ] && alias pcw='cd ~/Projects/Code/Work'
-# [ -d ~/Projects/Code/Playground ] && alias pcp='cd ~/Projects/Code/Playground'
-# [ -d ~/Projects/Code/Repos ] && alias pcr='cd ~/Projects/Code/Repos'
+[ -d ~/Downloads ] && alias dl='cd ~/Downloads'
+[ -d ~/Desktop ] && alias dt='cd ~/Desktop'
+[ -d ~/Notes ] && alias pn='cd ~/Notes'
+[ -d ~/Projects ] && alias pc='cd ~/Projects'
+[ -d ~/Projects/Forks ] && alias pcf='cd ~/Projects/Forks'
+[ -d ~/Projects/Work ] && alias pcw='cd ~/Projects/Work'
+[ -d ~/Projects/Playground ] && alias pcp='cd ~/Projects/Playground'
+[ -d ~/Projects/Repos ] && alias pcr='cd ~/Projects/Repos'
+[ -d ~/Projects/Learning/ ] && alias pcl='cd ~/Projects/Learning'
 
 # Commands Shortcuts
 alias e="$EDITOR"
