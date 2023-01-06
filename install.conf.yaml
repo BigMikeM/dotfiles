@@ -29,4 +29,4 @@
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
-  - [sh ./scripts/bootstrap.zsh]
+  - [sh ./scripts/bootstrap.zsh, Running bootstrap script]
