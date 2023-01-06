@@ -182,6 +182,37 @@ install_zsh() {
 	finish
 }
 
+install_citrix {
+
+  if _exists yay; then
+    return
+  fi
+
+  # TODO: choose/make dir to work in
+  build_dir="$DOTFILES/build"
+  mkdir -p -m755 $build_dir
+
+  url='https://www.citrix.com/downloads/workspace-app/linux/workspace-app-for-linux-latest.html'
+  _dl_urls_="$(curl -sL "$url" | grep -F ".tar.gz?__gda__")"
+  _dl_urls="$(echo "$_dl_urls_" | grep -F "$pkgver.tar.gz?__gda__")"
+  _source64=https:"$(echo "$_dl_urls" | sed -En 's|^.*rel="(//.*/linuxx64-[^"]*)".*$|\1|p')"
+  source=('citrix-configmgr.desktop'
+          'citrix-conncenter.desktop'
+          'citrix-wfica.desktop'
+          'citrix-workspace.desktop'
+          'wfica.sh'
+          'wfica_assoc.sh')
+  source_x86_64=("$pkgname-x64-$pkgver.tar.gz::$_source64")
+
+  ICAROOT=/opt/Citrix/ICAClient
+
+  wget "$url"
+
+  sha256sum 
+
+  rm -rf $build_dir
+}
+
 install_software() {
 
 	info "Installing software..."
@@ -202,13 +233,14 @@ install_software() {
 			nnn
 			lazygit
 			trash-cli
+      icaclient
 		)
 
 		echo "Installing: ${packages[*]}"
 
 		yay -S "${software[@]}"
 	else
-		error "Error: Brew or Yay is not available. Skipping software install"
+		error "Error: Brew or Yay is not available. Skipping installation of extra software"
 	fi
 
 	cd -
