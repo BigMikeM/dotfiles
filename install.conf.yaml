@@ -4,14 +4,6 @@
 
 - clean: ['~']
 
-- link:
-    ~/.zshrc: home/.zshrc
-    ~/.zprofile: home/.zprofile
-    ~/.config/lvim/config.lua: home/config/lvim/config.lua
-    ~/.config/sheldon/plugins.toml: home/config/sheldon/plugins.toml
-    ~/.config/kitty/kitty.conf: home/config/ktty/kitty.conf
-    ~/.wezterm.lua: home/.wezterm.lua
-
 - create:
     - ~/.config/kitty/
     - ~/.config/nvim/
@@ -26,6 +18,14 @@
     - ~/Projects/Playground
     - ~/Projects/Repos
     - ~/Projects/Learning
+
+- link:
+    ~/.zshrc: home/.zshrc
+    ~/.zprofile: home/.zprofile
+    ~/.config/lvim/config.lua: home/config/lvim/config.lua
+    ~/.config/sheldon/plugins.toml: home/config/sheldon/plugins.toml
+    ~/.config/kitty/kitty.conf: home/config/kitty/kitty.conf
+    ~/.wezterm.lua: home/.wezterm.lua
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]

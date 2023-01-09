@@ -4,12 +4,11 @@
 
 1.  Add nvm install to bootstrap script.
 
-1.  Set up config symlinks in bootstrap
+1.  Add ranger config
 
-*   Doom nvim
+1.  Set up config symlinks in dotbot install config
+
 *   Lunarvim
-*   zshrc
-*   zprofile
-*   sheldon
+*   Ranger (including optional dependencies)
 
 ## Possible implementation
