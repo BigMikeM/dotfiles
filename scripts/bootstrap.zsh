@@ -96,6 +96,10 @@ install_yay() {
 		return
 	fi
 
+	if _exists yay; then
+		return
+	fi
+
 	info "Trying to install Yay: Yet Another Yogurt"
 
 	mkdir -p "~/build/"
@@ -182,7 +186,7 @@ install_zsh() {
 	finish
 }
 
-install_citrix {
+install_citrix() {
 
   if _exists yay; then
     return
@@ -229,11 +233,12 @@ install_software() {
 			lsd
 			bat
 			tldr
-			gh
+			github-cli
 			nnn
 			lazygit
 			trash-cli
-      icaclient
+		 	icaclient
+			ranger
 		)
 
 		echo "Installing: ${packages[*]}"
