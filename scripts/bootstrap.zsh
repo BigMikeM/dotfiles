@@ -188,9 +188,9 @@ install_zsh() {
 
 install_citrix() {
 
-  if _exists yay; then
-    return
-  fi
+	if _exists yay; then
+		return
+	fi
 
   # TODO: choose/make dir to work in
   build_dir="$DOTFILES/build"
