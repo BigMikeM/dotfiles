@@ -5,9 +5,9 @@ export DOTFILES=${DOTFILES:="$HOME/.dotfiles"}
 export SPACESHIP_CONFIG="$DOTFILES/home/spaceshiprc.zsh"
 
 # Locale
-export LC_ALL=en_US.UTF-8
-export LANG=en_US.UTF-8
-export LANGUAGE=en_US.UTF-8
+# export LC_ALL=en_US.UTF-8
+# export LANG=en_US.UTF-8
+# export LANGUAGE=en_US.UTF-8
 
 export MANPATH="/usr/local/man:$MANPATH"
 
