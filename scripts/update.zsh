@@ -42,24 +42,12 @@ finish() {
 # Set directory
 export DOTFILES=${1:-"$HOME/.dotfiles"}
 
-on_start() {
-	info '           __        __   ____ _  __            '
-	info '      ____/ /____   / /_ / __/(_)/ /___   _____ '
-	info '     / __  // __ \ / __// /_ / // // _ \ / ___/ '
-	info '  _ / /_/ // /_/ // /_ / __// // //  __/(__  )  '
-	info ' (_)\__,_/ \____/ \__//_/  /_//_/ \___//____/   '
-	info '                                                '
-	info '          created by @denysdovhan               '
-	info '           modified by @bigmikem                '
-	info '                                                '
-}
-
 update_dotfiles() {
 	info "Updating dotfiles..."
 
 	cd "$DOTFILES" || exit
 	git pull origin main
-	# ./install --except shell
+	./install --except shell
 	cd - >/dev/null 2>&1 || exit
 
 	info "Updating Zsh plugins..."
@@ -116,7 +104,7 @@ update_brew() {
 update_apt() {
 	if _exists apt; then
 
-		info "Updating Pop_OS! and installed packages..."
+		info "Updating system and installed packages..."
 
 		sudo apt update
 		sudo apt upgrade -y
@@ -124,7 +112,7 @@ update_apt() {
 		sudo apt autoclean -y
 
 	elif _exists apt-get; then
-		info "Updating Pop_OS! and installed packages..."
+		info "Updating system and installed packages..."
 
 		sudo apt-get update
 		sudo apt-get upgrade -y
@@ -233,21 +221,23 @@ update_rust() {
 on_finish() {
 	success "Done!"
 	success "Happy Coding!"
-	echo
-	echo -ne "$RED"'-_-_-_-_-_-_-_-_-_-_-_-_-_-_'
-	echo -e "$RESET""$BOLD"',------,'"$RESET"
-	echo -ne "$YELLOW"'-_-_-_-_-_-_-_-_-_-_-_-_-_-_'
-	echo -e "$RESET""$BOLD"'|   /\_/\\'"$RESET"
-	echo -ne "$GREEN"'-_-_-_-_-_-_-_-_-_-_-_-_-_-'
-	echo -e "$RESET""$BOLD"'~|__( ^ .^)'"$RESET"
-	echo -ne "$CYAN"'-_-_-_-_-_-_-_-_-_-_-_-_-_-_'
-	echo -e "$RESET""$BOLD"'""  ""'"$RESET"
-	echo
+  # As much as I love it, I don't feel right keep it.
+  # However, I do want to use it as a reference to create something of my own.
+	# echo
+	# echo -ne "$RED"'-_-_-_-_-_-_-_-_-_-_-_-_-_-_'
+	# echo -e "$RESET""$BOLD"',------,'"$RESET"
+	# echo -ne "$YELLOW"'-_-_-_-_-_-_-_-_-_-_-_-_-_-_'
+	# echo -e "$RESET""$BOLD"'|   /\_/\\'"$RESET"
+	# echo -ne "$GREEN"'-_-_-_-_-_-_-_-_-_-_-_-_-_-'
+	# echo -e "$RESET""$BOLD"'~|__( ^ .^)'"$RESET"
+	# echo -ne "$CYAN"'-_-_-_-_-_-_-_-_-_-_-_-_-_-_'
+	# echo -e "$RESET""$BOLD"'""  ""'"$RESET"
+	# echo
 }
 
 on_error() {
-	error "Wow... Something serious happened!"
-	error "Though, I don't know what really what it was :("
+	error "ERROR!"
+  error "Something Borked."
 	exit 1
 }
 
@@ -255,8 +245,7 @@ main() {
 	echo "Before we proceed, please type your sudo password:"
 	sudo -v
 
-	on_start "$*"
-	# update_dotfiles "$*"
+	update_dotfiles "$*"
 	update_system "$*"
 	update_rust "$*"
 	update_all_node "$*"

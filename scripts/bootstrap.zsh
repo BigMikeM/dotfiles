@@ -124,8 +124,8 @@ install_git() {
 
 		info "Installing Git..."
 
-		if _exists apt-get; then
-			sudo apt-get install git
+		if _exists apt; then
+			sudo apt install git
 		elif _exists yay; then
 			yay -S git
 		elif _exists pacman; then
@@ -156,8 +156,8 @@ install_zsh() {
 
 		info "Installing Zsh..."
 
-		if _exists apt-get; then
-			sudo apt-get install zsh
+		if _exists apt; then
+			sudo apt install zsh
 		elif _exists yay; then
 			yay -S zsh
 		elif _exists pacman; then
@@ -192,29 +192,29 @@ install_citrix() {
 		return
 	fi
 
-  # TODO: choose/make dir to work in
-  build_dir="$DOTFILES/build"
-  mkdir -p -m755 $build_dir
+	# TODO: choose/make dir to work in
+	build_dir="$DOTFILES/build"
+	mkdir -p -m755 $build_dir
 
-  url='https://www.citrix.com/downloads/workspace-app/linux/workspace-app-for-linux-latest.html'
-  _dl_urls_="$(curl -sL "$url" | grep -F ".tar.gz?__gda__")"
-  _dl_urls="$(echo "$_dl_urls_" | grep -F "$pkgver.tar.gz?__gda__")"
-  _source64=https:"$(echo "$_dl_urls" | sed -En 's|^.*rel="(//.*/linuxx64-[^"]*)".*$|\1|p')"
-  source=('citrix-configmgr.desktop'
-          'citrix-conncenter.desktop'
-          'citrix-wfica.desktop'
-          'citrix-workspace.desktop'
-          'wfica.sh'
-          'wfica_assoc.sh')
-  source_x86_64=("$pkgname-x64-$pkgver.tar.gz::$_source64")
+	url='https://www.citrix.com/downloads/workspace-app/linux/workspace-app-for-linux-latest.html'
+	_dl_urls_="$(curl -sL "$url" | grep -F ".tar.gz?__gda__")"
+	_dl_urls="$(echo "$_dl_urls_" | grep -F "$pkgver.tar.gz?__gda__")"
+	_source64=https:"$(echo "$_dl_urls" | sed -En 's|^.*rel="(//.*/linuxx64-[^"]*)".*$|\1|p')"
+	source=('citrix-configmgr.desktop'
+		'citrix-conncenter.desktop'
+		'citrix-wfica.desktop'
+		'citrix-workspace.desktop'
+		'wfica.sh'
+		'wfica_assoc.sh')
+	source_x86_64=("$pkgname-x64-$pkgver.tar.gz::$_source64")
 
-  ICAROOT=/opt/Citrix/ICAClient
+	ICAROOT=/opt/Citrix/ICAClient
 
-  wget "$url"
+	wget "$url"
 
-  sha256sum 
+	sha256sum
 
-  rm -rf $build_dir
+	rm -rf $build_dir
 }
 
 install_software() {
@@ -237,7 +237,7 @@ install_software() {
 			nnn
 			lazygit
 			trash-cli
-		 	icaclient
+			icaclient
 			ranger
 		)
 
