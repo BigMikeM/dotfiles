@@ -9,6 +9,7 @@
     - ~/.config/nvim/
     - ~/.config/sheldon/
     - ~/.config/lvim/
+    - ~/.config/ranger/
     - ~/Notes/
     - ~/Downloads
     - ~/Desktop
@@ -25,6 +26,7 @@
     ~/.config/lvim/config.lua: home/config/lvim/config.lua
     ~/.config/sheldon/plugins.toml: home/config/sheldon/plugins.toml
     ~/.config/kitty/kitty.conf: home/config/kitty/kitty.conf
+    ~/.config/ranger/*: home/config/ranger/*
     ~/.wezterm.lua: home/.wezterm.lua
 
 - shell:
