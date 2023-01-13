@@ -284,41 +284,6 @@ lvim.plugins = {
     requires = "nvim-lua/plenary.nvim",
   },
   {
-    "pwntester/octo.nvim",
-    requires = {
-      'nvim-lua/plenary.nvim',
-      'nvim-telescope/telescope.nvim',
-      'kyazdani42/nvim-web-devicons',
-    },
-    config = function()
-      require("octo").setup()
-    end,
-  },
-  {
-    "tpope/vim-fugitive",
-    cmd = {
-      "G",
-      "Git",
-      "Gdiffsplit",
-      "Gread",
-      "Gwrite",
-      "Ggrep",
-      "GMove",
-      "GDelete",
-      "GBrowse",
-      "GRemove",
-      "GRename",
-      "Glgrep",
-      "Gedit"
-    },
-    ft = { "fugitive" }
-  },
-  {
-    "mattn/vim-gist",
-    event = "BufRead",
-    requires = "mattn/webapi-vim",
-  },
-  {
     "windwp/nvim-ts-autotag",
     config = function()
       require("nvim-ts-autotag").setup()
@@ -472,6 +437,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
   pattern = { "*.json", "*.jsonc", "*.md" },
   command = "setlocal wrap",
 })
+
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "zsh",
   callback = function()
