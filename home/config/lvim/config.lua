@@ -16,7 +16,6 @@ require 'kanagawa'.setup({ overrides = kanagawa_overrides })
 lvim.log.level = "warn"
 lvim.format_on_save.enabled = false
 lvim.colorscheme = "kanagawa"
--- lvim.colorscheme = "catppuccin"
 vim.opt.guifont = "MonoLisa Nerd Font:h12"
 vim.opt.colorcolumn = "80,100"
 
@@ -26,6 +25,7 @@ lvim.leader = "space"
 lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
 lvim.keys.normal_mode["<S-l>"] = ":BufferLineCycleNext<CR>"
 lvim.keys.normal_mode["<S-h>"] = ":BufferLineCyclePrev<CR>"
+lvim.keys.normal_mode["<leader>rn"] = ":IncRename "
 lvim.builtin.treesitter.rainbow.enable = true
 
 -- Change Telescope navigation to use j and k for navigation and n and p for history in both input and normal mode.
@@ -133,28 +133,6 @@ lvim.plugins = {
   },
   { "tpope/vim-surround" },
   { "rebelot/kanagawa.nvim" },
-  { "catppuccin/nvim", as = "catppuccin", config = function()
-    require("catppuccin").setup({
-      flavor = "mocha",
-      integrations = {
-        notify = true,
-        mini = true,
-        ts_rainbow = true,
-        cmp = true,
-        dap = true,
-        markdown = true,
-        treesitter_context = true,
-        symbols_outline = true,
-        telescope = true,
-        which_key = true,
-        nvimtree = true,
-        neogit = true,
-        mason = true,
-        hop = true,
-        gitsigns = true,
-      }
-    })
-  end },
   {
     "phaazon/hop.nvim",
     event = "BufRead",
@@ -370,38 +348,44 @@ lvim.plugins = {
     "felipec/vim-sanegx",
     event = "BufRead",
   },
-  -- {
-  --   "folke/noice.nvim",
-  --   config = function()
-  --     require("noice").setup({
-  --       lsp = {
-  --         override = {
-  --           ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-  --           ["vim.lsp.util.stylize_markdown"] = true,
-  --           ["cmp.entry.get_documentation"] = true,
-  --         },
-  --         signature = {
-  --           enabled = false
-  --         }
-  --       },
-  --       presets = {
-  --         bottom_search = true, -- use a classic bottom cmdline for search
-  --         command_palette = true, -- position the cmdline and popupmenu together
-  --         long_message_to_split = true, -- long messages will be sent to a split
-  --         inc_rename = false, -- enables an input dialog for inc-rename.nvim
-  --         lsp_doc_border = false, -- add a border to hover docs and signature help
-  --       },
-  --     })
-  --   end,
-  --   requires = {
-  --     -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
-  --     "MunifTanjim/nui.nvim",
-  --     -- OPTIONAL:
-  --     --   `nvim-notify` is only needed, if you want to use the notification view.
-  --     --   If not available, we use `mini` as the fallback
-  --     "rcarriga/nvim-notify",
-  --   }
-  -- }
+  {
+    "folke/noice.nvim",
+    config = function()
+      require("noice").setup({
+        lsp = {
+          override = {
+            ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+            ["vim.lsp.util.stylize_markdown"] = true,
+            ["cmp.entry.get_documentation"] = true,
+          },
+          signature = {
+            enabled = false
+          }
+        },
+        presets = {
+          bottom_search = true, -- use a classic bottom cmdline for search
+          command_palette = true, -- position the cmdline and popupmenu together
+          long_message_to_split = true, -- long messages will be sent to a split
+          inc_rename = true, -- enables an input dialog for inc-rename.nvim
+          lsp_doc_border = false, -- add a border to hover docs and signature help
+        },
+      })
+    end,
+    requires = {
+      -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+      "MunifTanjim/nui.nvim",
+      -- OPTIONAL:
+      --   `nvim-notify` is only needed, if you want to use the notification view.
+      --   If not available, we use `mini` as the fallback
+      "rcarriga/nvim-notify",
+    }
+  },
+  {
+  "smjonas/inc-rename.nvim",
+  config = function()
+    require("inc_rename").setup()
+  end,
+}
 }
 
 -- Autocommands (https://neovim.io/doc/user/autocmd.html)
