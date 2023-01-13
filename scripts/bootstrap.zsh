@@ -46,12 +46,6 @@ GITHUB_REPO_URL_BASE="https://github.com/bigmikem/dotfiles"
 HOMEBREW_INSTALLER_URL="https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
 
 on_start() {
-	info "           __        __   ____ _  __           "
-	info "      ____/ /____   / /_ / __/(_)/ /___   _____"
-	info "     / __  // __ \ / __// /_ / // // _ \ / ___/"
-	info "  _ / /_/ // /_/ // /_ / __// // //  __/(__  ) "
-	info " (_)\__,_/ \____/ \__//_/  /_//_/ \___//____/  "
-	info "                                               "
 	info "           created by @denysdovhan             "
 	info "             edited by @bigmikem               "
 	info "                                               "
@@ -237,11 +231,9 @@ install_software() {
 			nnn
 			lazygit
 			trash-cli
-			icaclient
 			ranger
+      luarocks
 		)
-
-		echo "Installing: ${packages[*]}"
 
 		yay -S "${software[@]}"
 	else
@@ -275,18 +267,6 @@ on_finish() {
 	echo
 	success "Setup was successfully done!"
 	success "Happy Coding!"
-	echo
-	echo -ne "$RED"'-_-_-_-_-_-_-_-_-_-_-_-_-_-_'
-	echo -e "$RESET""$BOLD"',------,'"$RESET"
-	echo -ne "$YELLOW"'-_-_-_-_-_-_-_-_-_-_-_-_-_-_'
-	echo -e "$RESET""$BOLD"'|   /\_/\\'"$RESET"
-	echo -ne "$GREEN"'-_-_-_-_-_-_-_-_-_-_-_-_-_-'
-	echo -e "$RESET""$BOLD"'~|__( ^ .^)'"$RESET"
-	echo -ne "$CYAN"'-_-_-_-_-_-_-_-_-_-_-_-_-_-_'
-	echo -e "$RESET""$BOLD"'""  ""'"$RESET"
-	echo
-	info "Don't forget to restart your terminal!"
-	echo
 }
 
 on_error() {
