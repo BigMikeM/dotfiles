@@ -52,6 +52,7 @@ lvim.builtin.which_key.mappings["t"] = {
   w = { "<cmd>Trouble workspace_diagnostics<cr>", "Workspace Diagnostics" },
 }
 
+
 lvim.builtin.alpha.active = true
 lvim.builtin.alpha.mode = "dashboard"
 lvim.builtin.terminal.active = true
@@ -233,11 +234,6 @@ lvim.plugins = {
         debug = false; -- Print debug information
         opacity = 85; -- 0-100 opacity level of the floating window where 100 is fully transparent.
         post_open_hook = nil -- A function taking two arguments, a buffer and a window to be ran as a hook.
-        -- You can use "default_mappings = true" setup option
-        -- Or explicitly set keybindings
-        -- vim.cmd("nnoremap gpd <cmd>lua require('goto-preview').goto_preview_definition()<CR>")
-        -- vim.cmd("nnoremap gpi <cmd>lua require('goto-preview').goto_preview_implementation()<CR>")
-        -- vim.cmd("nnoremap gP <cmd>lua require('goto-preview').close_all_win()<CR>")
       }
     end
   },
@@ -322,8 +318,114 @@ lvim.plugins = {
     config = function()
       require("inc_rename").setup()
     end,
-  }
+  },
+  {
+    "s1n7ax/nvim-window-picker",
+    tag = "1.*",
+    config = function()
+      require("window-picker").setup({
+        autoselect_one = true,
+        include_current = false,
+        filter_rules = {
+          -- filter using buffer options
+          bo = {
+            -- if the file type is one of following, the window will be ignored
+            filetype = { "neo-tree", "neo-tree-popup", "notify", "quickfix" },
+
+            -- if the buffer type is one of following, the window will be ignored
+            buftype = { "terminal" },
+          },
+        },
+        other_win_hl_color = "#e35e4f",
+      })
+    end,
+  },
+  {
+    "tzachar/cmp-tabnine",
+    run = "./install.sh",
+    requires = "hrsh7th/nvim-cmp",
+    event = "InsertEnter",
+  },
+  {
+    "ahmedkhalf/lsp-rooter.nvim",
+    event = "BufRead",
+    config = function()
+      require("lsp-rooter").setup()
+    end,
+  },
+  {
+    "monaqa/dial.nvim",
+    event = "BufRead",
+    config = function()
+      local dial = require "dial"
+      vim.cmd [[
+    nmap <C-a> <Plug>(dial-increment)
+      nmap <C-x> <Plug>(dial-decrement)
+      vmap <C-a> <Plug>(dial-increment)
+      vmap <C-x> <Plug>(dial-decrement)
+      vmap g<C-a> <Plug>(dial-increment-additional)
+      vmap g<C-x> <Plug>(dial-decrement-additional)
+    ]]
+
+      dial.augends["custom#boolean"] = dial.common.enum_cyclic {
+        name = "boolean",
+        strlist = { "true", "false" },
+      }
+      table.insert(dial.config.searchlist.normal, "custom#boolean")
+
+      -- For Languages which prefer True/False, e.g. python.
+      dial.augends["custom#Boolean"] = dial.common.enum_cyclic {
+        name = "Boolean",
+        strlist = { "True", "False" },
+      }
+      table.insert(dial.config.searchlist.normal, "custom#Boolean")
+    end,
+  },
+  {
+    "karb94/neoscroll.nvim",
+    event = "WinScrolled",
+    config = function()
+      require('neoscroll').setup({
+        -- All these keys will be mapped to their corresponding default scrolling animation
+        mappings = { '<C-u>', '<C-d>', '<C-b>', '<C-f>',
+          '<C-y>', '<C-e>', 'zt', 'zz', 'zb' },
+        hide_cursor = true, -- Hide cursor while scrolling
+        stop_eof = true, -- Stop at <EOF> when scrolling downwards
+        use_local_scrolloff = false, -- Use the local scope of scrolloff instead of the global scope
+        respect_scrolloff = false, -- Stop scrolling when the cursor reaches the scrolloff margin of the file
+        cursor_scrolls_alone = true, -- The cursor will keep on scrolling even if the window cannot scroll further
+        easing_function = nil, -- Default easing function
+        pre_hook = nil, -- Function to run before the scrolling animation starts
+        post_hook = nil, -- Function to run after the scrolling animation ends
+      })
+    end
+  },
 }
+
+-- example mappings you can place in some other place
+-- An awesome method to jump to windows
+local picker = require('window-picker')
+
+vim.keymap.set("n", ",w", function()
+  local picked_window_id = picker.pick_window({
+    include_current_win = true
+  }) or vim.api.nvim_get_current_win()
+  vim.api.nvim_set_current_win(picked_window_id)
+end, { desc = "Pick a window" })
+
+-- Swap two windows using the awesome window picker
+local function swap_windows()
+  local window = picker.pick_window({
+    include_current_win = false
+  })
+  local target_buffer = vim.fn.winbufnr(window)
+  -- Set the target window to contain current buffer
+  vim.api.nvim_win_set_buf(window, 0)
+  -- Set current window to contain target buffer
+  vim.api.nvim_win_set_buf(0, target_buffer)
+end
+
+vim.keymap.set('n', ',W', swap_windows, { desc = 'Swap windows' })
 
 -- Autocommands (https://neovim.io/doc/user/autocmd.html)
 lvim.autocommands = {
