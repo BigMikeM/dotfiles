@@ -221,18 +221,6 @@ update_rust() {
 on_finish() {
 	success "Done!"
 	success "Happy Coding!"
-  # As much as I love it, I don't feel right keep it.
-  # However, I do want to use it as a reference to create something of my own.
-	# echo
-	# echo -ne "$RED"'-_-_-_-_-_-_-_-_-_-_-_-_-_-_'
-	# echo -e "$RESET""$BOLD"',------,'"$RESET"
-	# echo -ne "$YELLOW"'-_-_-_-_-_-_-_-_-_-_-_-_-_-_'
-	# echo -e "$RESET""$BOLD"'|   /\_/\\'"$RESET"
-	# echo -ne "$GREEN"'-_-_-_-_-_-_-_-_-_-_-_-_-_-'
-	# echo -e "$RESET""$BOLD"'~|__( ^ .^)'"$RESET"
-	# echo -ne "$CYAN"'-_-_-_-_-_-_-_-_-_-_-_-_-_-_'
-	# echo -e "$RESET""$BOLD"'""  ""'"$RESET"
-	# echo
 }
 
 on_error() {
