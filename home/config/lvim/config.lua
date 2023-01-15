@@ -1,16 +1,20 @@
-local default_colors = require("kanagawa.colors").setup()
+if (require("kanagawa.colors"))
+then
+  local default_colors = require("kanagawa.colors").setup()
 
-local kanagawa_overrides = {
-  rainbowcol1 = { fg = default_colors.oniViolet },
-  rainbowcol2 = { fg = default_colors.surimiOrange },
-  rainbowcol3 = { fg = default_colors.lightBlue },
-  rainbowcol4 = { fg = default_colors.peachRed },
-  rainbowcol5 = { fg = default_colors.springViolet1 },
-  rainbowcol6 = { fg = default_colors.boatYellow1 },
-  rainbowcol7 = { fg = default_colors.sakuraPink },
-}
+  local kanagawa_overrides = {
+    rainbowcol1 = { fg = default_colors.sakuraPink },
+    rainbowcol2 = { fg = default_colors.oniViolet },
+    rainbowcol3 = { fg = default_colors.surimiOrange },
+    rainbowcol4 = { fg = default_colors.lightBlue },
+    rainbowcol5 = { fg = default_colors.springViolet1 },
+    rainbowcol6 = { fg = default_colors.boatYellow1 },
+    rainbowcol7 = { fg = default_colors.peachRed },
+  }
 
-require 'kanagawa'.setup({ overrides = kanagawa_overrides })
+  require 'kanagawa'.setup({ overrides = kanagawa_overrides })
+else
+end
 
 -- general
 lvim.log.level = "warn"
@@ -68,7 +72,7 @@ formatters.setup {
   { command = "isort", filetypes = { "python" } },
   {
     command = "prettier",
-    extra_args = { "--print-with", "100" },
+    extra_args = { "--print-with 80", "--prose-wrap always" },
     filetypes = { "typescript", "typescriptreact", "md", "markdown" },
   },
 }
@@ -331,7 +335,6 @@ lvim.plugins = {
           bo = {
             -- if the file type is one of following, the window will be ignored
             filetype = { "neo-tree", "neo-tree-popup", "notify", "quickfix" },
-
             -- if the buffer type is one of following, the window will be ignored
             buftype = { "terminal" },
           },
@@ -351,34 +354,6 @@ lvim.plugins = {
     event = "BufRead",
     config = function()
       require("lsp-rooter").setup()
-    end,
-  },
-  {
-    "monaqa/dial.nvim",
-    event = "BufRead",
-    config = function()
-      local dial = require "dial"
-      vim.cmd [[
-    nmap <C-a> <Plug>(dial-increment)
-      nmap <C-x> <Plug>(dial-decrement)
-      vmap <C-a> <Plug>(dial-increment)
-      vmap <C-x> <Plug>(dial-decrement)
-      vmap g<C-a> <Plug>(dial-increment-additional)
-      vmap g<C-x> <Plug>(dial-decrement-additional)
-    ]]
-
-      dial.augends["custom#boolean"] = dial.common.enum_cyclic {
-        name = "boolean",
-        strlist = { "true", "false" },
-      }
-      table.insert(dial.config.searchlist.normal, "custom#boolean")
-
-      -- For Languages which prefer True/False, e.g. python.
-      dial.augends["custom#Boolean"] = dial.common.enum_cyclic {
-        name = "Boolean",
-        strlist = { "True", "False" },
-      }
-      table.insert(dial.config.searchlist.normal, "custom#Boolean")
     end,
   },
   {
@@ -402,7 +377,6 @@ lvim.plugins = {
   },
 }
 
--- example mappings you can place in some other place
 -- An awesome method to jump to windows
 local picker = require('window-picker')
 
