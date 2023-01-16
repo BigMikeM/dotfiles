@@ -6,10 +6,8 @@
 
 - create:
     - ~/.config/kitty/
-    - ~/.config/nvim/
     - ~/.config/sheldon/
     - ~/.config/lvim/
-    - ~/.config/ranger/
     - ~/Notes/
     - ~/Downloads
     - ~/Desktop
@@ -26,8 +24,12 @@
     ~/.config/lvim/config.lua: home/config/lvim/config.lua
     ~/.config/sheldon/plugins.toml: home/config/sheldon/plugins.toml
     ~/.config/kitty/kitty.conf: home/config/kitty/kitty.conf
-    ~/.config/ranger/*: home/config/ranger/*
     ~/.wezterm.lua: home/.wezterm.lua
+    ~/.config/ranger/commands.py: home/config/ranger/commands.py
+    ~/.config/ranger/commands_full.py: home/config/ranger/commands_full.py
+    ~/.config/ranger/rc.conf: home/config/ranger/rc.conf
+    ~/.config/ranger/rifle.conf: home/config/ranger/rifle.conf
+    ~/.config/ranger/scope.sh: home/config/ranger/scope.sh
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
