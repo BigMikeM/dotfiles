@@ -4,17 +4,9 @@ export DOTFILES=${DOTFILES:="$HOME/.dotfiles"}
 # Spaceship custom config file
 export SPACESHIP_CONFIG="$DOTFILES/home/spaceshiprc.zsh"
 
-# Locale
-# export LC_ALL=en_US.UTF-8
-# export LANG=en_US.UTF-8
-# export LANGUAGE=en_US.UTF-8
-
 export MANPATH="/usr/local/man:$MANPATH"
 
 COMPLETION_WAITING_DOTS="true"
-
-# nnn plugins
-export NNN_PLUG='f:finder;o:fzopen;d:diffs;t:nmount;v:imgview'
 
 # Extend $PATH without duplicates
 _extend_path() {
@@ -81,8 +73,6 @@ plugins=(
 	vscode
 	common-aliases
 	command-not-found
-	docker
-	#ssh-agent
 )
 
 # Autoload node version when changing cwd
