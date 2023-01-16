@@ -174,7 +174,7 @@ install_zsh() {
 		echo "1) When changing your default shell via chsh -s"
 		echo
 
-		chsh -s "$(command -v zsh)" || error "Error: Cannot set Zsh as default shell!"
+		chsh -s "$(command -v zsh)" || error "Error: Could not set Zsh as default shell!"
 	fi
 
 	finish
@@ -191,20 +191,32 @@ install_software() {
 		brew bundle
 	elif _exists yay; then
 		software=(
+      neovim
 			sheldon
 			tree
 			lsd
 			bat
 			tldr
 			github-cli
-			nnn
 			lazygit
 			trash-cli
 			ranger
       luarocks
+      atool
+      ueberzug
+      ffmpegthumbnailer
+      highlight
+      imagemagick
+      libcaca
+      mediainfo
+      odt2txt
+      perl-image-exiftool
+      poppler
+      transmission-cli
+      python-chardet
 		)
 
-		yay -S "${software[@]}"
+		yay -Syu --needed "${software[@]}"
 	else
 		error "Error: Brew or Yay is not available. Skipping installation of extra software"
 	fi
