@@ -1,20 +1,16 @@
-if (require("kanagawa.colors"))
-then
-  local default_colors = require("kanagawa.colors").setup()
+-- local default_colors = require("kanagawa.colors").setup()
 
-  local kanagawa_overrides = {
-    rainbowcol1 = { fg = default_colors.sakuraPink },
-    rainbowcol2 = { fg = default_colors.oniViolet },
-    rainbowcol3 = { fg = default_colors.surimiOrange },
-    rainbowcol4 = { fg = default_colors.lightBlue },
-    rainbowcol5 = { fg = default_colors.springViolet1 },
-    rainbowcol6 = { fg = default_colors.boatYellow1 },
-    rainbowcol7 = { fg = default_colors.peachRed },
-  }
+-- local kanagawa_overrides = {
+--   rainbowcol1 = { fg = default_colors.sakuraPink },
+--   rainbowcol2 = { fg = default_colors.oniViolet },
+--   rainbowcol3 = { fg = default_colors.surimiOrange },
+--   rainbowcol4 = { fg = default_colors.lightBlue },
+--   rainbowcol5 = { fg = default_colors.springViolet1 },
+--   rainbowcol6 = { fg = default_colors.boatYellow1 },
+--   rainbowcol7 = { fg = default_colors.peachRed },
+-- }
 
-  require 'kanagawa'.setup({ overrides = kanagawa_overrides })
-else
-end
+-- require 'kanagawa'.setup({ overrides = kanagawa_overrides })
 
 -- general
 lvim.log.level = "warn"
@@ -209,7 +205,7 @@ lvim.plugins = {
       require("nvim-ts-autotag").setup()
     end,
   },
-  { "p00f/nvim-ts-rainbow" },
+  -- { "p00f/nvim-ts-rainbow" },
   {
     "folke/lsp-colors.nvim",
     event = "BufRead",
