@@ -57,7 +57,6 @@ update_dotfiles() {
 }
 
 update_system() {
-	update_brew "$*"
 	update_apt "$*"
 	update_archlinux "$*"
 }
@@ -85,20 +84,6 @@ update_yay() {
 
 	yay -Syu
 	yay -Yc
-}
-
-update_brew() {
-	if ! _exists brew; then
-		return
-	fi
-
-	info "Updating Homebrew..."
-
-	brew update
-	brew upgrade
-	brew cleanup
-
-	finish
 }
 
 update_apt() {

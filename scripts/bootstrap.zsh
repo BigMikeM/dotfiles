@@ -43,7 +43,6 @@ finish() {
 # Set directory
 export DOTFILES=${1:-"$HOME/.dotfiles"}
 GITHUB_REPO_URL_BASE="https://github.com/bigmikem/dotfiles"
-HOMEBREW_INSTALLER_URL="https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
 
 on_start() {
 	info "           created by @denysdovhan             "
@@ -58,31 +57,6 @@ on_start() {
 	if [ "${answer}" != "y" ]; then
 		exit 1
 	fi
-}
-
-install_homebrew() {
-
-	if _exists pacman; then
-		return
-	fi
-
-	info "Trying to detect installed Homebrew..."
-
-	if ! _exists brew; then
-		echo "Seems like you don't have Homebrew installed!"
-		read -p "Do you agree to proceed with Homebrew installation? [y/N] " -n 1 answer
-		echo
-		if [ "${answer}" != "y" ]; then
-			exit 1
-		fi
-
-		info "Installing Homebrew..."
-		bash -c "$(curl -fsSL ${HOMEBREW_INSTALLER_URL})"
-	else
-		success "You already have Homebrew installed. Skipping..."
-	fi
-
-	finish
 }
 
 install_yay() {
@@ -124,8 +98,6 @@ install_git() {
 			yay -S git
 		elif _exists pacman; then
 			sudo pacman -S git
-		elif _exists brew; then
-			brew install git
 		else
 			error "Error: Failed to install Git!"
 			exit 1
@@ -156,8 +128,6 @@ install_zsh() {
 			yay -S zsh
 		elif _exists pacman; then
 			sudo pacman -S zsh
-		elif _exists brew; then
-			brew install zsh zsh-completions
 		else
 			error "Error: Failed to install Zsh!"
 			exit 1
@@ -184,12 +154,7 @@ install_software() {
 
 	info "Installing software..."
 
-	cd "$DOTFILES"
-
-	# Homebrew Bundle
-	if _exists brew; then
-		brew bundle
-	elif _exists yay; then
+	if _exists yay; then
 		software=(
       neovim
 			sheldon
@@ -218,10 +183,8 @@ install_software() {
 
 		yay -Syu --needed "${software[@]}"
 	else
-		error "Error: Brew or Yay is not available. Skipping installation of extra software"
+		error "Error: Yay is not available. Skipping installation of extra software"
 	fi
-
-	cd -
 
 	finish
 }
@@ -260,7 +223,6 @@ on_error() {
 
 main() {
 	on_start "$*"
-	install_homebrew "$*"
 	install_yay "$*"
 	install_git "$*"
 	install_zsh "$*"
