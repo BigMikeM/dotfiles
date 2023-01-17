@@ -71,10 +71,12 @@ install_yay() {
 	info "Trying to install Yay: Yet Another Yogurt"
 
 	mkdir -p "~/build/"
+  cd "~/build"
 	pacman -S --needed git base-devel
 	git clone https://aur.archlinux.org/yay.git
 	cd yay
 	makepkg -si
+  cd "../.."
 	rm -rf "~/build/"
 
 }
@@ -92,9 +94,7 @@ install_git() {
 
 		info "Installing Git..."
 
-		if _exists apt; then
-			sudo apt install git
-		elif _exists yay; then
+		if _exists yay; then
 			yay -S git
 		elif _exists pacman; then
 			sudo pacman -S git
@@ -122,9 +122,7 @@ install_zsh() {
 
 		info "Installing Zsh..."
 
-		if _exists apt; then
-			sudo apt install zsh
-		elif _exists yay; then
+		if _exists yay; then
 			yay -S zsh
 		elif _exists pacman; then
 			sudo pacman -S zsh

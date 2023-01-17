@@ -57,11 +57,6 @@ update_dotfiles() {
 }
 
 update_system() {
-	update_apt "$*"
-	update_archlinux "$*"
-}
-
-update_archlinux() {
 	if ! _exists yay; then
 		update_pacman "$*"
 	else
@@ -84,30 +79,6 @@ update_yay() {
 
 	yay -Syu
 	yay -Yc
-}
-
-update_apt() {
-	if _exists apt; then
-
-		info "Updating system and installed packages..."
-
-		sudo apt update
-		sudo apt upgrade -y
-		sudo apt autoremove -y
-		sudo apt autoclean -y
-
-	elif _exists apt-get; then
-		info "Updating system and installed packages..."
-
-		sudo apt-get update
-		sudo apt-get upgrade -y
-		sudo apt-get autoremove -y
-		sudo apt-get autoclean -y
-	else
-		return
-	fi
-
-	finish
 }
 
 update_npm() {
