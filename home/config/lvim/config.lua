@@ -1,16 +1,16 @@
--- local default_colors = require("kanagawa.colors").setup()
+local default_colors = require("kanagawa.colors").setup()
 
--- local kanagawa_overrides = {
---   rainbowcol1 = { fg = default_colors.sakuraPink },
---   rainbowcol2 = { fg = default_colors.oniViolet },
---   rainbowcol3 = { fg = default_colors.surimiOrange },
---   rainbowcol4 = { fg = default_colors.lightBlue },
---   rainbowcol5 = { fg = default_colors.springViolet1 },
---   rainbowcol6 = { fg = default_colors.boatYellow1 },
---   rainbowcol7 = { fg = default_colors.peachRed },
--- }
+local kanagawa_overrides = {
+  rainbowcol1 = { fg = default_colors.sakuraPink },
+  rainbowcol2 = { fg = default_colors.oniViolet },
+  rainbowcol3 = { fg = default_colors.surimiOrange },
+  rainbowcol4 = { fg = default_colors.lightBlue },
+  rainbowcol5 = { fg = default_colors.springViolet1 },
+  rainbowcol6 = { fg = default_colors.boatYellow1 },
+  rainbowcol7 = { fg = default_colors.peachRed },
+}
 
--- require 'kanagawa'.setup({ overrides = kanagawa_overrides })
+require 'kanagawa'.setup({ overrides = kanagawa_overrides })
 
 -- general
 lvim.log.level = "warn"
@@ -26,7 +26,12 @@ lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
 lvim.keys.normal_mode["<S-l>"] = ":BufferLineCycleNext<CR>"
 lvim.keys.normal_mode["<S-h>"] = ":BufferLineCyclePrev<CR>"
 lvim.keys.normal_mode["<leader>rn"] = ":IncRename "
+lvim.builtin.treesitter.highlight.enable = true
 lvim.builtin.treesitter.rainbow.enable = true
+lvim.builtin.alpha.active = true
+lvim.builtin.alpha.mode = "dashboard"
+lvim.builtin.terminal.active = true
+lvim.builtin.nvimtree.setup.view.side = "left"
 
 -- Change Telescope navigation to use j and k for navigation and n and p for history in both input and normal mode.
 -- we use protected-mode (pcall) just in case the plugin wasn't loaded yet.
@@ -51,13 +56,6 @@ lvim.builtin.which_key.mappings["t"] = {
   l = { "<cmd>Trouble loclist<cr>", "LocationList" },
   w = { "<cmd>Trouble workspace_diagnostics<cr>", "Workspace Diagnostics" },
 }
-
-
-lvim.builtin.alpha.active = true
-lvim.builtin.alpha.mode = "dashboard"
-lvim.builtin.terminal.active = true
-lvim.builtin.nvimtree.setup.view.side = "left"
-lvim.builtin.treesitter.highlight.enable = true
 
 -- generic LSP settings
 
@@ -205,7 +203,7 @@ lvim.plugins = {
       require("nvim-ts-autotag").setup()
     end,
   },
-  -- { "p00f/nvim-ts-rainbow" },
+  { "p00f/nvim-ts-rainbow" },
   {
     "folke/lsp-colors.nvim",
     event = "BufRead",
