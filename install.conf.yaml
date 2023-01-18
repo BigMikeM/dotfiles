@@ -30,6 +30,8 @@
     ~/.config/ranger/rc.conf: home/config/ranger/rc.conf
     ~/.config/ranger/rifle.conf: home/config/ranger/rifle.conf
     ~/.config/ranger/scope.sh: home/config/ranger/scope.sh
+    ~/.gitconfig: home/.gitconfig
+    ~/.gitlocal: home/.gitlocal
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
