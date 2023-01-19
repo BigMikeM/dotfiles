@@ -11,7 +11,6 @@ return {
     "zero=1",
     "ss07=1",
     "ss05=1",
-    -- "ss08=1",
   },
   freetype_render_target = "HorizontalLcd",
   freetype_load_target = "HorizontalLcd",
