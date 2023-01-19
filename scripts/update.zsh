@@ -136,29 +136,13 @@ update_all_node() {
 		nvm install $default_node_version
 	fi
 
-	info "Installing latest stable version of Node.js..."
-	nvm install node
-
-	info "Updating Node LTS..."
-	nvm install --lts
 	nvm_lts_versions | while read lts_version; do
-		info "Installing NodeJS v${lts_version}..."
+    info "Updating Node LTS..."
 		nvm install "${lts_version}"
 	done
 
 	# Ensure we are using the version of node we started with
 	nvm use $current_version
-
-	finish
-}
-
-update_node() {
-	if ! _exists nvm; then
-		return
-	fi
-
-	info "Updating Node..."
-	nvm install node --latest-npm
 
 	finish
 }
