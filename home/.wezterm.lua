@@ -2,7 +2,6 @@ local wezterm = require("wezterm")
 return {
   font = wezterm.font("MonoLisa Nerd Font"),
   color_scheme = "kanagawabones",
-  -- color_scheme = "AyuMirage (Gogh)",
   harfbuzz_features = {
     "liga=1",
     "calt=1",
@@ -12,6 +11,7 @@ return {
     "ss07=1",
     "ss05=1",
   },
+  font_size = 12,
   freetype_render_target = "HorizontalLcd",
   freetype_load_target = "HorizontalLcd",
   max_fps = 75,
