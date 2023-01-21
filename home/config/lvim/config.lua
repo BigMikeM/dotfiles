@@ -1,16 +1,16 @@
-local default_colors = require("kanagawa.colors").setup()
+local colors = require("kanagawa.colors").setup()
 
 local kanagawa_overrides = {
-  rainbowcol1 = { fg = default_colors.sakuraPink },
-  rainbowcol2 = { fg = default_colors.oniViolet },
-  rainbowcol3 = { fg = default_colors.surimiOrange },
-  rainbowcol4 = { fg = default_colors.lightBlue },
-  rainbowcol5 = { fg = default_colors.springViolet1 },
-  rainbowcol6 = { fg = default_colors.boatYellow1 },
-  rainbowcol7 = { fg = default_colors.peachRed },
+  rainbowcol1 = { fg = colors.sakuraPink },
+  rainbowcol2 = { fg = colors.oniViolet },
+  rainbowcol3 = { fg = colors.surimiOrange },
+  rainbowcol4 = { fg = colors.lightBlue },
+  rainbowcol5 = { fg = colors.springViolet1 },
+  rainbowcol6 = { fg = colors.boatYellow1 },
+  rainbowcol7 = { fg = colors.peachRed },
 }
 
-require 'kanagawa'.setup({ overrides = kanagawa_overrides })
+require('kanagawa').setup({ overrides = kanagawa_overrides })
 
 -- general
 lvim.log.level = "warn"
@@ -303,11 +303,7 @@ lvim.plugins = {
       })
     end,
     requires = {
-      -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
       "MunifTanjim/nui.nvim",
-      -- OPTIONAL:
-      --   `nvim-notify` is only needed, if you want to use the notification view.
-      --   If not available, we use `mini` as the fallback
       "rcarriga/nvim-notify",
     }
   },
@@ -369,6 +365,7 @@ lvim.plugins = {
       })
     end
   },
+  { "lambdalisue/suda.vim" },
 }
 
 -- An awesome method to jump to windows
