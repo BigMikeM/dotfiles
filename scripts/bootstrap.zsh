@@ -177,6 +177,9 @@ install_software() {
       poppler
       transmission-cli
       python-chardet
+      nvm
+      kitty
+      wezterm
 		)
 
 		yay -Syu --needed "${software[@]}"
