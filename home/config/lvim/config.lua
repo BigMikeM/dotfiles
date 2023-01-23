@@ -57,6 +57,16 @@ lvim.builtin.which_key.mappings["t"] = {
   w = { "<cmd>Trouble workspace_diagnostics<cr>", "Workspace Diagnostics" },
 }
 
+lvim.builtin.which_key.mappings["m"] = {
+  name = "+MiniMap",
+  o =  { "<cmd>lua require('mini.map').open()<cr>", "Open" },
+  c =  { "<cmd>lua require('mini.map').close()<cr>", "Close" },
+  f =  { "<cmd>lua require('mini.map').toggle_focus()<cr>", "Toggle (Focus)" },
+  r =  { "<cmd>lua require('mini.map').refresh()<cr>", "Refresh" },
+  t =  { "<cmd>lua require('mini.map').toggle()<cr>", "Toggle (Opened/Closed)" },
+  s =  { "<cmd>lua require('mini.map').toggle_side()<cr>", "Switch Sides" },
+}
+
 -- generic LSP settings
 
 -- set a formatter, this will override the language server formatting capabilities (if it exists)
@@ -100,7 +110,6 @@ lvim.plugins = {
   },
   {
     "echasnovski/mini.map",
-    branch = "stable",
     config = function()
       require('mini.map').setup()
       local map = require('mini.map')
@@ -418,6 +427,26 @@ lvim.autocommands = {
         end
       end,
     },
+  },
+  {
+    { "TextChangedI" },
+    {
+      desc = "Make Mini.Map update constantly (Text Changed)",
+      pattern = { "*" },
+      callback = function()
+        require("mini.map").on_content_change()
+      end
+    }
+  },
+  {
+    { "CursorMovedI" },
+    {
+      desc = "Make Mini.Map update constantly (View Change)",
+      pattern = { "*" },
+      callback = function()
+        require("mini.map").on_view_change()
+      end
+    }
   },
 }
 
