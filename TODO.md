@@ -10,3 +10,5 @@
 *   Ranger (including optional dependencies)
 
 ## Possible implementation
+
+Integrate Pamac? I think it's worth it for me.
