@@ -7,7 +7,6 @@ vim.opt.colorcolumn = "80,100"
 
 -- keymappings [view all the defaults by pressing <leader>Lk]
 lvim.leader = "space"
--- add your own keymapping
 lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
 lvim.keys.normal_mode["<S-l>"] = ":BufferLineCycleNext<CR>"
 lvim.keys.normal_mode["<S-h>"] = ":BufferLineCyclePrev<CR>"
@@ -18,18 +17,6 @@ lvim.builtin.alpha.active = true
 lvim.builtin.alpha.mode = "dashboard"
 lvim.builtin.terminal.active = true
 lvim.builtin.nvimtree.setup.view.side = "left"
-
--- Change Telescope navigation to use j and k for navigation and n and p for history in both input and normal mode.
--- we use protected-mode (pcall) just in case the plugin wasn't loaded yet.
-local _, actions = pcall(require, "telescope.actions")
-lvim.builtin.telescope.defaults.mappings = {
-  i = {
-    ["<C-j>"] = actions.move_selection_next,
-    ["<C-k>"] = actions.move_selection_previous,
-    ["<C-n>"] = actions.cycle_history_next,
-    ["<C-p>"] = actions.cycle_history_prev,
-  },
-}
 
 -- Use which-key to add extra bindings with the leader-key prefix
 lvim.builtin.which_key.mappings["P"] = { "<cmd>Telescope projects<CR>", "Projects" }
@@ -45,14 +32,26 @@ lvim.builtin.which_key.mappings["t"] = {
 
 lvim.builtin.which_key.mappings["m"] = {
   name = "+MiniMap",
-  o =  { "<cmd>lua require('mini.map').open()<cr>", "Open" },
-  c =  { "<cmd>lua require('mini.map').close()<cr>", "Close" },
-  f =  { "<cmd>lua require('mini.map').toggle_focus()<cr>", "Toggle (Focus)" },
-  r =  { "<cmd>lua require('mini.map').refresh()<cr>", "Refresh" },
-  t =  { "<cmd>lua require('mini.map').toggle()<cr>", "Toggle (Opened/Closed)" },
-  s =  { "<cmd>lua require('mini.map').toggle_side()<cr>", "Switch Sides" },
+  o = { "<cmd>lua require('mini.map').open()<cr>", "Open" },
+  c = { "<cmd>lua require('mini.map').close()<cr>", "Close" },
+  f = { "<cmd>lua require('mini.map').toggle_focus()<cr>", "Toggle (Focus)" },
+  r = { "<cmd>lua require('mini.map').refresh()<cr>", "Refresh" },
+  t = { "<cmd>lua require('mini.map').toggle()<cr>", "Toggle (Opened/Closed)" },
+  s = { "<cmd>lua require('mini.map').toggle_side()<cr>", "Switch Sides" },
 }
 
+
+-- Change Telescope navigation to use j and k for navigation and n and p for history in both input and normal mode.
+-- we use protected-mode (pcall) just in case the plugin wasn't loaded yet.
+local _, actions = pcall(require, "telescope.actions")
+lvim.builtin.telescope.defaults.mappings = {
+  i = {
+    ["<C-j>"] = actions.move_selection_next,
+    ["<C-k>"] = actions.move_selection_previous,
+    ["<C-n>"] = actions.cycle_history_next,
+    ["<C-p>"] = actions.cycle_history_prev,
+  },
+}
 -- generic LSP settings
 
 -- set a formatter, this will override the language server formatting capabilities (if it exists)
@@ -70,11 +69,10 @@ formatters.setup {
 -- set additional linters
 local linters = require "lvim.lsp.null-ls.linters"
 linters.setup {
-  { command = "flake8", filetypes = { "python" } },
-  {
-    command = "codespell",
-    filetypes = { "javascript", "python" },
-  },
+  -- {
+  --   command = "codespell",
+  --   filetypes = { "javascript", "python" },
+  -- },
 }
 
 -- Additional Plugins
@@ -258,11 +256,11 @@ lvim.plugins = {
     "rmagatti/goto-preview",
     config = function()
       require('goto-preview').setup {
-        width = 120; -- Width of the floating window
-        height = 25; -- Height of the floating window
-        default_mappings = true; -- Bind default mappings
-        debug = false; -- Print debug information
-        opacity = 85; -- 0-100 opacity level of the floating window where 100 is fully transparent.
+        width = 120, -- Width of the floating window
+        height = 25, -- Height of the floating window
+        default_mappings = true, -- Bind default mappings
+        debug = false, -- Print debug information
+        opacity = 85, -- 0-100 opacity level of the floating window where 100 is fully transparent.
         post_open_hook = nil -- A function taking two arguments, a buffer and a window to be ran as a hook.
       }
     end
@@ -405,8 +403,8 @@ local picker = require('window-picker')
 
 vim.keymap.set("n", ",w", function()
   local picked_window_id = picker.pick_window({
-    include_current_win = true
-  }) or vim.api.nvim_get_current_win()
+        include_current_win = true
+      }) or vim.api.nvim_get_current_win()
   vim.api.nvim_set_current_win(picked_window_id)
 end, { desc = "Pick a window" })
 
