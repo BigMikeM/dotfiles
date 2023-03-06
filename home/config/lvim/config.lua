@@ -58,7 +58,7 @@ lvim.builtin.which_key.mappings["m"] = {
 -- set a formatter, this will override the language server formatting capabilities (if it exists)
 local formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
-  { command = "blue", filetypes = { "python" } },
+  { command = "blue",  filetypes = { "python" } },
   { command = "isort", filetypes = { "python" } },
   {
     command = "prettier",
