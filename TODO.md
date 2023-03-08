@@ -15,3 +15,6 @@
 1. Integrate Pamac? (probably not, I still prefer yay)
 
 1. Is it possible for me to download and install a font I like? What about also applying nerd font patch? Feasible, but is it worth it?
+
+1. Is it possible to fetch and use the most recent version of the kanagawa theme for kitty (or other apps)? Maybe a curl + include?
+
