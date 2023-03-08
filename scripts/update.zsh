@@ -57,36 +57,60 @@ update_dotfiles() {
 }
 
 update_system() {
-	if ! _exists yay; then
-		update_pacman "$*"
-	else
-		update_yay "$*"
-	fi
+  if ! _exists pacman; then
+    return
+  elif _exists yay; then
+    _update_yay
+  elif _exists pacman; then
+    _update_pacman
+  fi
 }
 
-update_pacman() {
+_update_pacman() {
 	if ! _exists pacman; then
 		return
 	fi
 
+  info "Pacman detected."
+  info "Updating system packages."
+  echo
+
 	pacman -Syu
+
+  finish
 }
 
-update_yay() {
+_update_yay() {
 	if ! _exists yay; then
 		return
 	fi
 
-	yay -Syu
+  info "Yay detected."
+  info "Regenerating yay database."
+  echo
+
+  yay -Y --gendb
+
+  info "Updating all packages (including development)"
+  echo
+
+	yay -Syu --devel
+
+  info "Cleaning up unnecessary packages."
+  echo
+
 	yay -Yc
+
+  finish
 }
 
-update_npm() {
+_update_npm() {
 	if ! _exists npm; then
 		return
 	fi
 
 	info "Updating NPM..."
+  echo
 
 	if _exists nvm; then
 		nvm install-latest-npm
@@ -121,27 +145,40 @@ nvm_lts_versions() {
 update_all_node() {
 	if ! _exists nvm; then
 		info "Node Version Manager (nvm) not found. Unable to automatically update NodeJS."
+    echo
+
 		return
 	fi
 
-	info "Updating all Node.js versions..."
+	info "Attempting to update all installed versions of NodeJS."
+  echo
+
 	current_version=$(get_node_version "current")
 	default_node_version=$(get_node_version "default")
 
-	info "Updating current version of Node.js..."
-	nvm install $current_version --latest-npm --reinstall-from=current
+	info "Updating current active version of NodeJS."
+  echo
+
+	nvm install $current_version --latest-npm
 
 	if [[ "${default_node_version}" != "${current_version}" ]]; then
-		info "Updating default version of Node.js..."
+		info "Updating default version of NodeJS."
+    echo
+
 		nvm install $default_node_version
 	fi
 
 	nvm_lts_versions | while read lts_version; do
-    info "Updating Node LTS..."
+    info "Updating all installed LTS versions of NodeJS."
+    echo
+
 		nvm install "${lts_version}"
 	done
 
 	# Ensure we are using the version of node we started with
+  info "Switching back to the version of NodeJS we started with."
+  echo
+
 	nvm use $current_version
 
 	finish
@@ -153,13 +190,15 @@ update_rust() {
 	fi
 
 	info "Updating Rust..."
+  echo
+
 	rustup update
 
 	finish
 }
 
 on_finish() {
-	success "Done!"
+	success "Done with system update!"
 	success "Happy Coding!"
 }
 
@@ -170,7 +209,11 @@ on_error() {
 }
 
 main() {
+  info "This update process may prompt you for passwords multiple times."
+  echo
+
 	echo "Before we proceed, please type your sudo password:"
+
 	sudo -v
 
 	update_dotfiles "$*"
