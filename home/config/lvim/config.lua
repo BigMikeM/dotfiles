@@ -439,13 +439,16 @@ require("kanagawa").setup({
     local theme = colors.theme
     local palette = colors.palette
     return {
+      -- "Modern", borderless Telescope UI:
       TelescopeTitle = { fg = theme.ui.special, bold = true },
       TelescopePromptNormal = { bg = theme.ui.bg_p1 },
-      -- TelescopePromptBorder = { fg = theme.ui.bg_p1, bg = theme.ui.bg_p1 },
+      TelescopePromptBorder = { fg = theme.ui.bg_p1, bg = theme.ui.bg_p1 },
       TelescopeResultsNormal = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m1 },
-      -- TelescopeResultsBorder = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
+      TelescopeResultsBorder = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
       TelescopePreviewNormal = { bg = theme.ui.bg_dim },
-      -- TelescopePreviewBorder = { bg = theme.ui.bg_dim, fg = theme.ui.bg_dim },
+      TelescopePreviewBorder = { bg = theme.ui.bg_dim, fg = theme.ui.bg_dim },
+
+      -- Custom rainbow brackets support:
       rainbowcol1 = { fg = palette.sakuraPink },
       rainbowcol2 = { fg = palette.oniViolet },
       rainbowcol3 = { fg = palette.surimiOrange },
@@ -453,6 +456,8 @@ require("kanagawa").setup({
       rainbowcol5 = { fg = palette.springViolet1 },
       rainbowcol6 = { fg = palette.boatYellow1 },
       rainbowcol7 = { fg = palette.peachRed },
+
+      -- Darker background for popups to contrast with editor view
       Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
       PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2 },
       PmenuSbar = { bg = theme.ui.bg_m1 },
@@ -460,5 +465,3 @@ require("kanagawa").setup({
     }
   end,
 })
-
-
