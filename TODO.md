@@ -2,15 +2,16 @@
 
 ## Planned implementation
 
-1.  Add nvm install to bootstrap script.
+1. Set up NVM after it is installed
 
-1.  Set up config symlinks in dotbot install config
+1. Install YAY with bootstrap
 
+1. Skip setting up ZSH as shell if it is already set
+
+1. Re-implement Doom Nvim configs (for the hell of it)
 
 ## Possible implementation
 
-1.  Lunarvim installation and setup
+1. Integrate Pamac? (probably not, I still prefer yay)
 
-1. Integrate Pamac? I think it's worth it for me.
-
-1. Set up NVM (maybe only if it wasn't available before bootstrap?) and install node/npm in bootstrap
+1. Is it possible for me to download and install a font I like? What about also applying nerd font patch? Feasible, but is it worth it?
