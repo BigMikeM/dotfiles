@@ -105,14 +105,44 @@ install_yay() {
   finish
 }
 
+install_software() {
 
-		if [ "${answer}" != "y" ]; then
-			exit 1
-		fi
+	info "Installing software..."
+
+  software=(
+    # Base software needed for others
+    git
+    openssh
+    sheldon
+    # Handy CLI utilities
+    tree
+    lsd
+    bat
+    tldr
+    github-cli
+    trash-cli
+    # CLI apps
+    neovim
+    lazygit
+    ranger
+    nvm
+    # GUI apps
+    kitty
+    wezterm
+    # Preferred (yet optional) dependencies
+    luarocks
+    atool
+    ueberzug
+    highlight
+    shellcheck
+    shellharden
   )
 
 
+	if _exists yay; then
+		yay -Syu --needed "${software[@]}"
 	else
+		error "Error: Yay is not available. Skipping installation of extra software"
 	fi
 
 	finish
@@ -134,46 +164,11 @@ install_yay() {
 	finish
 }
 
-install_software() {
 
-	info "Installing software..."
 
-	if _exists yay; then
-		software=(
-      neovim
-			sheldon
-			tree
-			lsd
-			bat
-			tldr
-			github-cli
-			lazygit
-			trash-cli
-			ranger
-      luarocks
-      atool
-      ueberzug
-      ffmpegthumbnailer
-      highlight
-      imagemagick
-      libcaca
-      mediainfo
-      odt2txt
-      perl-image-exiftool
-      poppler
-      transmission-cli
-      python-chardet
-      nvm
-      kitty
-      wezterm
-		)
 
-		yay -Syu --needed "${software[@]}"
-	else
-		error "Error: Yay is not available. Skipping installation of extra software"
 	fi
 
-	finish
 }
 
 install_npm() {
