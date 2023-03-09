@@ -197,6 +197,32 @@ update_rust() {
 	finish
 }
 
+on_start() {
+	info "     |-|                                             |-|     "
+	info "     |-|           Custom update utility.            |-|     "
+	info "     |-|                                             |-|     "
+	info "     |-|      This script will attempt to update     |-|     "
+	info "     |-|    the dotfiles repo and system packages.   |-|     "
+	info "     |-|                                             |-|     "
+	warn "     |-|        ONLY ARCHLINUX-BASED SYSTEMS         |-|     "
+	warn "     |-|         ARE CURRENTLY SUPPORTED!!           |-|     "
+	info "     |-|                                             |-|     "
+	info "     |-|          created by @denysdovhan            |-|     "
+	info "     |-|            edited by @BigMikeM              |-|     "
+	info "     |-|                                             |-|     "
+
+  info "This script will attempt to install and set up desired software."
+  info "You may be prompted for input multiple times throughout the process."
+	echo
+
+	read -p "Do you want to proceed with installation? [y/N] " -n 1 answer
+	echo
+
+	if [[ "${answer:0:1}" != "y" ]]; then
+		exit 1
+	fi
+}
+
 on_finish() {
 	success "Done with system update!"
 	success "Happy Coding!"

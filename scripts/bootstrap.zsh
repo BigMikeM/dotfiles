@@ -45,16 +45,28 @@ export DOTFILES=${1:-"$HOME/.dotfiles"}
 GITHUB_REPO_URL_BASE="https://github.com/bigmikem/dotfiles"
 
 on_start() {
-	info "           created by @denysdovhan             "
-	info "             edited by @bigmikem               "
-	info "                                               "
+	info "     |-|                                             |-|     "
+	info "     |-|         Custom dotfiles bootstrap.          |-|     "
+	info "     |-|                                             |-|     "
+	info "     |-|     This script will attempt to install     |-|     "
+	info "     |-|      and set up a curated selection of      |-|     "
+	info "     |-|        GUI and CLI apps, as well as         |-|     "
+	info "     |-|         custom configuration files.         |-|     "
+	info "     |-|                                             |-|     "
+	warn "     |-|         ONLY ARCHLINUX-BASED SYSTEMS        |-|     "
+	warn "     |-|          ARE CURRENTLY SUPPORTED!!          |-|     "
+	info "     |-|                                             |-|     "
+	info "     |-|          created by @denysdovhan            |-|     "
+	info "     |-|            edited by @BigMikeM              |-|     "
+	info "     |-|                                             |-|     "
 
-	info "This script will guide you through installing git, zsh and dofiles itself."
-	echo "It will not install anything without your direct agreement!"
+  info "This script will attempt to install and set up desired software."
 	echo
+
 	read -p "Do you want to proceed with installation? [y/N] " -n 1 answer
 	echo
-	if [ "${answer}" != "y" ]; then
+
+	if [[ "${answer:0:1}" != "y" ]]; then
 		exit 1
 	fi
 }
