@@ -78,6 +78,9 @@ on_start() {
 
 install_yay() {
 	if ! _exists pacman; then
+    error "Pacman not found! Cannot install yay."
+    echo
+
 		return
 	fi
 
@@ -85,17 +88,21 @@ install_yay() {
 		return
 	fi
 
-	info "Trying to install Yay: Yet Another Yogurt"
+	info 'Trying to install "Yay: Yet Another Yogurt"'
 
-	mkdir -p "~/build/"
-  cd "~/build"
-	pacman -S --needed git base-devel
-	git clone https://aur.archlinux.org/yay.git
-	cd yay
+  YAY_BUILD_DIR="~/.build_yay/"
+
+  info "Using build directory: $YAY_BUILD_DIR"
+  echo
+
+	sudo pacman -S --needed git base-devel
+	git clone "https://aur.archlinux.org/yay.git" "$YAY_BUILD_DIR"
+	cd "$YAY_BUILD_DIR"
 	makepkg -si
-  cd "../.."
-	rm -rf "~/build/"
+  cd -
+	rm -rf "$YAY_BUILD_DIR"
 
+  finish
 }
 
 install_git() {
