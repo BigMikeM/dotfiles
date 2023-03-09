@@ -60,9 +60,8 @@ formatters.setup {
   { command = "blue",  filetypes = { "python" } },
   { command = "isort", filetypes = { "python" } },
   {
-    command = "prettier",
-    extra_args = { "--print-with 80", "--prose-wrap always" },
-    filetypes = { "typescript", "typescriptreact", "md", "markdown" },
+    command = "shellharden",
+    filetypes = { "shell", "bash", "zsh", "sh" },
   },
 }
 

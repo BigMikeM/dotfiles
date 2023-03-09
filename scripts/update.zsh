@@ -80,7 +80,7 @@ _update_pacman() {
   info "Updating system packages."
   echo
 
-	pacman -Syu
+	sudo pacman -Syu
 
   finish
 }
@@ -128,7 +128,7 @@ _update_npm() {
 }
 
 nvm_node_version() {
-	printf %s "$(nvm ls $1 | cut -s -d'.' -f'1,2' | cut -d'v' -f2)"
+	printf %s "$(nvm ls "$1" | cut -s -d'.' -f'1,2' | cut -d'v' -f2)"
 }
 
 system_node_version() {
@@ -137,9 +137,9 @@ system_node_version() {
 
 get_node_version() {
 	if _exists nvm; then
-		printf %s $(nvm_node_version "$1")
+		printf %s "$(nvm_node_version "$1")"
 	else
-		printf %s $(system_node_version)
+		printf %s "$(system_node_version)"
 	fi
 }
 
@@ -164,27 +164,27 @@ update_all_node() {
 	info "Updating current active version of NodeJS."
   echo
 
-	nvm install $current_version --latest-npm
+	nvm install "$current_version" --latest-npm
 
-	if [[ "${default_node_version}" != "${current_version}" ]]; then
+	if [[ "$default_node_version" != "$current_version" ]]; then
 		info "Updating default version of NodeJS."
     echo
 
-		nvm install $default_node_version
+		nvm install "$default_node_version"
 	fi
 
 	nvm_lts_versions | while read lts_version; do
     info "Updating all installed LTS versions of NodeJS."
     echo
 
-		nvm install "${lts_version}"
+		nvm install "$lts_version"
 	done
 
 	# Ensure we are using the version of node we started with
   info "Switching back to the version of NodeJS we started with."
   echo
 
-	nvm use $current_version
+	nvm use "$current_version"
 
 	finish
 }
@@ -240,12 +240,11 @@ on_error() {
 }
 
 main() {
-  info "This update process may prompt you for passwords multiple times."
-  echo
 
-	echo "Before we proceed, please type your sudo password:"
+  on_start "$*"
 
-	sudo -v
+  echo "Please enter your password to get started:"
+  sudo -v
 
 	update_dotfiles "$*"
 	update_system "$*"
