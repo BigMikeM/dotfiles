@@ -1,7 +1,7 @@
 -- general
 lvim.log.level = "warn"
 lvim.format_on_save.enabled = false
-lvim.colorscheme = "kanagawa-wave"
+lvim.colorscheme = "kanagawa-wave" -- Dark -> Light: dragon -> wave -> lotus
 vim.opt.guifont = "MonoLisa Nerd Font:h12"
 vim.opt.colorcolumn = "80,100"
 
@@ -446,7 +446,6 @@ require("kanagawa").setup({
       TelescopeResultsBorder = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
       TelescopePreviewNormal = { bg = theme.ui.bg_dim },
       TelescopePreviewBorder = { bg = theme.ui.bg_dim, fg = theme.ui.bg_dim },
-
       -- Custom rainbow brackets support:
       rainbowcol1 = { fg = palette.sakuraPink },
       rainbowcol2 = { fg = palette.oniViolet },
@@ -455,7 +454,6 @@ require("kanagawa").setup({
       rainbowcol5 = { fg = palette.springViolet1 },
       rainbowcol6 = { fg = palette.boatYellow1 },
       rainbowcol7 = { fg = palette.peachRed },
-
       -- Darker background for popups to contrast with editor view
       Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
       PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2 },
