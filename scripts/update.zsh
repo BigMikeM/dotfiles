@@ -17,14 +17,9 @@ _exists() {
 	command -v "$1" >/dev/null 2>&1
 }
 
-# Success reporter
+# Informational messages
 info() {
 	echo -e "${CYAN}${*}${RESET}"
-}
-
-# Error reporter
-error() {
-	echo -e "${RED}${*}${RESET}"
 }
 
 # Success reporter
@@ -32,11 +27,21 @@ success() {
 	echo -e "${GREEN}${*}${RESET}"
 }
 
+# Error reporter
+error() {
+	echo -e "${RED}${*}${RESET}"
+}
+
+# Warning or otherwise important message
+warn() {
+  echo -e "${YELLOW}${*}${RESET}"
+}
+
 # End section
 finish() {
 	success "Done!"
 	echo
-	sleep 1
+	sleep 2
 }
 
 # Set directory

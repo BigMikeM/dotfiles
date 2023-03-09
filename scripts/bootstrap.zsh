@@ -18,19 +18,24 @@ _exists() {
 	command -v "$1" >/dev/null 2>&1
 }
 
-# Success reporter
+# Informational messages
 info() {
 	echo -e "${CYAN}${*}${RESET}"
 }
 
-# Error reporter
-error() {
-	echo -e "${RED}${*}${RESET}"
-}
-
 # Success reporter
 success() {
-	echo -e "${GREEN}${*}${RESET}"
+	echo -e "${GREEN}${BOLD}${*}${RESET}"
+}
+
+# Error reporter
+error() {
+	echo -e "${RED}${BOLD}${*}${RESET}"
+}
+
+# Warning or otherwise important message
+warn() {
+  echo -e "${YELLOW}${*}${RESET}"
 }
 
 # End section
