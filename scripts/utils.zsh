@@ -1,0 +1,85 @@
+# Holding space for functions to be used in other scripts
+
+install_git() {
+	info "Trying to detect installed Git..."
+
+	if ! _exists git; then
+		echo "Seems like you don't have Git installed!"
+		read -p "Would you like to proceed with Git installation? [y/N] " -n 1 answer
+		echo
+		if [[ "${answer,,}" != "y" || "${answer,,}" != "yes" ]]; then
+      exit 1
+		fi
+
+		info "Installing Git..."
+
+		if _exists yay; then
+			yay -S git
+		elif _exists pacman; then
+			sudo pacman -S git
+		else
+			error "Error: Failed to install Git!"
+			exit 1
+		fi
+	else
+		success "You already have Git installed. Skipping..."
+	fi
+
+	finish
+}
+
+install_zsh() {
+	info "Trying to detect installed Zsh..."
+
+	if ! _exists zsh; then
+		echo "Seems like you don't have Zsh installed!"
+		read -p "Do you agree to proceed with Zsh installation? [y/N] " -n 1 answer
+		echo
+	  if [[ "${answer,,}" != "n" || "${answer,,}" != "no" ]]; then
+			exit 1
+		fi
+
+		info "Installing Zsh..."
+
+		if _exists yay; then
+			yay -S --needed zsh
+		elif _exists pacman; then
+			sudo pacman -S zsh
+		else
+			error "Error: Failed to install Zsh!"
+			exit 1
+		fi
+
+    if _exists zsh && [[ -z "$ZSH_VERSION" ]]; then
+      info "Setting up Zsh as default shell..."
+
+      chsh -s "$(command -v zsh)" || error "Error: Could not set Zsh as default shell!"
+    fi
+	else
+		success "You already have Zsh installed. Skipping..."
+	fi
+
+	finish
+}
+
+install_npm() {
+
+  if ! _exists npm; then
+    return
+  fi
+
+	info "Installing global npm packages..."
+
+	packages=(
+		commitizen
+		npkill
+		fkill-cli
+		cz-conventional-changelog
+	)
+
+	echo "Installing: ${packages[*]}"
+
+	npm install -g "${packages[*]}"
+
+	finish
+}
