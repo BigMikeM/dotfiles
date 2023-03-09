@@ -206,10 +206,7 @@ on_error() {
 main() {
 	on_start "$*"
 	install_yay "$*"
-	install_git "$*"
-	install_zsh "$*"
 	install_software "$*"
-	install_npm "$*"
 	on_finish "$*"
 }
 
