@@ -12,7 +12,7 @@ COMPLETION_WAITING_DOTS="true"
 _extend_path() {
 	[[ -d "$1" ]] || return
 
-	if ! "$(echo "$PATH" | tr ":" "\n" | grep -qx "$1")"; then
+	if ! $(echo "$PATH" | tr ":" "\n" | grep -qx "$1"); then
 		export PATH="$1:$PATH"
 	fi
 }
@@ -98,7 +98,7 @@ fi
 # ------------------------------------------------------------------------------
 
 # Sourcing all zsh files from $DOTFILES/lib
-lib_files=("$(find "$DOTFILES"/lib -type f -name "*.zsh")")
+lib_files=($(find $DOTFILES/lib -type f -name "*.zsh"))
 if [[ "${#lib_files[@]}" -gt 0 ]]; then
 	for file in "${lib_files[@]}"; do
 		source "$file"
