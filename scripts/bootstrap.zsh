@@ -148,47 +148,6 @@ install_software() {
 	finish
 }
 
-
-
-
-
-
-		echo "The script will ask you the password for sudo:"
-		echo
-		echo "1) When changing your default shell via chsh -s"
-		echo
-
-		chsh -s "$(command -v zsh)" || error "Error: Could not set Zsh as default shell!"
-	fi
-
-	finish
-}
-
-
-
-
-	fi
-
-}
-
-install_npm() {
-
-	info "Installing global npm packages..."
-
-	packages=(
-		commitizen
-		npkill
-		fkill-cli
-		cz-conventional-changelog
-	)
-
-	echo "Installing: ${packages[*]}"
-
-	npm install -g "${packages[@]}"
-
-	finish
-}
-
 on_finish() {
 	echo
 	success "Setup was successfully done!"
@@ -203,8 +162,111 @@ on_error() {
 	exit 1
 }
 
+check_software_for_setup() {
+  
+  info "Checking for apps which will need to be set up after bootstrap..."
+
+  software_to_check=(
+    sheldon
+    gh
+    nvm
+  )
+  
+  software_to_setup=()
+
+  for i in "$software_to_check"; do
+    if ! _exists "$i"; then
+      software_to_setup+="$i"
+
+      info "${i} was not found. Adding to setup list."
+    fi
+  done
+
+  finish
+}
+
+_set_up_nvm() {
+
+  info "Setting up Node Version Manager"
+  info "This will install the latest version of NodeJS."
+  read -p "Would you also like to install the latest LTS release? [y/N]" -n 1 answer
+	echo
+
+  nvm install node
+
+	if [[ "${answer,,}" != "y" || "${answer,,}" != "yes" ]]; then
+		info "You chose to install the latest NodeJS lts."
+    nvm install --lts
+	fi
+
+  finish
+}
+
+_set_up_sheldon() {
+
+  info "Setting up Sheldon."
+  echo
+
+  sheldon lock --update
+
+  finish
+}
+
+_set_up_gh() {
+
+  info "Setting up GitHub CLI."
+  info "This will also set up SSH to connect your git repos with GitHub."
+  echo
+
+  gh auth login
+
+  finish
+}
+
+_set_up_lvim() {
+
+  if ! _exists nvim; then
+    exit
+  fi
+
+  info "LunarVim setup is not yet complete."
+  info "Skipping."
+  echo
+
+  return
+
+}
+
+_init_app() {
+
+  local app="$1"
+
+  if ! _exists "$app"; then
+    return
+  fi
+  
+  eval "_set_up_$1" || 
+    warn "No setup function found for $i"
+    info "Skipping setup of $i"
+    echo
+
+    return
+}
+
+set_up_software() {
+
+  info "Attempting to initialize new apps."
+
+  for i in "${software_to_setup[*]}"; do
+    _init_app "$i"
+  done
+
+  finish
+}
+
 main() {
 	on_start "$*"
+  check_software_for_setup "$*"
 	install_yay "$*"
 	install_software "$*"
 	on_finish "$*"
