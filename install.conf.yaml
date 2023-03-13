@@ -21,7 +21,6 @@
 
 - link:
     ~/.zshrc: home/.zshrc
-    ~/.zprofile: home/.zprofile
     ~/.zfunc/_cargo: home/.zfunc/_cargo
     ~/.config/lvim/config.lua: home/config/lvim/config.lua
     ~/.config/sheldon/plugins.toml: home/config/sheldon/plugins.toml
