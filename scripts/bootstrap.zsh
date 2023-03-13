@@ -174,9 +174,9 @@ check_software_for_setup() {
   
   software_to_setup=()
 
-  for i in "$software_to_check"; do
+  for i in "${software_to_check[@]}"; do
     if ! _exists "$i"; then
-      software_to_setup+="$i"
+      software_to_setup+=("$i")
 
       info "${i} was not found. Adding to setup list."
     fi
@@ -257,7 +257,7 @@ set_up_software() {
 
   info "Attempting to initialize new apps."
 
-  for i in "${software_to_setup[*]}"; do
+  for i in "${software_to_setup[@]}"; do
     _init_app "$i"
   done
 
