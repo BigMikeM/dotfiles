@@ -173,7 +173,7 @@ update_all_node() {
 		nvm install "$default_node_version"
 	fi
 
-	nvm_lts_versions | while read lts_version; do
+	nvm_lts_versions | while read -r lts_version; do
     info "Updating all installed LTS versions of NodeJS."
     echo
 
@@ -220,10 +220,10 @@ on_start() {
   info "You may be prompted for input multiple times throughout the process."
 	echo
 
-	read -p "Do you want to proceed with installation? [y/N] " -n 1 answer
+	read -rp "Would you like to proceed with installation? [y/N] " -n 1 answer
 	echo
 
-	if [[ "${answer:0:1}" != "y" ]]; then
+	if [[ "${answer,,}" != "y" ]]; then
 		exit 1
 	fi
 }
