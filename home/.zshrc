@@ -83,16 +83,6 @@ zstyle ':omz:plugins:nvm' autoload yes
 # Shell plugins
 eval "$(sheldon source)"
 
-# Per-directory configs
-if command -v direnv >/dev/null 2>&1; then
-	eval "$(direnv hook zsh)"
-fi
-
-# Start homebrew
-if [[ -e "/home/linuxbrew/.linuxbrew/bin" ]]; then
-  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-fi 
-
 # ------------------------------------------------------------------------------
 # Overrides
 # ------------------------------------------------------------------------------
