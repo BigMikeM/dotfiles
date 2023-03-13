@@ -2,7 +2,6 @@ local wezterm = require("wezterm")
 return {
   -- font = wezterm.font("MonoLisa Nerd Font"),
   font = wezterm.font("RecMonoDuotone Nerd Font"),
-  -- color_scheme = "kanagawabones",
   harfbuzz_features = {
     "liga=1",
     "calt=1",
