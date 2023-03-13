@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # Holding space for functions to be used in other scripts
 
 install_git() {
@@ -5,10 +6,10 @@ install_git() {
 
 	if ! _exists git; then
 		echo "Seems like you don't have Git installed!"
-		read -p "Would you like to proceed with Git installation? [y/N] " -n 1 answer
+		read -rp "Would you like to proceed with Git installation? [y/N] " -n 1 answer
 		echo
-		if [[ "${answer,,}" != "y" || "${answer,,}" != "yes" ]]; then
-      exit 1
+	  if [[ "${answer,,}" != "y" ]]; then
+			exit 1
 		fi
 
 		info "Installing Git..."
@@ -33,9 +34,9 @@ install_zsh() {
 
 	if ! _exists zsh; then
 		echo "Seems like you don't have Zsh installed!"
-		read -p "Do you agree to proceed with Zsh installation? [y/N] " -n 1 answer
+		read -rp "Do you agree to proceed with Zsh installation? [y/N] " -n 1 answer
 		echo
-	  if [[ "${answer,,}" != "n" || "${answer,,}" != "no" ]]; then
+	  if [[ "${answer,,}" != "y" ]]; then
 			exit 1
 		fi
 
