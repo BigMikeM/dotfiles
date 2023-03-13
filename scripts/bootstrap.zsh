@@ -68,10 +68,10 @@ on_start() {
   info "This script will attempt to install and set up desired software."
 	echo
 
-	read -p "Do you want to proceed with installation? [y/N] " -n 1 answer
+	read -rp "Do you want to proceed with installation? [y/N] " -n 1 answer
 	echo
 
-	if [[ "${answer:0:1}" != "y" ]]; then
+	if [[ "${answer,,}" != "y" ]]; then
 		exit 1
 	fi
 }
@@ -189,12 +189,12 @@ _set_up_nvm() {
 
   info "Setting up Node Version Manager"
   info "This will install the latest version of NodeJS."
-  read -p "Would you also like to install the latest LTS release? [y/N]" -n 1 answer
+  read -rp "Would you also like to install the latest LTS release? [y/N]" -n 1 answer
 	echo
 
   nvm install node
 
-	if [[ "${answer,,}" != "y" || "${answer,,}" != "yes" ]]; then
+	if [[ "${answer,,}" != "y" ]]; then
 		info "You chose to install the latest NodeJS lts."
     nvm install --lts
 	fi
