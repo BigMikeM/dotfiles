@@ -11,10 +11,11 @@
 1. Re-implement Doom Nvim configs (for the hell of it)
 
 1. Set up apps with bootstrap:
-  - nvm (install node)
-  - rust (via rustup)
-  - yay (--gendb, set update devel as default, enable colors if disabled)
-  - sheldon (install plugins)
+
+    - nvm (install node)
+    - rust (via rustup)
+    - yay (--gendb, set update devel as default, enable colors if disabled)
+    - sheldon (install plugins)
 
 ## Possible implementation
 
