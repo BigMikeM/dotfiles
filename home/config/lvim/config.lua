@@ -63,15 +63,13 @@ formatters.setup {
     command = "shellharden",
     filetypes = { "shell", "bash", "zsh", "sh" },
   },
+  { command = "markdownlint" },
 }
 
 -- set additional linters
 local linters = require "lvim.lsp.null-ls.linters"
 linters.setup {
-  -- {
-  --   command = "codespell",
-  --   filetypes = { "javascript", "python" },
-  -- },
+  -- { command = "marksman" },
 }
 
 -- Additional Plugins
