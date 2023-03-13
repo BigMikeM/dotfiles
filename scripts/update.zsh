@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Get System Updates, update NPM packages and dotfiles
+# Get System Updates, Update NodeJS/NPM, Update rust/Rustup, etc...
 # Source: https://github.com/sapegin/dotfiles/blob/master/setup/update.sh
 
 trap on_error SIGTERM
@@ -29,7 +29,7 @@ success() {
 
 # Error reporter
 error() {
-	echo -e "${RED}${*}${RESET}"
+	echo -e "${RED}${BOLD}${*}${RESET}"
 }
 
 # Warning or otherwise important message
@@ -109,7 +109,7 @@ _update_yay() {
   finish
 }
 
-_update_npm() {
+update_npm() {
 	if ! _exists npm; then
 		return
 	fi
