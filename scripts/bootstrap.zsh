@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # Dotfiles and bootstrap installer
 # Installs git, clones repository and symlinks dotfiles to your home directory
@@ -47,7 +47,6 @@ finish() {
 
 # Set directory
 export DOTFILES=${1:-"$HOME/.dotfiles"}
-GITHUB_REPO_URL_BASE="https://github.com/bigmikem/dotfiles"
 
 on_start() {
 	info "     |-|                                             |-|     "
@@ -90,7 +89,7 @@ install_yay() {
 
 	info 'Trying to install "Yay: Yet Another Yogurt"'
 
-  YAY_BUILD_DIR="~/.build_yay/"
+  YAY_BUILD_DIR="$HOME/.build_yay/"
 
   info "Using build directory: $YAY_BUILD_DIR"
   echo
@@ -172,7 +171,7 @@ check_software_for_setup() {
     nvm
   )
   
-  software_to_setup=()
+  software_to_setup=( "yay" )
 
   for i in "${software_to_check[@]}"; do
     if ! _exists "$i"; then
@@ -233,8 +232,29 @@ _set_up_lvim() {
   info "Skipping."
   echo
 
-  return
+  finish
 
+}
+
+_set_up_yay() {
+  info "Setting up Yay: Yet another Yaourt"
+  echo
+
+  yay -Y --gendb
+  yay -Y --devel --combinedupgrade --batchinstall --save
+
+  _set_up_pacman
+
+  finish
+}
+
+_set_up_pacman () {
+
+  info "Editing your pacman.conf will require elevated access"
+  sudo -v
+
+  sudo sed -Ei "s/(^\#\s*)(Color.*)/\2/g" "/etc/pacman.conf"
+  sudo sed -Ei "s/(^\#\s*)(VerbosePackageLists.*)/\2/g" "/etc/pacman.conf"
 }
 
 _init_app() {
@@ -246,8 +266,8 @@ _init_app() {
   fi
   
   eval "_set_up_$1" || 
-    warn "No setup function found for $i"
-    info "Skipping setup of $i"
+    warn "No setup function found for [$i]"
+    info "Skipping setup of [$i]"
     echo
 
     return
