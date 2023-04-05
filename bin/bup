@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# Simple script to use brightnessctl up by given percentage
+
+amount=$1
+
+brightnessctl set "+${amount}%" 1> /dev/null
