@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # Get System Updates, Update NodeJS/NPM, Update rust/Rustup, etc...
 # Source: https://github.com/sapegin/dotfiles/blob/master/setup/update.sh
@@ -90,22 +90,19 @@ _update_yay() {
 		return
 	fi
 
-  info "Yay detected."
-  info "Regenerating yay database."
   echo
-
-  yay -Y --gendb
-
   info "Updating all packages (including development)"
   echo
 
 	yay -Syu --devel
 
+  echo
   info "Cleaning up unnecessary packages."
   echo
 
 	yay -Yc
 
+  echo
   finish
 }
 
