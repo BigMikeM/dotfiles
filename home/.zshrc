@@ -1,8 +1,16 @@
+#!/usr/bin/env zsh
+
 # Export path to root of dotfiles repo
-export DOTFILES=${DOTFILES:="$HOME/.dotfiles"}
+# export DOTFILES=${DOTFILES:="$HOME/.dotfiles"}
+export DOTFILES="$HOME/.dotfiles"
+
+# Ensure XDG_CONFIG_HOME is set, as it seems not to be sometimes
+if [[ -z $XDG_CONFIG_HOME ]]; then
+  export XDG_CONFIG_HOME="/home/mike/.config/"
+fi
 
 # Spaceship custom config file
-export SPACESHIP_CONFIG="$DOTFILES/home/spaceshiprc.zsh"
+# export SPACESHIP_CONFIG="$DOTFILES/home/spaceshiprc.zsh"
 
 export MANPATH="/usr/local/man:$MANPATH"
 
@@ -12,9 +20,8 @@ COMPLETION_WAITING_DOTS="true"
 _extend_path() {
 	[[ -d "$1" ]] || return
 
-  current_path="$(echo "$PATH" | tr ":" "\n" | grep -qx "$1")"
-
-	if [[ ! -z $current_path  ]]; then
+  
+	if ! $(echo "$PATH" | tr ":" "\n" | grep -qx "$1"); then
 		export PATH="$1:$PATH"
 	fi
 }
@@ -29,6 +36,14 @@ _extend_path "$HOME/.config/yarn/global/node_modules/.bin"
 _extend_path "$HOME/.bun/bin"
 _extend_path "$HOME/bin"
 _extend_path "$HOME/.cargo/bin"
+
+# generate environment with system-d and export vars
+# export $(run-parts /usr/lib/systemd/user-environment-generators/ | xargs)
+
+# Conditionally switch firefox to wayland mode when in wayland
+if [[ "$XDG_SESSION_TYPE" == "wayland" ]]; then
+  export MOZ_ENABLE_WAYLAND=1
+fi
 
 # Extend $NODE_PATH
 if [ -d ~/.npm-global ]; then
@@ -90,7 +105,8 @@ eval "$(sheldon source)"
 # ------------------------------------------------------------------------------
 
 # Sourcing all zsh files from $DOTFILES/lib
-lib_files=( $(find "${DOTFILES}/lib" -type f -name "*.zsh") )
+lib_files=( $(find "$DOTFILES/lib" -type f -name "*.zsh") )
+
 if [[ "${#lib_files[@]}" -gt 0 ]]; then
 	for file in "${lib_files[@]}"; do
 		source "$file"
