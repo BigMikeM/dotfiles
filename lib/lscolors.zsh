@@ -1,3 +1,4 @@
+
 # LSCOLORS
 # Online editor: https://geoff.greer.fm/lscolors/
 export LSCOLORS="Gxfxcxdxbxegedabagacab"
