@@ -1,8 +1,8 @@
 #!/usr/bin/env zsh
 
 # Export path to root of dotfiles repo
-# export DOTFILES=${DOTFILES:="$HOME/.dotfiles"}
 export DOTFILES="$HOME/.dotfiles"
+export DOTFILES=${DOTFILES:="$HOME/.dotfiles"}
 
 # Ensure XDG_CONFIG_HOME is set, as it seems not to be sometimes
 if [[ -z $XDG_CONFIG_HOME ]]; then
