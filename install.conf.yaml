@@ -1,39 +1,32 @@
 - defaults:
     link:
       relink: true
+      force: true
+      create: true
+      glob: true
+    shell:
+      stdout: true
+      stderr: true
 
 - clean: ['~']
 
 - create:
-    - ~/.config/kitty/
-    - ~/.config/sheldon/
-    - ~/.config/lvim/
-    - ~/.zfunc/
-    - ~/Notes/
+    - ~/.config
+    - ~/Notes
     - ~/Downloads
     - ~/Desktop
-    - ~/Projects
-    - ~/Projects/Forks
     - ~/Projects/Work 
     - ~/Projects/Playground
     - ~/Projects/Repos
     - ~/Projects/Learning
 
 - link:
-    ~/.zshrc: home/.zshrc
-    ~/.zfunc/_cargo: home/.zfunc/_cargo
-    ~/.config/lvim/config.lua: home/config/lvim/config.lua
-    ~/.config/sheldon/plugins.toml: home/config/sheldon/plugins.toml
-    ~/.config/kitty/kitty.conf: home/config/kitty/kitty.conf
-    ~/.wezterm.lua: home/.wezterm.lua
-    ~/.config/ranger/commands.py: home/config/ranger/commands.py
-    ~/.config/ranger/commands_full.py: home/config/ranger/commands_full.py
-    ~/.config/ranger/rc.conf: home/config/ranger/rc.conf
-    ~/.config/ranger/rifle.conf: home/config/ranger/rifle.conf
-    ~/.config/ranger/scope.sh: home/config/ranger/scope.sh
-    ~/.gitconfig: home/.gitconfig
-    ~/.gitlocal: home/.gitlocal
+    ~/.config/: home/config/*
+    ~/: home/.*
 
 - shell:
-  - [git submodule update --init --recursive, Installing submodules]
-  # - [sh ./scripts/bootstrap.zsh, Running bootstrap script]
+    - description: Installing submodules
+      command: git submodule update --init --recursive
+
+    - description: Run ./scripts/bootstrap to bootstrap new machine
+      command: echo "./scripts/bootstrap"
