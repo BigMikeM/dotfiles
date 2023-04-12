@@ -1,3 +1,4 @@
+
 # Enable aliases to be sudo’ed
 #   http://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
 alias sudo='sudo '
@@ -38,17 +39,14 @@ alias o='open'
 alias oo='open .'
 
 # Run scripts
-alias update="bash $DOTFILES/scripts/update.zsh"
-alias bootstrap="bash $DOTFILES/scripts/bootstrap.zsh"
+alias update="source $DOTFILES/scripts/update"
+alias bootstrap="source $DOTFILES/scripts/bootstrap"
 
 # Quick jump to dotfiles
 alias dotfiles="e $DOTFILES"
 
 # Quick reload of zsh environment
-alias reload="source $HOME/.zshrc"
-
-# My IP
-alias myip='ifconfig | sed -En "s/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p"'
+alias reload='source $HOME/.zshrc'
 
 # Show $PATH in readable view
 alias path='echo -e ${PATH//:/\\n}'
