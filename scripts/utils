@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # Holding space for functions to be used in other scripts
 
 install_git() {

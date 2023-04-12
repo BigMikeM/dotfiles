@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Dotfiles and bootstrap installer
 # Installs git, clones repository and symlinks dotfiles to your home directory
 
-set -e
+# set -e
 trap on_error SIGTERM
 
 e='\033'
@@ -46,7 +46,7 @@ finish() {
 }
 
 # Set directory
-export DOTFILES=${1:-"$HOME/.dotfiles"}
+export DOTFILES="$HOME/.dotfiles"
 
 on_start() {
 	info "     |-|                                             |-|     "
@@ -67,10 +67,9 @@ on_start() {
   info "This script will attempt to install and set up desired software."
 	echo
 
-	read -rp "Do you want to proceed with installation? [y/N] " -n 1 answer
-	echo
+  read -rp "Would you like to proceed with installation? [y/N] " -n 1 answer
 
-	if [[ "${answer,,}" != "y" ]]; then
+	if [ "${answer,,}" != "y" ]; then
 		exit 1
 	fi
 }
@@ -98,7 +97,11 @@ install_yay() {
 	git clone "https://aur.archlinux.org/yay.git" "$YAY_BUILD_DIR"
 	cd "$YAY_BUILD_DIR"
 	makepkg -si
-  cd -
+  cd -defer = '''
+  {% for file in files %}
+    zsh-defer source "{{ file }}"
+  {% endfor %}
+'''
 	rm -rf "$YAY_BUILD_DIR"
 
   finish
@@ -110,6 +113,7 @@ install_software() {
 
   software=(
     # Base software needed for others
+    zsh
     git
     openssh
     sheldon
@@ -179,6 +183,10 @@ check_software_for_setup() {
 
       info "${i} was not found. Adding to setup list."
     fi
+
+    if _exists "$i"; then
+      info "Found ${i}..."
+    fi
   done
 
   finish
@@ -189,11 +197,12 @@ _set_up_nvm() {
   info "Setting up Node Version Manager"
   info "This will install the latest version of NodeJS."
   read -rp "Would you also like to install the latest LTS release? [y/N]" -n 1 answer
+  # vared -p "Would you like the latest LTS release? [y/N]" -c anwser
 	echo
 
   nvm install node
 
-	if [[ "${answer,,}" != "y" ]]; then
+	if [ "${answer,,}" == "y" ]; then
 		info "You chose to install the latest NodeJS lts."
     nvm install --lts
 	fi
@@ -285,7 +294,7 @@ set_up_software() {
 }
 
 main() {
-	on_start "$*"
+	on_start
   check_software_for_setup "$*"
 	install_yay "$*"
 	install_software "$*"
