@@ -1,4 +1,3 @@
-#!/usr/bin/env zsh
 
 # Export path to root of dotfiles repo
 export DOTFILES="$HOME/.dotfiles"
@@ -8,6 +7,9 @@ export DOTFILES=${DOTFILES:="$HOME/.dotfiles"}
 if [[ -z $XDG_CONFIG_HOME ]]; then
   export XDG_CONFIG_HOME="/home/mike/.config/"
 fi
+
+# Avoid file overwrites when using >
+set -o noclobber
 
 # Spaceship custom config file
 # export SPACESHIP_CONFIG="$DOTFILES/home/spaceshiprc.zsh"
