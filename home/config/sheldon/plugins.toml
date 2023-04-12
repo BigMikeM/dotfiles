@@ -31,8 +31,17 @@ apply = ["defer"]
 github = "marzocchi/zsh-notify"
 apply = ["defer"]
 
+[plugins.z]
+github = "agkozak/zsh-z"
+apply = ["defer"]
+
 [plugins.lib]
 local = "~/.dotfiles/lib"
 
 [templates]
-defer = "{% for file in files %} zsh-defer source \"{{ file }}\"\n{% endfor %}"
+# defer = "{% for file in files %} zsh-defer source \"{{ file }}\"\n{% endfor %}"
+defer = '''
+  {% for file in files %}
+    zsh-defer source "{{ file }}"
+  {% endfor %}
+'''
