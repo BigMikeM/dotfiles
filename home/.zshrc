@@ -114,27 +114,23 @@ plugins=(
 zstyle ':omz:plugins:nvm' autoload yes
 
 # ------------------------------------------------------------------------------
-# Dependencies
+# Other stuff
 # ------------------------------------------------------------------------------
 
 # Shell plugins
 eval "$(sheldon source)"
 
-# ------------------------------------------------------------------------------
-# Overrides
-# ------------------------------------------------------------------------------
+# # Sourcing all zsh files from $DOTFILES/lib
+# lib_files=($(find "$DOTFILES/lib" -type f -name "*.zsh"))
 
-# Sourcing all zsh files from $DOTFILES/lib
-lib_files=( $(find "$DOTFILES/lib" -type f -name "*.zsh") )
-
-if [[ "${#lib_files[@]}" -gt 0 ]]; then
-	for file in "${lib_files[@]}"; do
-		source "$file"
-	done
-fi
+# if [[ "${#lib_files[@]}" -gt 0 ]]; then
+# 	for file in "${lib_files[@]}"; do
+# 		source "$file"
+# 	done
+# fi
 
 # Source local configuration
 if [[ -f "$HOME/.zshlocal" ]]; then
 	source "$HOME/.zshlocal"
 fi
-# ------------------------------------------------------------------------------
+
