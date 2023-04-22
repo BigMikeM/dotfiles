@@ -97,12 +97,9 @@ install_yay() {
 	git clone "https://aur.archlinux.org/yay.git" "$YAY_BUILD_DIR"
 	cd "$YAY_BUILD_DIR"
 	makepkg -si
-  cd -defer = '''
-  {% for file in files %}
-    zsh-defer source "{{ file }}"
-  {% endfor %}
-'''
-	rm -rf "$YAY_BUILD_DIR"
+  cd -
+
+  rm -rf "$YAY_BUILD_DIR"
 
   finish
 }
