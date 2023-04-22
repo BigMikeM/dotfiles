@@ -4,6 +4,17 @@
 #
 # Read `man 5 sway` for a complete reference.
 
+# theme
+include ~/.config/sway/themes/kanagawa.sway
+
+# class                  border     bground    text        indicator  child_border
+client.focused           $sumiInk2  $sumiInk1  $fujiWhite  $sumiInk3  $sumiInk2
+client.focused_inactive  $sumiInk2  $sumiInk1  $fujiWhite  $sumiInk3  $sumiInk2
+client.unfocused         $sumiInk1  $sumiInk0  $oldWhite   $sumiInk2  $sumiInk1
+client.urgent            $autumnRed #f7617f    #e5f4f8     #f7617f    #f7617f
+client.placeholder       #000000    #0c0c0c    #e5f4f8     #000000    #0c0c0c
+
+client.background        $sumiInk1
 ### Variables
 #
 # Logo key. Use Mod1 for Alt.
@@ -33,11 +44,11 @@ output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 #
 # You can get the names of your outputs by running: swaymsg -t get_outputs
 # output 'BOE 0x0A4D Unknown' scale 1.75
+exec_always ~/.config/sway/clamshell.sh
 set $laptop eDP-1
 output $laptop scale 1.5
 bindswitch --reload --locked lid:on output $laptop disable
 bindswitch --reload --locked lid:off output $laptop enable
-exec_always ~/.dotfiles/home/config/sway/clamshell.sh
 
 ### Idle configuration
 #
@@ -246,4 +257,3 @@ gaps outer 3
 
 # exec waybar
 include /etc/sway/config.d/*
-
