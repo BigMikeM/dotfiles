@@ -30,17 +30,6 @@ lvim.builtin.which_key.mappings["t"] = {
   w = { "<cmd>Trouble workspace_diagnostics<cr>", "Workspace Diagnostics" },
 }
 
-lvim.builtin.which_key.mappings["m"] = {
-  name = "+MiniMap",
-  o = { "<cmd>lua require('mini.map').open()<cr>", "Open" },
-  c = { "<cmd>lua require('mini.map').close()<cr>", "Close" },
-  f = { "<cmd>lua require('mini.map').toggle_focus()<cr>", "Toggle (Focus)" },
-  r = { "<cmd>lua require('mini.map').refresh()<cr>", "Refresh" },
-  t = { "<cmd>lua require('mini.map').toggle()<cr>", "Toggle (Opened/Closed)" },
-  s = { "<cmd>lua require('mini.map').toggle_side()<cr>", "Switch Sides" },
-}
-
-
 -- Change Telescope navigation to use j and k for navigation and n and p for history in both input and normal mode.
 -- we use protected-mode (pcall) just in case the plugin wasn't loaded yet.
 local _, actions = pcall(require, "telescope.actions")
@@ -96,33 +85,6 @@ lvim.plugins = {
     end,
   },
   {
-    "echasnovski/mini.map",
-    config = function()
-      require('mini.map').setup()
-      local map = require('mini.map')
-      map.setup({
-        integrations = {
-          map.gen_integration.builtin_search(),
-          map.gen_integration.diagnostic({
-            error = 'DiagnosticFloatingError',
-            warn  = 'DiagnosticFloatingWarn',
-            info  = 'DiagnosticFloatingInfo',
-            hint  = 'DiagnosticFloatingHint',
-          }),
-        },
-        symbols = {
-          encode = map.gen_encode_symbols.dot('4x2'),
-        },
-        window = {
-          side = 'right',
-          width = 20, -- set to 1 for a pure scrollbar :)
-          winblend = 15,
-          show_integration_count = false,
-        },
-      })
-    end
-  },
-  {
     "nacro90/numb.nvim",
     event = "BufRead",
     config = function()
@@ -172,13 +134,6 @@ lvim.plugins = {
       vim.g.rnvimr_draw_border = 1
       vim.g.rnvimr_pick_enable = 1
       vim.g.rnvimr_bw_enable = 1
-    end,
-  },
-  {
-    "andymass/vim-matchup",
-    event = "CursorMoved",
-    config = function()
-      vim.g.matchup_matchparen_offscreen = { method = "popup" }
     end,
   },
   {
@@ -244,7 +199,7 @@ lvim.plugins = {
   },
   {
     "iamcco/markdown-preview.nvim",
-    run = "cd app && npm install",
+    build = "cd app && npm install",
     ft = "markdown",
     config = function()
       vim.g.mkdp_auto_start = 1
@@ -275,34 +230,34 @@ lvim.plugins = {
     "felipec/vim-sanegx",
     event = "BufRead",
   },
-  -- {
-  --   "folke/noice.nvim",
-  --   config = function()
-  --     require("noice").setup({
-  --       lsp = {
-  --         override = {
-  --           ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-  --           ["vim.lsp.util.stylize_markdown"] = true,
-  --           ["cmp.entry.get_documentation"] = true,
-  --         },
-  --         signature = {
-  --           enabled = false
-  --         }
-  --       },
-  --       presets = {
-  --         bottom_search = false,        -- use a classic bottom cmdline for search
-  --         command_palette = true,       -- position the cmdline and popupmenu together
-  --         long_message_to_split = true, -- long messages will be sent to a split
-  --         inc_rename = true,            -- enables an input dialog for inc-rename.nvim
-  --         lsp_doc_border = false,       -- add a border to hover docs and signature help
-  --       },
-  --     })
-  --   end,
-  --   requires = {
-  --     "MunifTanjim/nui.nvim",
-  --     "rcarriga/nvim-notify",
-  --   }
-  -- },
+  {
+    "folke/noice.nvim",
+    config = function()
+      require("noice").setup({
+        lsp = {
+          override = {
+            ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+            ["vim.lsp.util.stylize_markdown"] = true,
+            ["cmp.entry.get_documentation"] = true,
+          },
+          signature = {
+            enabled = false
+          }
+        },
+        presets = {
+          bottom_search = false,        -- use a classic bottom cmdline for search
+          command_palette = true,       -- position the cmdline and popupmenu together
+          long_message_to_split = true, -- long messages will be sent to a split
+          inc_rename = true,            -- enables an input dialog for inc-rename.nvim
+          lsp_doc_border = false,       -- add a border to hover docs and signature help
+        },
+      })
+    end,
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "rcarriga/nvim-notify",
+    }
+  },
   {
     "smjonas/inc-rename.nvim",
     config = function()
@@ -311,7 +266,7 @@ lvim.plugins = {
   },
   {
     "s1n7ax/nvim-window-picker",
-    tag = "1.*",
+    version = "1.*",
     config = function()
       require("window-picker").setup({
         autoselect_one = true,
@@ -331,8 +286,8 @@ lvim.plugins = {
   },
   {
     "tzachar/cmp-tabnine",
-    run = "./install.sh",
-    requires = "hrsh7th/nvim-cmp",
+    build = "./install.sh",
+    dependencies = "hrsh7th/nvim-cmp",
     event = "InsertEnter",
   },
   {
@@ -389,28 +344,28 @@ end
 vim.keymap.set('n', ',W', swap_windows, { desc = 'Swap windows' })
 
 -- Autocommands (https://neovim.io/doc/user/autocmd.html)
-lvim.autocommands = {
-  {
-    { "TextChangedI" },
-    {
-      desc = "Make Mini.Map update constantly (Text Changed)",
-      pattern = { "*" },
-      callback = function()
-        require("mini.map").on_content_change()
-      end
-    }
-  },
-  {
-    { "CursorMovedI" },
-    {
-      desc = "Make Mini.Map update constantly (View Change)",
-      pattern = { "*" },
-      callback = function()
-        require("mini.map").on_view_change()
-      end
-    }
-  },
-}
+-- lvim.autocommands = {
+--   {
+--     { "TextChangedI" },
+--     {
+--       desc = "Make Mini.Map update constantly (Text Changed)",
+--       pattern = { "*" },
+--       callback = function()
+--         require("mini.map").on_content_change()
+--       end
+--     }
+--   },
+--   {
+--     { "CursorMovedI" },
+--     {
+--       desc = "Make Mini.Map update constantly (View Change)",
+--       pattern = { "*" },
+--       callback = function()
+--         require("mini.map").on_view_change()
+--       end
+--     }
+--   },
+-- }
 
 vim.api.nvim_create_autocmd("BufEnter", {
   pattern = { "*.json", "*.jsonc", "*.md" },
@@ -440,7 +395,7 @@ require("kanagawa").setup({
     local theme = colors.theme
     local palette = colors.palette
     return {
-      -- "Modern", borderless Telescope UI:
+      -- Borderless Telescope UI:
       TelescopeTitle = { fg = theme.ui.special, bold = true },
       TelescopePromptNormal = { bg = theme.ui.bg_p1 },
       TelescopePromptBorder = { fg = theme.ui.bg_p1, bg = theme.ui.bg_p1 },
