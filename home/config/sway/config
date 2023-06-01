@@ -36,7 +36,12 @@ set $menu wofi --show drun | xargs swaymsg exec --
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
+# output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
+exec "cd $HOME/.config/sway/ && ./random_background.sh"
+
+# Clipboard management
+exec wl-paste -t text --watch clipman store --no-persist
+
 #
 # Example configuration:
 #
@@ -45,19 +50,22 @@ output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 # You can get the names of your outputs by running: swaymsg -t get_outputs
 # output 'BOE 0x0A4D Unknown' scale 1.75
 exec_always ~/.config/sway/clamshell.sh
-set $laptop eDP-1
-output $laptop scale 1.5
-bindswitch --reload --locked lid:on output $laptop disable
-bindswitch --reload --locked lid:off output $laptop enable
+set $builtin_display eDP-1
+set $asus_desktop 'ASUSTek COMPUTER INC PA278CV LCLMQS261423'
+output $builtin_display scale 1.75 adaptive_sync on subpixel rgb max_render_time off render_bit_depth 10
+output $asus_desktop mode 2560x1440@74.924Hz adaptive_sync on subpixel rgb max_render_time off render_bit_depth 10
+bindswitch --reload --locked lid:on output $builtin_display disable
+bindswitch --reload --locked lid:off output $builtin_display enable
 
 ### Idle configuration
 #
 # Example configuration:
 #
-# exec swayidle -w \
-#          timeout 300 'swaylock -f -c 000000' \
-#          timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
-#          before-sleep 'swaylock -f -c 000000'
+exec swayidle -w \
+         timeout 600 'swaylock -f -c 000000' \
+         timeout 900 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
+         before-sleep 'playerctl pause' \
+         before-sleep 'swaylock -f -c 000000'
 #
 # This will lock your screen after 300 seconds of inactivity, then turn off
 # your displays after another 300 seconds, and turn your screens back on when
@@ -240,6 +248,7 @@ mode "resize" {
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
+
 bindsym $mod+r mode "resize"
 
 bar {
@@ -247,13 +256,25 @@ bar {
   workspace_buttons yes
 }
 
-# Options for SwayFX
-shadows on
-smart_corner_radius on
-shadow_blur_radius 10
-corner_radius 8
 gaps inner 3
 gaps outer 3
 
+# Options for SwayFX
+shadows enable
+smart_corner_radius on
+corner_radius 8
+
+blur enable
+blur_xray disable
+
+layer_effects "waybar" blur enable; shadows enable
+layer_effects "wofi" blur enable; shadows enable; corner radius 6
+
+scratchpad_minimize enable
+
 # exec waybar
 include /etc/sway/config.d/*
+
+# For a fibonacci layout
+# Requires i3ipc (python-i3ipc)
+exec ~/.config/sway/fibonacci_layout.py
