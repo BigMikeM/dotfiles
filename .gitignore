@@ -8,3 +8,5 @@ node_modules
 *.lock.json
 *.zwc
 home/config/kitty/kitty.conf.bak
+lazy-lock.json
+user-dirs.locale
