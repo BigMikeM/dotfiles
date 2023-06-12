@@ -11,8 +11,6 @@ lvim.builtin.alpha.active = true
 lvim.builtin.alpha.mode = "dashboard"
 lvim.builtin.terminal.active = true
 lvim.builtin.nvimtree.setup.view.side = "left"
-lvim.format_on_save.enabled = true
-lvim.format_on_save.pattern = { "*.py", "*.lua" }
 
 -- LSP Settings
 require("lang.formatters")
@@ -296,6 +294,7 @@ vim.api.nvim_create_autocmd("FileType", {
 -- Beginning to modularize this enormous config
 require("keymaps.lvim")
 require("keymaps.windowpicker")
+require("keymaps.rust")
 require("lang.python")
 require("lang.rust")
 require("theme.kanagawa")

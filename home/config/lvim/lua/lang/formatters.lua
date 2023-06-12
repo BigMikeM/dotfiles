@@ -6,6 +6,9 @@ formatters.setup({
 		filetypes = { "shell", "bash", "zsh", "sh" },
 	},
 	{ command = "markdownlint" },
-	{ command = "stylua" },
+	{ command = "stylua", filetypes = { "lua" } },
 	{ command = "black" },
 })
+
+lvim.format_on_save.enabled = true
+lvim.format_on_save.pattern = { "*.py", "*.lua" }
