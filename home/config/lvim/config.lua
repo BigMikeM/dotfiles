@@ -5,86 +5,19 @@ lvim.colorscheme = "kanagawa-wave" -- Dark -> Light: dragon -> wave -> lotus
 vim.opt.guifont = "MonoLisa Nerd Font:h12"
 vim.opt.colorcolumn = "80,100"
 
--- keymappings [view all the defaults by pressing <leader>Lk]
-lvim.leader = "space"
-lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
-lvim.keys.normal_mode["<S-l>"] = ":BufferLineCycleNext<CR>"
-lvim.keys.normal_mode["<S-h>"] = ":BufferLineCyclePrev<CR>"
-lvim.keys.normal_mode["<leader>rn"] = ":IncRename "
 lvim.builtin.treesitter.highlight.enable = true
 lvim.builtin.treesitter.rainbow.enable = true
 lvim.builtin.alpha.active = true
 lvim.builtin.alpha.mode = "dashboard"
 lvim.builtin.terminal.active = true
 lvim.builtin.nvimtree.setup.view.side = "left"
-
--- Use which-key to add extra bindings with the leader-key prefix
-lvim.builtin.which_key.mappings["P"] = { "<cmd>Telescope projects<CR>", "Projects" }
-lvim.builtin.which_key.mappings["t"] = {
-	name = "+Trouble",
-	r = { "<cmd>Trouble lsp_references<cr>", "References" },
-	f = { "<cmd>Trouble lsp_definitions<cr>", "Definitions" },
-	d = { "<cmd>Trouble document_diagnostics<cr>", "Diagnostics" },
-	q = { "<cmd>Trouble quickfix<cr>", "QuickFix" },
-	l = { "<cmd>Trouble loclist<cr>", "LocationList" },
-	w = { "<cmd>Trouble workspace_diagnostics<cr>", "Workspace Diagnostics" },
-}
-
--- Change Telescope navigation to use j and k for navigation and n and p for history in both input and normal mode.
--- we use protected-mode (pcall) just in case the plugin wasn't loaded yet.
-local _, actions = pcall(require, "telescope.actions")
-lvim.builtin.telescope.defaults.mappings = {
-	i = {
-		["<C-j>"] = actions.move_selection_next,
-		["<C-k>"] = actions.move_selection_previous,
-		["<C-n>"] = actions.cycle_history_next,
-		["<C-p>"] = actions.cycle_history_prev,
-	},
-}
--- generic LSP settings
-
-lvim.builtin.treesitter.ensure_installed = {
-	"bash",
-	"yaml",
-	"vim",
-	"sql",
-}
--- set a formatter, this will override the language server formatting capabilities (if it exists)
-local formatters = require("lvim.lsp.null-ls.formatters")
-formatters.setup({
-	{
-		command = "shellharden",
-		filetypes = { "shell", "bash", "zsh", "sh" },
-	},
-	{ command = "markdownlint" },
-	{ command = "stylua" },
-	{ command = "black" },
-})
-
 lvim.format_on_save.enabled = true
 lvim.format_on_save.pattern = { "*.py", "*.lua" }
 
--- set additional linters
-local linters = require("lvim.lsp.null-ls.linters")
-linters.setup({
-	{
-		command = "shellcheck",
-		filetypes = { "shell", "bash", "zsh", "sh" },
-	},
-	{ command = "pyright", filetypes = { "python" } },
-})
-
--- automatically install python syntax highlighting
-lvim.builtin.treesitter.ensure_installed = {
-	"python",
-	"rust",
-	"vim",
-	"javascript",
-	"json",
-	"toml",
-	"yaml",
-	"lua",
-}
+-- LSP Settings
+require("lang.formatters")
+require("lang.linters")
+require("lang.installed")
 
 -- Additional Plugins
 lvim.plugins = {
@@ -347,30 +280,6 @@ lvim.plugins = {
 	{ "lambdalisue/suda.vim" },
 }
 
--- An awesome method to jump to windows
-local picker = require("window-picker")
-
-vim.keymap.set("n", ",w", function()
-	local picked_window_id = picker.pick_window({
-		include_current_win = true,
-	}) or vim.api.nvim_get_current_win()
-	vim.api.nvim_set_current_win(picked_window_id)
-end, { desc = "Pick a window" })
-
--- Swap two windows using the awesome window picker
-local function swap_windows()
-	local window = picker.pick_window({
-		include_current_win = false,
-	})
-	local target_buffer = vim.fn.winbufnr(window)
-	-- Set the target window to contain current buffer
-	vim.api.nvim_win_set_buf(window, 0)
-	-- Set current window to contain target buffer
-	vim.api.nvim_win_set_buf(0, target_buffer)
-end
-
-vim.keymap.set("n", ",W", swap_windows, { desc = "Swap windows" })
-
 vim.api.nvim_create_autocmd("BufEnter", {
 	pattern = { "*.json", "*.jsonc", "*.md" },
 	command = "setlocal wrap",
@@ -385,6 +294,8 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 -- Beginning to modularize this enormous config
+require("keymaps.lvim")
+require("keymaps.windowpicker")
 require("lang.python")
 require("lang.rust")
 require("theme.kanagawa")
