@@ -2,7 +2,7 @@
 lvim.log.level = "warn"
 lvim.format_on_save.enabled = false
 lvim.colorscheme = "kanagawa-wave" -- Dark -> Light: dragon -> wave -> lotus
-vim.opt.guifont = "MonoLisa Nerd Font:h12"
+vim.opt.guifont = "RecMonoDuotone Nerd Font:h12"
 vim.opt.colorcolumn = "80,100"
 
 lvim.builtin.treesitter.highlight.enable = true
