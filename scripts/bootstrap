@@ -121,6 +121,9 @@ install_software() {
     tldr
     github-cli
     trash-cli
+    brightnessctl
+    playerctl
+    pactl
     # CLI apps
     neovim
     lazygit
@@ -129,6 +132,8 @@ install_software() {
     # GUI apps
     kitty
     wezterm
+    wofi
+    waybar
     # Preferred (yet optional) dependencies
     luarocks
     atool
