@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 # Dotfiles and bootstrap installer
-# Installs git, clones repository and symlinks dotfiles to your home directory
 
 # set -e
 trap on_error SIGTERM
@@ -95,9 +94,9 @@ install_yay() {
 
 	sudo pacman -S --needed git base-devel
 	git clone "https://aur.archlinux.org/yay.git" "$YAY_BUILD_DIR"
-	cd "$YAY_BUILD_DIR"
+	cd "$YAY_BUILD_DIR" || on_error
 	makepkg -si
-  cd -
+  cd - || on_error
 
   rm -rf "$YAY_BUILD_DIR"
 
