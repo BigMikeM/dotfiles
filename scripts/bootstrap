@@ -139,7 +139,7 @@ install_software() {
     ueberzug
     highlight
     shellcheck
-    shellharden
+    shfmt
   )
 
 

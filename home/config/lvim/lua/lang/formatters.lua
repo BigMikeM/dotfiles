@@ -2,7 +2,7 @@
 local formatters = require("lvim.lsp.null-ls.formatters")
 formatters.setup({
 	{
-		command = "shellharden",
+		command = "shfmt",
 		filetypes = { "shell", "bash", "zsh", "sh" },
 	},
 	{ command = "markdownlint" },
