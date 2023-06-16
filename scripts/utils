@@ -8,7 +8,7 @@ install_git() {
 		echo "Seems like you don't have Git installed!"
 		read -rp "Would you like to proceed with Git installation? [y/N] " -n 1 answer
 		echo
-	  if [[ "${answer,,}" != "y" ]]; then
+		if [[ "${answer,,}" != "y" ]]; then
 			exit 1
 		fi
 
@@ -36,7 +36,7 @@ install_zsh() {
 		echo "Seems like you don't have Zsh installed!"
 		read -rp "Do you agree to proceed with Zsh installation? [y/N] " -n 1 answer
 		echo
-	  if [[ "${answer,,}" != "y" ]]; then
+		if [[ "${answer,,}" != "y" ]]; then
 			exit 1
 		fi
 
@@ -51,11 +51,11 @@ install_zsh() {
 			exit 1
 		fi
 
-    if _exists zsh && [[ -z "$ZSH_VERSION" ]]; then
-      info "Setting up Zsh as default shell..."
+		if _exists zsh && [[ -z "$ZSH_VERSION" ]]; then
+			info "Setting up Zsh as default shell..."
 
-      chsh -s "$(command -v zsh)" || error "Error: Could not set Zsh as default shell!"
-    fi
+			chsh -s "$(command -v zsh)" || error "Error: Could not set Zsh as default shell!"
+		fi
 	else
 		success "You already have Zsh installed. Skipping..."
 	fi
@@ -65,9 +65,9 @@ install_zsh() {
 
 install_npm() {
 
-  if ! _exists npm; then
-    return
-  fi
+	if ! _exists npm; then
+		return
+	fi
 
 	info "Installing global npm packages..."
 

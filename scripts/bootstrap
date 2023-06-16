@@ -34,7 +34,7 @@ error() {
 
 # Warning or otherwise important message
 warn() {
-  echo -e "${YELLOW}${*}${RESET}"
+	echo -e "${YELLOW}${*}${RESET}"
 }
 
 # End section
@@ -63,10 +63,10 @@ on_start() {
 	info "     |-|            edited by @BigMikeM              |-|     "
 	info "     |-|                                             |-|     "
 
-  info "This script will attempt to install and set up desired software."
+	info "This script will attempt to install and set up desired software."
 	echo
 
-  read -rp "Would you like to proceed with installation? [y/N] " -n 1 answer
+	read -rp "Would you like to proceed with installation? [y/N] " -n 1 answer
 
 	if [ "${answer,,}" != "y" ]; then
 		exit 1
@@ -75,8 +75,8 @@ on_start() {
 
 install_yay() {
 	if ! _exists pacman; then
-    error "Pacman not found! Cannot install yay."
-    echo
+		error "Pacman not found! Cannot install yay."
+		echo
 
 		return
 	fi
@@ -87,61 +87,60 @@ install_yay() {
 
 	info 'Trying to install "Yay: Yet Another Yogurt"'
 
-  YAY_BUILD_DIR="$HOME/.build_yay/"
+	YAY_BUILD_DIR="$HOME/.build_yay/"
 
-  info "Using build directory: $YAY_BUILD_DIR"
-  echo
+	info "Using build directory: $YAY_BUILD_DIR"
+	echo
 
 	sudo pacman -S --needed git base-devel
 	git clone "https://aur.archlinux.org/yay.git" "$YAY_BUILD_DIR"
 	cd "$YAY_BUILD_DIR" || on_error
 	makepkg -si
-  cd - || on_error
+	cd - || on_error
 
-  rm -rf "$YAY_BUILD_DIR"
+	rm -rf "$YAY_BUILD_DIR"
 
-  finish
+	finish
 }
 
 install_software() {
 
 	info "Installing software..."
 
-  software=(
-    # Base software needed for others
-    zsh
-    git
-    openssh
-    sheldon
-    # Handy CLI utilities
-    tree
-    lsd
-    bat
-    tldr
-    github-cli
-    trash-cli
-    brightnessctl
-    playerctl
-    pactl
-    # CLI apps
-    neovim
-    lazygit
-    ranger
-    nvm
-    # GUI apps
-    kitty
-    wezterm
-    wofi
-    waybar
-    # Preferred (yet optional) dependencies
-    luarocks
-    atool
-    ueberzug
-    highlight
-    shellcheck
-    shfmt
-  )
-
+	software=(
+		# Base software needed for others
+		zsh
+		git
+		openssh
+		sheldon
+		# Handy CLI utilities
+		tree
+		lsd
+		bat
+		tldr
+		github-cli
+		trash-cli
+		brightnessctl
+		playerctl
+		pactl
+		# CLI apps
+		neovim
+		lazygit
+		ranger
+		nvm
+		# GUI apps
+		kitty
+		wezterm
+		wofi
+		waybar
+		# Preferred (yet optional) dependencies
+		luarocks
+		atool
+		ueberzug
+		highlight
+		shellcheck
+		shfmt
+	)
 
 	if _exists yay; then
 		yay -Syu --needed "${software[@]}"
@@ -167,136 +166,136 @@ on_error() {
 }
 
 check_software_for_setup() {
-  
-  info "Checking for apps which will need to be set up after bootstrap..."
 
-  software_to_check=(
-    sheldon
-    gh
-    nvm
-  )
-  
-  software_to_setup=( "yay" )
+	info "Checking for apps which will need to be set up after bootstrap..."
 
-  for i in "${software_to_check[@]}"; do
-    if ! _exists "$i"; then
-      software_to_setup+=("$i")
+	software_to_check=(
+		sheldon
+		gh
+		nvm
+	)
 
-      info "${i} was not found. Adding to setup list."
-    fi
+	software_to_setup=("yay")
 
-    if _exists "$i"; then
-      info "Found ${i}..."
-    fi
-  done
+	for i in "${software_to_check[@]}"; do
+		if ! _exists "$i"; then
+			software_to_setup+=("$i")
 
-  finish
+			info "${i} was not found. Adding to setup list."
+		fi
+
+		if _exists "$i"; then
+			info "Found ${i}..."
+		fi
+	done
+
+	finish
 }
 
 _set_up_nvm() {
 
-  info "Setting up Node Version Manager"
-  info "This will install the latest version of NodeJS."
-  read -rp "Would you also like to install the latest LTS release? [y/N]" -n 1 answer
-  # vared -p "Would you like the latest LTS release? [y/N]" -c anwser
+	info "Setting up Node Version Manager"
+	info "This will install the latest version of NodeJS."
+	read -rp "Would you also like to install the latest LTS release? [y/N]" -n 1 answer
+	# vared -p "Would you like the latest LTS release? [y/N]" -c anwser
 	echo
 
-  nvm install node
+	nvm install node
 
 	if [ "${answer,,}" == "y" ]; then
 		info "You chose to install the latest NodeJS lts."
-    nvm install --lts
+		nvm install --lts
 	fi
 
-  finish
+	finish
 }
 
 _set_up_sheldon() {
 
-  info "Setting up Sheldon."
-  echo
+	info "Setting up Sheldon."
+	echo
 
-  sheldon lock --update
+	sheldon lock --update
 
-  finish
+	finish
 }
 
 _set_up_gh() {
 
-  info "Setting up GitHub CLI."
-  info "This will also set up SSH to connect your git repos with GitHub."
-  echo
+	info "Setting up GitHub CLI."
+	info "This will also set up SSH to connect your git repos with GitHub."
+	echo
 
-  gh auth login
+	gh auth login
 
-  finish
+	finish
 }
 
 _set_up_lvim() {
 
-  if ! _exists nvim; then
-    exit
-  fi
+	if ! _exists nvim; then
+		exit
+	fi
 
-  info "LunarVim setup is not yet complete."
-  info "Skipping."
-  echo
+	info "LunarVim setup is not yet complete."
+	info "Skipping."
+	echo
 
-  finish
+	finish
 
 }
 
 _set_up_yay() {
-  info "Setting up Yay: Yet another Yaourt"
-  echo
+	info "Setting up Yay: Yet another Yaourt"
+	echo
 
-  yay -Y --gendb
-  yay -Y --devel --combinedupgrade --batchinstall --save
+	yay -Y --gendb
+	yay -Y --devel --combinedupgrade --batchinstall --save
 
-  _set_up_pacman
+	_set_up_pacman
 
-  finish
+	finish
 }
 
-_set_up_pacman () {
+_set_up_pacman() {
 
-  info "Editing your pacman.conf will require elevated access"
-  sudo -v
+	info "Editing your pacman.conf will require elevated access"
+	sudo -v
 
-  sudo sed -Ei "s/(^\#\s*)(Color.*)/\2/g" "/etc/pacman.conf"
-  sudo sed -Ei "s/(^\#\s*)(VerbosePackageLists.*)/\2/g" "/etc/pacman.conf"
+	sudo sed -Ei "s/(^\#\s*)(Color.*)/\2/g" "/etc/pacman.conf"
+	sudo sed -Ei "s/(^\#\s*)(VerbosePackageLists.*)/\2/g" "/etc/pacman.conf"
 }
 
 _init_app() {
 
-  local app="$1"
+	local app="$1"
 
-  if ! _exists "$app"; then
-    return
-  fi
-  
-  eval "_set_up_$1" || 
-    warn "No setup function found for [$i]"
-    info "Skipping setup of [$i]"
-    echo
+	if ! _exists "$app"; then
+		return
+	fi
 
-    return
+	eval "_set_up_$1" ||
+		warn "No setup function found for [$i]"
+	info "Skipping setup of [$i]"
+	echo
+
+	return
 }
 
 set_up_software() {
 
-  info "Attempting to initialize new apps."
+	info "Attempting to initialize new apps."
 
-  for i in "${software_to_setup[@]}"; do
-    _init_app "$i"
-  done
+	for i in "${software_to_setup[@]}"; do
+		_init_app "$i"
+	done
 
-  finish
+	finish
 }
 
 main() {
 	on_start
-  check_software_for_setup "$*"
+	check_software_for_setup "$*"
 	install_yay "$*"
 	install_software "$*"
 	on_finish "$*"

@@ -34,7 +34,7 @@ error() {
 
 # Warning or otherwise important message
 warn() {
-  echo -e "${YELLOW}${*}${RESET}"
+	echo -e "${YELLOW}${*}${RESET}"
 }
 
 # End section
@@ -62,13 +62,13 @@ update_dotfiles() {
 }
 
 update_system() {
-  if ! _exists pacman; then
-    return
-  elif _exists yay; then
-    _update_yay
-  elif _exists pacman; then
-    _update_pacman
-  fi
+	if ! _exists pacman; then
+		return
+	elif _exists yay; then
+		_update_yay
+	elif _exists pacman; then
+		_update_pacman
+	fi
 }
 
 _update_pacman() {
@@ -76,13 +76,13 @@ _update_pacman() {
 		return
 	fi
 
-  info "Pacman detected."
-  info "Updating system packages."
-  echo
+	info "Pacman detected."
+	info "Updating system packages."
+	echo
 
 	sudo pacman -Syu
 
-  finish
+	finish
 }
 
 _update_yay() {
@@ -90,20 +90,20 @@ _update_yay() {
 		return
 	fi
 
-  echo
-  info "Updating all packages (including development)"
-  echo
+	echo
+	info "Updating all packages (including development)"
+	echo
 
 	yay -Syu --devel
 
-  echo
-  info "Cleaning up unnecessary packages."
-  echo
+	echo
+	info "Cleaning up unnecessary packages."
+	echo
 
 	yay -Yc
 
-  echo
-  finish
+	echo
+	finish
 }
 
 update_npm() {
@@ -112,7 +112,7 @@ update_npm() {
 	fi
 
 	info "Updating NPM..."
-  echo
+	echo
 
 	if _exists nvm; then
 		nvm install-latest-npm
@@ -147,39 +147,39 @@ nvm_lts_versions() {
 update_all_node() {
 	if ! _exists nvm; then
 		info "Node Version Manager (nvm) not found. Unable to automatically update NodeJS."
-    echo
+		echo
 
 		return
 	fi
 
 	info "Attempting to update all installed versions of NodeJS."
-  echo
+	echo
 
 	current_version=$(get_node_version "current")
 	default_node_version=$(get_node_version "default")
 
 	info "Updating current active version of NodeJS."
-  echo
+	echo
 
 	nvm install "$current_version" --latest-npm
 
 	if [[ "$default_node_version" != "$current_version" ]]; then
 		info "Updating default version of NodeJS."
-    echo
+		echo
 
 		nvm install "$default_node_version"
 	fi
 
 	nvm_lts_versions | while read -r lts_version; do
-    info "Updating all installed LTS versions of NodeJS."
-    echo
+		info "Updating all installed LTS versions of NodeJS."
+		echo
 
 		nvm install "$lts_version"
 	done
 
 	# Ensure we are using the version of node we started with
-  info "Switching back to the version of NodeJS we started with."
-  echo
+	info "Switching back to the version of NodeJS we started with."
+	echo
 
 	nvm use "$current_version"
 
@@ -192,7 +192,7 @@ update_rust() {
 	fi
 
 	info "Updating Rust..."
-  echo
+	echo
 
 	rustup update
 
@@ -223,16 +223,16 @@ on_finish() {
 
 on_error() {
 	error "ERROR!"
-  error "Something Borked."
+	error "Something Borked."
 	exit 1
 }
 
 main() {
 
-  on_start "$*"
+	on_start "$*"
 
-  echo "Please enter your password to get started:"
-  sudo -v
+	echo "Please enter your password to get started:"
+	sudo -v
 
 	update_dotfiles "$*"
 	update_system "$*"

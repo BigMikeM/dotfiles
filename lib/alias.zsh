@@ -1,4 +1,3 @@
-
 # Enable aliases to be sudo’ed
 #   http://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
 alias sudo='sudo '
@@ -96,7 +95,7 @@ if _exists neovide; then
 fi
 
 if _exists arm-none-eabi-gdb; then
-  alias agdb='arm-none-eabi-gdb'
+	alias agdb='arm-none-eabi-gdb'
 fi
 
 # Add an "alert" alias for long running commands.  Use like so:

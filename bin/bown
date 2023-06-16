@@ -4,4 +4,4 @@
 
 amount=$1
 
-brightnessctl set "${amount}%-" &> /dev/null
+brightnessctl set "${amount}%-" &>/dev/null
