@@ -5,5 +5,4 @@ linters.setup({
 		command = "shellcheck",
 		filetypes = { "shell", "bash", "zsh", "sh" },
 	},
-	{ command = "pyright", filetypes = { "python" } },
 })
