@@ -40,10 +40,7 @@ _extend_path "$HOME/bin"
 _extend_path "$HOME/.cargo/bin"
 
 # generate environment with system-d and export vars
-# export $(run-parts /usr/lib/systemd/user-environment-generators/ | xargs)
 export $(run-parts /usr/lib/systemd/user-environment-generators/ | xargs)
-
-# Conditionally switch firefox to wayland mode when in wayland
 
 # Extend $NODE_PATH
 if [ -d ~/.npm-global ]; then
