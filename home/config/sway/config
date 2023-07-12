@@ -1,0 +1,27 @@
+# Initial Setup 
+# exec ~/set_once.sh
+
+# Config for sway
+#
+# Read `man 5 sway` for a complete reference.
+
+# Fibonacci layout for opening new windows
+exec $HOME/.config/sway/scripts/fibonacci_layout.py
+
+# user config directory
+include $HOME/.config/sway/config.d/*
+
+# only enable this if every app you use is compatible with wayland
+# xwayland disable
+
+# Options for SwayFX
+shadows enable
+smart_corner_radius on
+corner_radius 5
+
+blur enable
+blur_xray disable
+
+layer_effects "waybar" blur enable; shadows enable
+layer_effects "wofi" blur enable; shadows enable; corner radius 6
+
