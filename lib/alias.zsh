@@ -28,7 +28,7 @@ alias cls='clear'
 [ -d ~/Projects/Learning/ ] && alias pcl='cd ~/Projects/Learning'
 
 # Commands Shortcuts
-alias e="$EDITOR"
+alias e='$EDITOR'
 alias -- +x='chmod +x'
 alias x+='chmod +x'
 
@@ -38,11 +38,11 @@ alias o='open'
 alias oo='open .'
 
 # Run scripts
-alias update="source $DOTFILES/scripts/update"
-alias bootstrap="source $DOTFILES/scripts/bootstrap"
+alias update='source $DOTFILES/scripts/update'
+alias bootstrap='source $DOTFILES/scripts/bootstrap'
 
 # Quick jump to dotfiles
-alias dotfiles="e $DOTFILES"
+alias dotfiles='e $DOTFILES'
 
 # Quick reload of zsh environment
 alias reload='source $HOME/.zshrc'
