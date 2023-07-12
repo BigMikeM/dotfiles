@@ -131,8 +131,6 @@ install_software() {
 		# GUI apps
 		kitty
 		wezterm
-		wofi
-		waybar
 		# Preferred (yet optional) dependencies
 		luarocks
 		atool
