@@ -25,7 +25,7 @@ def find_parent(sway, window_id):
     return finder(sway.get_tree(), None)
 
 
-def set_layout(sway, e):
+def set_layout(sway, _):
     """
     Set the layout/split for the currently
     focused window to either vertical or
