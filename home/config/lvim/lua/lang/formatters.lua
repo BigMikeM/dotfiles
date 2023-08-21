@@ -10,6 +10,7 @@ formatters.setup({
 	{ command = "black" },
 	{ command = "prettier", filetypes = { "js", "json" } },
 	{ command = "isort" },
+  { command = "rustfmt"}
 })
 
 -- lvim.format_on_save.enabled = true

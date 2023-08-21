@@ -6,4 +6,5 @@ linters.setup({
 		filetypes = { "shell", "bash", "zsh", "sh" },
 	},
 	{ command = "pylint" },
+  { command = "rust-analyzer"}
 })
