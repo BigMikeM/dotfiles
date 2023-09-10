@@ -22,6 +22,7 @@
 
 - link:
     ~/.config/: home/config/*
+    ~/.local/share/: extras/*
     ~/: home/.*
 
 - shell:
