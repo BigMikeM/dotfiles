@@ -1,11 +1,15 @@
-
+#! /usr/bin/env zsh
 # Export path to root of dotfiles repo
 export DOTFILES="$HOME/.dotfiles"
 export DOTFILES=${DOTFILES:="$HOME/.dotfiles"}
 
+_exists() {
+	command -v "$1" >/dev/null 2>&1
+}
+
 # Ensure XDG_CONFIG_HOME is set, as it seems not to be sometimes
 if [[ -z $XDG_CONFIG_HOME ]]; then
-  export XDG_CONFIG_HOME="/home/mike/.config/"
+	export XDG_CONFIG_HOME="/home/mike/.config/"
 fi
 
 # Avoid file overwrites when using >
@@ -22,8 +26,7 @@ COMPLETION_WAITING_DOTS="true"
 _extend_path() {
 	[[ -d "$1" ]] || return
 
-  
-	if ! $(echo "$PATH" | tr ":" "\n" | grep -qx "$1"); then
+	if ! echo "$PATH" | tr ":" "\n" | grep -qx "$1"; then
 		export PATH="$1:$PATH"
 	fi
 }
@@ -35,12 +38,12 @@ _extend_path "$HOME/.npm-global/bin"
 _extend_path "$HOME/.rvm/bin"
 _extend_path "$HOME/.yarn/bin"
 _extend_path "$HOME/.config/yarn/global/node_modules/.bin"
-_extend_path "$HOME/.bun/bin"
+_extend_path "$HOME/go/bin"
 _extend_path "$HOME/bin"
 _extend_path "$HOME/.cargo/bin"
 
 # generate environment with system-d and export vars
-export $(run-parts /usr/lib/systemd/user-environment-generators/ | xargs)
+export "$(run-parts /usr/lib/systemd/user-environment-generators/ | xargs)"
 
 # Extend $NODE_PATH
 if [ -d ~/.npm-global ]; then
@@ -48,7 +51,7 @@ if [ -d ~/.npm-global ]; then
 fi
 
 # Load nvm
-source /usr/share/nvm/init-nvm.sh
+# source /usr/share/nvm/init-nvm.sh
 
 # Default editor for local and remote sessions
 if [[ -n "$SSH_CONNECTION" ]]; then
@@ -70,16 +73,16 @@ export PAGER='less'
 
 # less options
 less_opts=(
-  # Quit if entire file fits on first screen.
-  -FX
-  # Ignore case in searches that do not contain uppercase.
-  --ignore-case
-  # Allow ANSI colour escapes, but no other escapes.
-  --RAW-CONTROL-CHARS
-  # Quiet the terminal bell. (when trying to scroll past the end of the buffer)
-  --quiet
-  # Do not complain when we are on a dumb terminal.
-  --dumb
+	# Quit if entire file fits on first screen.
+	-FX
+	# Ignore case in searches that do not contain uppercase.
+	--ignore-case
+	# Allow ANSI colour escapes, but no other escapes.
+	--RAW-CONTROL-CHARS
+	# Quiet the terminal bell. (when trying to scroll past the end of the buffer)
+	--quiet
+	# Do not complain when we are on a dumb terminal.
+	--dumb
 )
 export LESS="${less_opts[*]}"
 
