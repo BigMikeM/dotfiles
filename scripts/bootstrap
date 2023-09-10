@@ -73,34 +73,22 @@ on_start() {
 	fi
 }
 
-install_yay() {
-	if ! _exists pacman; then
-		error "Pacman not found! Cannot install yay."
-		echo
-
-		return
-	fi
-
-	if _exists yay; then
-		return
-	fi
-
-	info 'Trying to install "Yay: Yet Another Yogurt"'
-
-	YAY_BUILD_DIR="$HOME/.build_yay/"
-
-	info "Using build directory: $YAY_BUILD_DIR"
-	echo
-
-	sudo pacman -S --needed git base-devel
-	git clone "https://aur.archlinux.org/yay.git" "$YAY_BUILD_DIR"
-	cd "$YAY_BUILD_DIR" || on_error
-	makepkg -si
+install_go() {
+	GO_INSTALL_DIR="${HOME}/go_install"
+	mkdir -p "${GO_INSTALL_DIR}"
+	cd "${GO_INSTALL_DIR}" || on_error
+	curl -L "https://go.dev/dl/go1.21.1.src.tar.gz"
+	rm -rf /usr/local/go && tar -C /usr/local -xzf go1.21.1.linux-amd64.tar.gz
 	cd - || on_error
+	rm -fr "${GO_INSTALL_DIR}"
+}
 
-	rm -rf "$YAY_BUILD_DIR"
-
-	finish
+install_lazygit() {
+	if ! _exists go version; then
+		return 1
+	else
+		go install github.com/jesseduffield/lazygit@latest
+	fi
 }
 
 install_software() {
@@ -131,6 +119,8 @@ install_software() {
 		# GUI apps
 		kitty
 		wezterm
+    alacritty
+    neovide
 		# Preferred (yet optional) dependencies
 		luarocks
 		atool
