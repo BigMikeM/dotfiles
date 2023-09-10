@@ -123,9 +123,14 @@ eval "$(sheldon source)"
 # 		source "$file"
 # 	done
 # fi
+#
+if _exists pipx; then
+	autoload -U bashcompinit
+	bashcompinit
+	eval "$(register-python-argcomplete pipx)"
+fi
 
 # Source local configuration
 if [[ -f "$HOME/.zshlocal" ]]; then
 	source "$HOME/.zshlocal"
 fi
-
