@@ -79,23 +79,17 @@ if _exists ranger; then
 	alias rd=". ranger"
 fi
 
-# Neovide and Lunarvim aliases
+# Neovide aliases
 if _exists neovide; then
-
-	if ! _exists lvim; then
-		alias neovide='neovide'
-	else
-		alias neovide='neovide --neovim-bin="$HOME/.local/bin/lvim"'
-	fi
-
-	if _exists neovide-lunarvim; then
-		alias neovide='neovide-lunarvim'
-	fi
-
+	alias nd='neovide'
 fi
 
 if _exists arm-none-eabi-gdb; then
 	alias agdb='arm-none-eabi-gdb'
+fi
+
+if _exists lazygit; then
+	alias lg='lazygit'
 fi
 
 # Add an "alert" alias for long running commands.  Use like so:
