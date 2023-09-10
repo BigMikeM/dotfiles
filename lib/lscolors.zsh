@@ -1,3 +1,4 @@
+#!/usr/bin/env zsh
 
 # LSCOLORS
 # Online editor: https://geoff.greer.fm/lscolors/
