@@ -1,32 +1,57 @@
 # TODO
 
-## Planned implementation
+## Bootstrap
 
-1. Set up NVM after it is installed
+- Make crossplatform
+- Install rustup
+- Install python
+  - pip install black, isort, pynvim, i3ipc(sway)
+  - pipx?
+- Install zsh (is there a distro-independant way?)
+- Install lunarvim
+- Install nvm
+  - curl -o- <https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh> | bash
+- Install node
+  - npm install neovim
+- Install neovim (appimage?)
+- Install rustup
+  - Linux: curl --proto '=https' --tlsv1.2 -sSf <https://sh.rustup.rs> | sh
+  - WSL:
+  - cargo install sheldon, fd-find, ripgrep
+  - sheldon needs openssl, pkg-config
+- Install Kitty terminal
+  - curl -L <https://sw.kovidgoyal.net/kitty/installer.sh> | sh /dev/stdin
+- Install lazygit
+- golang? lua? luarocks?
+- Install ranger (via pipx install ranger-fm)
+- Install alacritty?
+  - debian dep install: apt install cmake pkg-config libfreetype6-dev libfontconfig1-dev libxcb-xfixes0-dev libxkbcommon-dev python3
+  - arch dep install: pacman -S cmake freetype2 fontconfig pkg-config make libxcb libxkbcommon python
+  - after rustup/cargo are installed, do
 
-1. Install YAY with bootstrap
+    ```sh
+    git clone https://github.com/alacritty/alacritty.git
+    cd alacritty
+    cargo build --release
+    # If all goes well, this should place a binary at target/release/alacritty.
+    ```
 
-1. Skip setting up ZSH as shell if it is already set
+- Install neovide
+  - deb deps:
 
-1. Re-implement Doom Nvim configs (for the hell of it)
+      ```sh
+    sudo apt install -y curl \
+        gnupg ca-certificates git \
+        gcc-multilib g++-multilib cmake libssl-dev pkg-config \
+        libfreetype6-dev libasound2-dev libexpat1-dev libxcb-composite0-dev \
+        libbz2-dev libsndio-dev freeglut3-dev libxmu-dev libxi-dev libfontconfig1-dev \
+        libxcursor-dev
+    ```
 
-1. Set up apps with bootstrap:
+  - arch deps:
 
-    - nvm (install node)
-    - rust (via rustup)
-    - yay (--gendb, set update devel as default, enable colors if disabled)
-    - sheldon (install plugins)
-
-## Possible implementation
-
-1. Integrate Pamac? (probably not, I still prefer yay)
-
-1. Is it possible for me to download and install a font I like? What about also applying nerd font patch? Feasible, but is it worth it?
-
-1. Is it possible to fetch and use the most recent version of the kanagawa theme for kitty (or other apps)? Maybe a curl + include?
-
-1. Is it feasible to install zsh w/ sheldon and use it from there instead of using the built-in package manager? This way Sheldon would _truly_ be managing zsh along with the other plugins.
-
-1. Reminder script (remind "something" "when")
-
-1. Sway deps
+    ```sh
+    sudo pacman -S base-devel fontconfig freetype2 libglvnd sndio cmake \
+    git gtk3 python sdl2 vulkan-intel libxkbcommon-x11
+    ```
+- pipx install jrnl
