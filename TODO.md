@@ -55,3 +55,7 @@
     git gtk3 python sdl2 vulkan-intel libxkbcommon-x11
     ```
 - pipx install jrnl
+- Install neovim:
+    - curl neovim-linux64.tar.gz https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
+    - sudo tar -C /opt/ -xvf neovim-linux54.tar.gz
+- Install nvm: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
