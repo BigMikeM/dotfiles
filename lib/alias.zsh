@@ -74,6 +74,10 @@ fi
 if _exists bat; then
 	alias cat='bat'
 fi
+# On Debian-based distros, "bat" may be installed as "batcat"
+if _exists batcat; then
+  alias cat='batcat'
+fi
 
 if _exists ranger; then
 	alias rd=". ranger"
