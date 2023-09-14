@@ -10,4 +10,5 @@ lvim.builtin.treesitter.ensure_installed = {
 	"lua",
 	"bash",
 	"sql",
+  "markdown",
 }
