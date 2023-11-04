@@ -59,3 +59,9 @@
     - curl neovim-linux64.tar.gz https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
     - sudo tar -C /opt/ -xvf neovim-linux54.tar.gz
 - Install nvm: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
+
+- For Fedora, I need devel files:
+    - sudo dnf group install "C Development Tools and Libraries" "Development Tools" "Development Libraries"
+    - sudo dnf install cmake
+- nvidia repos/install, various copr's, non-free repos
+
