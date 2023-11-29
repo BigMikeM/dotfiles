@@ -1,12 +1,12 @@
 -- general
 lvim.log.level = "warn"
 lvim.format_on_save.enabled = false
-lvim.colorscheme = "kanagawa-dragon" -- Dark -> Light: dragon -> wave -> lotus
+lvim.colorscheme = "kanagawa-wave" -- Dark -> Light: dragon -> wave -> lotus
 vim.opt.guifont = "RecMonoDuotone Nerd Font:h12"
 vim.opt.colorcolumn = "80,100"
 
 lvim.builtin.treesitter.highlight.enable = true
--- lvim.builtin.treesitter.rainbow.enable = true
+lvim.builtin.treesitter.rainbow.enable = true
 lvim.builtin.alpha.active = true
 lvim.builtin.alpha.mode = "dashboard"
 lvim.builtin.terminal.active = true
@@ -152,7 +152,7 @@ lvim.plugins = {
 			require("nvim-ts-autotag").setup()
 		end,
 	},
-	-- { "p00f/nvim-ts-rainbow" },
+	{ "p00f/nvim-ts-rainbow" },
 	{
 		"folke/lsp-colors.nvim",
 		event = "BufRead",
@@ -233,59 +233,31 @@ lvim.plugins = {
 		"felipec/vim-sanegx",
 		event = "BufRead",
 	},
---	{
---	"folke/noice.nvim",
---	config = function()
---		require("noice").setup({
---			lsp = {
---				override = {
---					["vim.lsp.util.convert_input_to_markdown_lines"] = true,
---					["vim.lsp.util.stylize_markdown"] = true,
---					["cmp.entry.get_documentation"] = true,
---				},
---				signature = {
---					enabled = false,
---				},
---			},
---			presets = {
---				bottom_search = false, -- use a classic bottom cmdline for search
---				command_palette = true, -- position the cmdline and popupmenu together
---				long_message_to_split = true, -- long messages will be sent to a split
---				inc_rename = true, -- enables an input dialog for inc-rename.nvim
---				lsp_doc_border = false, -- add a border to hover docs and signature help
---			},
---		})
---	end,
---	dependencies = {
---		"MunifTanjim/nui.nvim",
---		"rcarriga/nvim-notify",
---	},
-	-- },
 	{
-	"smjonas/inc-rename.nvim",
-	config = function()
-		require("inc_rename").setup()
-	end,
+		"smjonas/inc-rename.nvim",
+		config = function()
+			require("inc_rename").setup()
+		end,
 	},
 	{
-	"s1n7ax/nvim-window-picker",
-	version = "1.*",
-	config = function()
-		require("window-picker").setup({
-			autoselect_one = true,
-			include_current = false,
-			filter_rules = {
-				-- filter using buffer options
-				bo = {
-					-- if the file type is one of following, the window will be ignored
-					filetype = { "neo-tree", "neo-tree-popup", "notify", "quickfix" },
-					-- if the buffer type is one of following, the window will be ignored
-					buftype = { "terminal" },
+		"s1n7ax/nvim-window-picker",
+		version = "1.*",
+		config = function()
+			require("window-picker").setup({
+				autoselect_one = true,
+				include_current = false,
+				filter_rules = {
+					-- filter using buffer options
+					bo = {
+						-- if the file type is one of following, the window will be ignored
+						filetype = { "neo-tree", "neo-tree-popup", "notify", "quickfix" },
+						-- if the buffer type is one of following, the window will be ignored
+						buftype = { "terminal" },
+					},
 				},
-			},
-			other_win_hl_color = "#e35e4f",
-		})
-	end,
+				other_win_hl_color = "#e35e4f",
+			})
+		end,
 	},
 	{
 		"tzachar/cmp-tabnine",
