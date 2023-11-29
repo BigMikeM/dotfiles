@@ -11,4 +11,9 @@ lvim.builtin.treesitter.ensure_installed = {
 	"bash",
 	"sql",
   "markdown",
+  "git_config",
+  "git_rebase",
+  "gitcommit",
+  "gitattributes",
+  "gitignore"
 }
