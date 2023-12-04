@@ -34,6 +34,7 @@ end
 require("lang.formatters")
 require("lang.linters")
 require("lang.installed")
+vim.diagnostic.config({ virtual_text = false })
 
 -- Additional Plugins
 lvim.plugins = {
