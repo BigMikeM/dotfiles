@@ -21,7 +21,7 @@ smart_borders on
 # exec swaybg -i ~/.config/sway/sway.png
 
 # Script to change backgrounds automatically
-exec "cd ~/.config/sway/scripts/ && ./random_background.sh"
+# exec "cd ~/.config/sway/scripts/ && ./random_background.sh"
 
 # Title format for windows
 for_window [shell="xdg_shell"] title_format "%title (%app_id)"
