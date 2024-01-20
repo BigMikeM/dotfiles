@@ -8,10 +8,10 @@ formatters.setup({
 	{ command = "markdownlint" },
 	{ command = "stylua", filetypes = { "lua" } },
 	{ command = "black" },
-	{ command = "prettier", filetypes = { "js", "json" } },
+	{ command = "prettier", filetypes = { "js", "json", "css" } },
 	{ command = "isort" },
-  { command = "rustfmt"}
+	{ command = "rustfmt" },
 })
 
 -- lvim.format_on_save.enabled = true
--- lvim.format_on_save.pattern = { "*.py", "*.lua" }
+lvim.format_on_save.pattern = { "*.py", "*.lua" }
