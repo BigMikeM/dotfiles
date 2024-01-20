@@ -116,6 +116,7 @@ zstyle ':omz:plugins:nvm' autoload yes
 # ------------------------------------------------------------------------------
 # Other stuff
 # ------------------------------------------------------------------------------
+export BAT_THEME="Catppuccin-mocha"
 
 # Shell plugins
 eval "$(sheldon source)"

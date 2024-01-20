@@ -1,3 +1,4 @@
+#!/bin/bash
 # Enable aliases to be sudo’ed
 #   http://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
 alias sudo='sudo '
@@ -76,7 +77,7 @@ if _exists bat; then
 fi
 # On Debian-based distros, "bat" may be installed as "batcat"
 if _exists batcat; then
-  alias cat='batcat'
+	alias cat='batcat'
 fi
 
 if _exists ranger; then

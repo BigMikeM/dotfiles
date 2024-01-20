@@ -2,6 +2,7 @@
 lvim.log.level = "warn"
 lvim.format_on_save.enabled = false
 lvim.colorscheme = "kanagawa-wave" -- Dark -> Light: dragon -> wave -> lotus
+-- lvim.colorscheme = "catppuccin-macchiato"
 vim.opt.guifont = "RecMonoDuotone Nerd Font:h12"
 vim.opt.colorcolumn = "80,100"
 
@@ -11,6 +12,7 @@ lvim.builtin.alpha.active = true
 lvim.builtin.alpha.mode = "dashboard"
 lvim.builtin.terminal.active = true
 lvim.builtin.nvimtree.setup.view.side = "left"
+lvim.builtin.lualine.options.theme = "catppuccin"
 
 if vim.g.neovide then
 	-- Put anything you want to happen only in Neovide here
@@ -38,6 +40,32 @@ vim.diagnostic.config({ virtual_text = false })
 
 -- Additional Plugins
 lvim.plugins = {
+	{
+		"catppuccin/nvim",
+		name = "catppuccin",
+		config = function()
+			require("catppuccin").setup({
+				integrations = {
+					notify = true,
+					ts_rainbow = true,
+					noice = true,
+					neotest = true,
+					mason = true,
+					hop = true,
+					neotree = true,
+					which_key = true,
+					window_picker = true,
+					sandwich = true,
+					navic = {
+						enabled = true,
+					},
+					illuminate = {
+						enabled = true,
+					},
+				},
+			})
+		end,
+	},
 	"simrat39/rust-tools.nvim",
 	{
 		"saecki/crates.nvim",
@@ -64,7 +92,6 @@ lvim.plugins = {
 		"folke/trouble.nvim",
 		cmd = "TroubleToggle",
 	},
-	{ "tpope/vim-surround" },
 	{
 		"rebelot/kanagawa.nvim",
 	},
@@ -285,11 +312,12 @@ lvim.plugins = {
 					command_palette = true, -- position the cmdline and popupmenu together
 					long_message_to_split = true, -- long messages will be sent to a split
 					inc_rename = true, -- enables an input dialog for inc-rename.nvim
-					lsp_doc_border = false, -- add a border to hover docs and signature help
+					lsp_doc_border = true, -- add a border to hover docs and signature help
 				},
 			})
 		end,
 	},
+	{ "machakann/vim-sandwich" },
 }
 
 vim.api.nvim_create_autocmd("BufEnter", {
@@ -312,3 +340,7 @@ require("keymaps.rust")
 require("lang.python")
 require("lang.rust")
 require("theme.kanagawa")
+
+require("nvim-navic").setup({
+	highlight = true,
+})
