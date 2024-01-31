@@ -1,8 +1,9 @@
 -- general
 lvim.log.level = "warn"
 lvim.format_on_save.enabled = false
-lvim.colorscheme = "kanagawa-wave" -- Dark -> Light: dragon -> wave -> lotus
--- lvim.colorscheme = "catppuccin-macchiato"
+-- lvim.colorscheme = "kanagawa-wave" -- Dark -> Light: dragon -> wave -> lotus
+lvim.colorscheme = "catppuccin-macchiato"
+lvim.builtin.lualine.options.theme = "catppuccin"
 vim.opt.guifont = "RecMonoDuotone Nerd Font:h12"
 vim.opt.colorcolumn = "80,100"
 
@@ -12,7 +13,6 @@ lvim.builtin.alpha.active = true
 lvim.builtin.alpha.mode = "dashboard"
 lvim.builtin.terminal.active = true
 lvim.builtin.nvimtree.setup.view.side = "left"
-lvim.builtin.lualine.options.theme = "catppuccin"
 
 if vim.g.neovide then
 	-- Put anything you want to happen only in Neovide here
@@ -318,6 +318,14 @@ lvim.plugins = {
 		end,
 	},
 	{ "machakann/vim-sandwich" },
+	{
+		"rasulomaroff/reactive.nvim",
+		config = function()
+			require("reactive").setup({
+				load = { "catppuccin-macchiato-cursor", "catppuccin-macchiato-cursorline" },
+			})
+		end,
+	},
 }
 
 vim.api.nvim_create_autocmd("BufEnter", {
