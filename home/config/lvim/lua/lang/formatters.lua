@@ -11,6 +11,7 @@ formatters.setup({
 	{ command = "prettier", filetypes = { "js", "json", "css" } },
 	{ command = "isort" },
 	{ command = "rustfmt" },
+	{ command = "taplo" },
 })
 
 -- lvim.format_on_save.enabled = true

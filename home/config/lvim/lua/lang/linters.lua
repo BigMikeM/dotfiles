@@ -5,5 +5,6 @@ linters.setup({
 		command = "shellcheck",
 		filetypes = { "shell", "bash", "zsh", "sh" },
 	},
-	{ command = "pylint" }
+	{ command = "pylint" },
+	{ command = "taplo" },
 })
