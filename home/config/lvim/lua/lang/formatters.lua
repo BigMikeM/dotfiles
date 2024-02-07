@@ -12,6 +12,7 @@ formatters.setup({
 	{ command = "isort" },
 	{ command = "rustfmt" },
 	{ command = "taplo" },
+	{ command = "yamlfmt" },
 })
 
 -- lvim.format_on_save.enabled = true
