@@ -1,7 +1,0 @@
-multigrid = true
-vsync = true
-maximized = false
-srgb = true
-idle = false
-neovim_bin = "/home/mike/.local/bin/lvim"
-frame = "Full"
