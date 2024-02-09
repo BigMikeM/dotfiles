@@ -2,7 +2,7 @@
 lvim.log.level = "warn"
 lvim.format_on_save.enabled = false
 -- lvim.colorscheme = "kanagawa-wave" -- Dark -> Light: dragon -> wave -> lotus
-lvim.colorscheme = "catppuccin-mocha"
+lvim.colorscheme = "catppuccin-macchiato"
 lvim.builtin.lualine.options.theme = "catppuccin"
 vim.opt.guifont = "RecMonoDuotone Nerd Font:h12"
 -- vim.opt.colorcolumn = "80,100"
@@ -82,8 +82,8 @@ lvim.plugins = {
 		event = "BufRead",
 		config = function()
 			require("hop").setup()
-			vim.api.nvim_set_keymap("n", "s", ":HopChar2<cr>", { silent = true })
-			vim.api.nvim_set_keymap("n", "S", ":HopWord<cr>", { silent = true })
+			vim.api.nvim_set_keymap("n", "f", ":HopChar2<cr>", { silent = true })
+			vim.api.nvim_set_keymap("n", "F", ":HopWord<cr>", { silent = true })
 		end,
 	},
 	{
@@ -303,7 +303,7 @@ lvim.plugins = {
 		"rasulomaroff/reactive.nvim",
 		config = function()
 			require("reactive").setup({
-				load = { "catppuccin-mocha-cursor", "catppuccin-mocha-cursorline" },
+				load = { "catppuccin-macchiato-cursor", "catppuccin-macchiato-cursorline" },
 			})
 		end,
 	},
