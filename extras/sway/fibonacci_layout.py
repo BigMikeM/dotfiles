@@ -68,7 +68,7 @@ def main():
             pid_file = opt[1]
 
     if pid_file:
-        with open(pid_file, "w") as f:
+        with open(pid_file, "w", encoding="utf-8") as f:
             f.write(str(os.getpid()))
 
     sway = Connection()
