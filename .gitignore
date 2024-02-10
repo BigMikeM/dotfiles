@@ -10,4 +10,3 @@ node_modules
 home/config/kitty/kitty.conf.bak
 lazy-lock.json
 user-dirs.locale
-extras/
