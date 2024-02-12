@@ -1,0 +1,73 @@
+#!/bin/bash
+
+# TODO: Maybe rename the variables and function to something
+# referencing the fact that these are only foreground/text colors
+
+# Declarations
+
+## Colors
+
+### 8 Base colors
+BLACK=$(tput setaf 0)
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+BLUE=$(tput setaf 4)
+MAGENTA=$(tput setaf 5)
+CYAN=$(tput setaf 6)
+WHITE=$(tput setaf 7)
+
+### Extended colors
+PURPLE=$(tput setaf 125)
+LIME_YELLOW=$(tput setaf 190)
+POWDER_BLUE=$(tput setaf 153)
+
+## Styles
+BRIGHT=$(tput bold)
+BLINK=$(tput blink)
+REVERSE=$(tput smso)
+UNDERLINE=$(tput smul)
+BOLD=$(tput bold)
+## Reset
+NORMAL=$(tput sgr0)
+
+# Formatting functions
+
+## Colors
+black() {
+	printf "%s\n" "${BLACK}${1}${NORMAL}"
+}
+
+blue() {
+	printf "%s\n" "${BLUE}${1}${NORMAL}"
+}
+
+red() {
+	printf "%s\n" "${RED}${1}${NORMAL}"
+}
+
+yellow() {
+	printf "%s\n" "${YELLOW}${1}${NORMAL}"
+}
+
+green() {
+	printf "%s\n" "${GREEN}${1}${NORMAL}"
+}
+
+white() {
+	printf "%s\n" "${WHITE}${1}${NORMAL}"
+}
+
+## Styles
+bold() {
+	printf "%s\n" "${BOLD}${1}${NORMAL}"
+}
+
+# Exports
+
+## Colors
+export BLACK RED GREEN YELLOW LIME_YELLOW POWDER_BLUE MAGENTA CYAN WHITE BLUE PURPLE
+## Styles
+export BRIGHT BLINK REVERSE UNDERLINE NORMAL
+## Functions
+export blue black red yellow green white bold

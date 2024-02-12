@@ -1,0 +1,54 @@
+#!/bin/bash
+# Package lists for supported package managers
+rpm_packages=(
+	zsh
+	git
+	openssh
+	tree
+	lsd
+	bat
+	tldr
+	gh
+	trash-cli
+	brightnessctl
+	playerctl
+	pactl
+	neovim
+	ranger
+	kitty
+	alacritty
+	luarocks
+	atool
+	highlight
+	shellcheck
+	shfmt
+)
+
+arch_packages=(
+	zsh
+	git
+	openssh
+	sheldon
+	tree
+	lsd
+	bat
+	tldr
+	github-cli
+	trash-cli
+	brightnessctl
+	playerctl
+	pactl
+	neovim
+	ranger
+	kitty
+	wezterm
+	alacritty
+	luarocks
+	atool
+	ueberzug
+	highlight
+	shellcheck
+	shfmt
+)
+
+export rpm_packages arch_packages

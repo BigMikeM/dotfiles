@@ -2,50 +2,17 @@
 
 # Dotfiles and bootstrap installer
 
-# set -e
+set -e
+IFS=$'\t\n'
 trap on_error SIGTERM
-
-e='\033'
-RESET="${e}[0m"
-BOLD="${e}[1m"
-CYAN="${e}[0;96m"
-RED="${e}[0;91m"
-YELLOW="${e}[0;93m"
-GREEN="${e}[0;92m"
-
-_exists() {
-	command -v "$1" >/dev/null 2>&1
-}
-
-# Informational messages
-info() {
-	echo -e "${CYAN}${*}${RESET}"
-}
-
-# Success reporter
-success() {
-	echo -e "${GREEN}${BOLD}${*}${RESET}"
-}
-
-# Error reporter
-error() {
-	echo -e "${RED}${BOLD}${*}${RESET}"
-}
-
-# Warning or otherwise important message
-warn() {
-	echo -e "${YELLOW}${*}${RESET}"
-}
-
-# End section
-finish() {
-	success "Done!"
-	echo
-	sleep 1
-}
 
 # Set directory
 export DOTFILES="$HOME/.dotfiles"
+
+# Imports
+source "${DOTFILES}/scripts/fg_colors"
+source "${DOTFILES}/scripts/utilities"
+source "${DOTFILES}/scripts/package_list"
 
 on_start() {
 	info "     |-|                                             |-|     "
@@ -56,17 +23,15 @@ on_start() {
 	info "     |-|        GUI and CLI apps, as well as         |-|     "
 	info "     |-|         custom configuration files.         |-|     "
 	info "     |-|                                             |-|     "
-	warn "     |-|         ONLY ARCHLINUX-BASED SYSTEMS        |-|     "
-	warn "     |-|          ARE CURRENTLY SUPPORTED!!          |-|     "
-	info "     |-|                                             |-|     "
 	info "     |-|          created by @denysdovhan            |-|     "
-	info "     |-|            edited by @BigMikeM              |-|     "
+	info "     |-|            forked by @BigMikeM              |-|     "
 	info "     |-|                                             |-|     "
 
 	info "This script will attempt to install and set up desired software."
-	echo
+	printf "%s\n" ""
 
 	read -rp "Would you like to proceed with installation? [y/N] " -n 1 answer
+	echo
 
 	if [ "${answer,,}" != "y" ]; then
 		exit 1
@@ -91,65 +56,58 @@ install_lazygit() {
 	fi
 }
 
+find_package_manager() {
+	local manager=""
+	# if _exists apt; then
+	# 	manager="apt"
+	# fi
+	if _exists dnf; then
+		manager="rpm"
+	fi
+	if _exists pacman; then
+		manager="arch"
+	fi
+
+	if [[ -n "${manager}" ]]; then
+		printf %s "${manager}"
+	else
+		warn "No supported package manager found."
+	fi
+}
+
+# apt_install() {
+#   sudo -v
+#   sudo apt install "${apt_packages[@]}"
+# }
+
+rpm_install() {
+	sudo -v
+	sudo dnf install --refresh -y "${rpm_packages[@]}"
+}
+
+arch_install() {
+	sudo -v
+	sudo pacman -Sy "${arch_packages[@]}"
+}
+
 install_software() {
 
-	info "Installing software..."
-
-	software=(
-		# Base software needed for others
-		zsh
-		git
-		openssh
-		sheldon
-		# Handy CLI utilities
-		tree
-		lsd
-		bat
-		tldr
-		github-cli
-		trash-cli
-		brightnessctl
-		playerctl
-		pactl
-		# CLI apps
-		neovim
-		lazygit
-		ranger
-		nvm
-		# GUI apps
-		kitty
-		wezterm
-    alacritty
-    neovide
-		# Preferred (yet optional) dependencies
-		luarocks
-		atool
-		ueberzug
-		highlight
-		shellcheck
-		shfmt
-	)
-
-	if _exists yay; then
-		yay -Syu --needed "${software[@]}"
-	else
-		error "Error: Yay is not available. Skipping installation of extra software"
-	fi
+	eval "$(find_package_manager)_install"
 
 	finish
 }
 
 on_finish() {
-	echo
+	printf "%s\n" ""
 	success "Setup was successfully done!"
 	success "Happy Coding!"
 }
 
 on_error() {
-	echo
+	printf "%s\n" ""
 	error "ERROR"
-	error "Something borked."
-	echo
+	error "Something broke."
+	printf "%s\n" ""
 	exit 1
 }
 
@@ -186,7 +144,7 @@ _set_up_nvm() {
 	info "This will install the latest version of NodeJS."
 	read -rp "Would you also like to install the latest LTS release? [y/N]" -n 1 answer
 	# vared -p "Would you like the latest LTS release? [y/N]" -c anwser
-	echo
+	printf "%s\n" ""
 
 	nvm install node
 
@@ -201,7 +159,7 @@ _set_up_nvm() {
 _set_up_sheldon() {
 
 	info "Setting up Sheldon."
-	echo
+	printf "%s\n" ""
 
 	sheldon lock --update
 
@@ -212,8 +170,7 @@ _set_up_gh() {
 
 	info "Setting up GitHub CLI."
 	info "This will also set up SSH to connect your git repos with GitHub."
-	echo
-
+	printf "%s\n" ""
 	gh auth login
 
 	finish
@@ -227,16 +184,14 @@ _set_up_lvim() {
 
 	info "LunarVim setup is not yet complete."
 	info "Skipping."
-	echo
-
+	printf "%s\n" ""
 	finish
 
 }
 
 _set_up_yay() {
 	info "Setting up Yay: Yet another Yaourt"
-	echo
-
+	printf "%s\n" ""
 	yay -Y --gendb
 	yay -Y --devel --combinedupgrade --batchinstall --save
 
@@ -263,10 +218,9 @@ _init_app() {
 	fi
 
 	eval "_set_up_$1" ||
-		warn "No setup function found for [$i]"
-	info "Skipping setup of [$i]"
-	echo
-
+		warn "No setup function found for [$i]" \
+			info "Skipping setup of [$i]"
+	printf "%s\n" ""
 	return
 }
 
@@ -283,8 +237,8 @@ set_up_software() {
 
 main() {
 	on_start
-	check_software_for_setup "$*"
-	install_yay "$*"
+	# check_software_for_setup "$*"
+	# install_yay "$*"
 	install_software "$*"
 	on_finish "$*"
 }
