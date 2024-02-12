@@ -8,4 +8,5 @@ linters.setup({
 	{ command = "pylint" },
 	{ command = "taplo" },
 	{ command = "yamllint" },
+  { command = "luacheck"}
 })
