@@ -51,6 +51,8 @@ arch_packages=(
 	highlight
 	shellcheck
 	shfmt
+  python
+  golang
 )
 
 export rpm_packages arch_packages

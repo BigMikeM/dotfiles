@@ -35,32 +35,32 @@ NORMAL=$(tput sgr0)
 
 ## Colors
 black() {
-	printf "%s\n" "${BLACK}${1}${NORMAL}"
+	printf "%s\n" "${BLACK}${*}${NORMAL}"
 }
 
 blue() {
-	printf "%s\n" "${BLUE}${1}${NORMAL}"
+	printf "%s\n" "${BLUE}${*}${NORMAL}"
 }
 
 red() {
-	printf "%s\n" "${RED}${1}${NORMAL}"
+	printf "%s\n" "${RED}${*}${NORMAL}"
 }
 
 yellow() {
-	printf "%s\n" "${YELLOW}${1}${NORMAL}"
+	printf "%s\n" "${YELLOW}${*}${NORMAL}"
 }
 
 green() {
-	printf "%s\n" "${GREEN}${1}${NORMAL}"
+	printf "%s\n" "${GREEN}${*}${NORMAL}"
 }
 
 white() {
-	printf "%s\n" "${WHITE}${1}${NORMAL}"
+	printf "%s\n" "${WHITE}${*}${NORMAL}"
 }
 
 ## Styles
 bold() {
-	printf "%s\n" "${BOLD}${1}${NORMAL}"
+	printf "%s\n" "${BOLD}${*}${NORMAL}"
 }
 
 # Exports

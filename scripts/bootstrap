@@ -11,8 +11,7 @@ export DOTFILES="$HOME/.dotfiles"
 export SCRIPTS="$DOTFILES/scripts/"
 
 # Imports
-source "${SCRIPTS}/fg_colors"
-source "${SCRIPTS}/utilities"
+source "${SCRIPTS}/utils"
 source "${SCRIPTS}/package_list"
 
 on_start() {
