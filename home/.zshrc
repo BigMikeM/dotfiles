@@ -12,12 +12,6 @@ if [[ -z $XDG_CONFIG_HOME ]]; then
 	export XDG_CONFIG_HOME="/home/mike/.config/"
 fi
 
-# Avoid file overwrites when using >
-set -o noclobber
-
-# Spaceship custom config file
-# export SPACESHIP_CONFIG="$DOTFILES/home/spaceshiprc.zsh"
-
 export MANPATH="/usr/local/man:$MANPATH"
 
 COMPLETION_WAITING_DOTS="true"
