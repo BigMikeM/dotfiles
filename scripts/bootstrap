@@ -8,11 +8,12 @@ trap on_error SIGTERM
 
 # Set directory
 export DOTFILES="$HOME/.dotfiles"
+export SCRIPTS="$DOTFILES/scripts/"
 
 # Imports
-source "${DOTFILES}/scripts/fg_colors"
-source "${DOTFILES}/scripts/utilities"
-source "${DOTFILES}/scripts/package_list"
+source "${SCRIPTS}/fg_colors"
+source "${SCRIPTS}/utilities"
+source "${SCRIPTS}/package_list"
 
 on_start() {
 	info "     |-|                                             |-|     "
@@ -36,16 +37,6 @@ on_start() {
 	if [ "${answer,,}" != "y" ]; then
 		exit 1
 	fi
-}
-
-install_go() {
-	GO_INSTALL_DIR="${HOME}/go_install"
-	mkdir -p "${GO_INSTALL_DIR}"
-	cd "${GO_INSTALL_DIR}" || on_error
-	curl -L "https://go.dev/dl/go1.21.1.src.tar.gz"
-	rm -rf /usr/local/go && tar -C /usr/local -xzf go1.21.1.linux-amd64.tar.gz
-	cd - || on_error
-	rm -fr "${GO_INSTALL_DIR}"
 }
 
 install_lazygit() {
