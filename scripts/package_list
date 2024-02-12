@@ -22,6 +22,8 @@ rpm_packages=(
 	highlight
 	shellcheck
 	shfmt
+  python
+  golang
 )
 
 arch_packages=(
