@@ -62,6 +62,7 @@ find_package_manager() {
 		printf %s "${manager}"
 	else
 		warn "No supported package manager found."
+    on_error "Unable to complete installation."
 	fi
 }
 
@@ -81,8 +82,10 @@ arch_install() {
 }
 
 install_software() {
+  
+  info "Installing system packages."
 
-	eval "$(find_package_manager)_install"
+  "$(find_package_manager)"_install
 
 	finish
 }
@@ -96,7 +99,7 @@ on_finish() {
 on_error() {
 	printf "%s\n" ""
 	error "ERROR"
-	error "Something broke."
+	error "${*}"
 	printf "%s\n" ""
 	exit 1
 }
