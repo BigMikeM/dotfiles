@@ -34,7 +34,39 @@ finish() {
 	sleep 1
 }
 
-export _exists info success error warn finish
+on_finish() {
+	printf "%s\n" ""
+	success "Setup was successfully done!"
+	success "Happy Coding!"
+}
+
+on_error() {
+	printf "%s\n" ""
+	error "ERROR"
+	error "${*}"
+	printf "%s\n" ""
+	exit 1
+}
+
+find_package_manager() {
+	local manager=""
+	# if _exists apt; then
+	# 	manager="apt"
+	# fi
+	if _exists dnf; then
+		manager="rpm"
+	fi
+	if _exists pacman; then
+		manager="arch"
+	fi
+
+	if [[ -n "${manager}" ]]; then
+		printf %s "${manager}"
+	else
+		warn "No supported package manager found."
+		on_error "Unable to complete installation."
+	fi
+}
 
 install_zsh() {
 	info "Trying to detect installed Zsh..."

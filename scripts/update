@@ -5,121 +5,57 @@
 
 trap on_error SIGTERM
 
-e='\033'
-RESET="${e}[0m"
-BOLD="${e}[1m"
-CYAN="${e}[0;96m"
-RED="${e}[0;91m"
-YELLOW="${e}[0;93m"
-GREEN="${e}[0;92m"
-
-_exists() {
-	command -v "$1" >/dev/null 2>&1
-}
-
-# Informational messages
-info() {
-	echo -e "${CYAN}${*}${RESET}"
-}
-
-# Success reporter
-success() {
-	echo -e "${GREEN}${*}${RESET}"
-}
-
-# Error reporter
-error() {
-	echo -e "${RED}${BOLD}${*}${RESET}"
-}
-
-# Warning or otherwise important message
-warn() {
-	echo -e "${YELLOW}${*}${RESET}"
-}
-
-# End section
-finish() {
-	success "Done!"
-	echo
-	sleep 2
-}
-
 # Set directory
 export DOTFILES=${1:-"$HOME/.dotfiles"}
+SCRIPT_DIR="${DOTFILES}/scripts"
+
+source "${SCRIPT_DIR}/utils"
 
 update_dotfiles() {
 	info "Updating dotfiles..."
 
-	cd "$DOTFILES" || exit
+	cd "${DOTFILES}" || exit
 	git pull origin main
 	./install --except shell
 	cd - >/dev/null 2>&1 || exit
 
-	info "Updating Zsh plugins..."
+	info "Updating shell plugins with Sheldon..."
 	sheldon lock --update
 
 	finish
 }
 
 update_system() {
-	if ! _exists pacman; then
-		return
-	elif _exists yay; then
-		_update_yay
-	elif _exists pacman; then
-		_update_pacman
-	fi
+	package_manager="$(find_package_manager)"
+
+	"${package_manager}"_update
 }
 
-_update_pacman() {
-	if ! _exists pacman; then
-		return
-	fi
+rpm_update() {
+	sudo -v
+	sudo dnf upgrade --refresh -y
+}
 
-	info "Pacman detected."
-	info "Updating system packages."
-	echo
-
+arch_update() {
+	sudo -v
 	sudo pacman -Syu
-
-	finish
 }
 
-_update_yay() {
-	if ! _exists yay; then
-		return
-	fi
-
-	echo
-	info "Updating all packages (including development)"
-	echo
-
-	yay -Syu --devel
-
-	echo
-	info "Cleaning up unnecessary packages."
-	echo
-
-	yay -Yc
-
-	echo
-	finish
-}
-
-update_npm() {
+npm_update() {
 	if ! _exists npm; then
 		return
 	fi
 
-	info "Updating NPM..."
+	info "Updating packages installed globally with NPM..."
 	echo
 
 	if _exists nvm; then
 		nvm install-latest-npm
 	else
 		npm install npm -g
-		npm update -g
 	fi
+
+	npm update -g
 
 	finish
 }
@@ -155,33 +91,38 @@ update_all_node() {
 	info "Attempting to update all installed versions of NodeJS."
 	echo
 
-	current_version=$(get_node_version "current")
+	start_version=$(get_node_version "current")
 	default_node_version=$(get_node_version "default")
 
 	info "Updating current active version of NodeJS."
 	echo
 
-	nvm install "$current_version" --latest-npm
+	nvm install "${start_version}" --latest-npm
 
-	if [[ "$default_node_version" != "$current_version" ]]; then
+	if [[ "${default_node_version}" -ne "${start_version}" ]]; then
 		info "Updating default version of NodeJS."
 		echo
 
-		nvm install "$default_node_version"
+		nvm install "${default_node_version}"
 	fi
 
 	nvm_lts_versions | while read -r lts_version; do
-		info "Updating all installed LTS versions of NodeJS."
 		echo
 
-		nvm install "$lts_version"
+		if [[ "${lts_version}" -ne "${start_version}" ]]; then
+			info "Updating Node LTS ${lts_version}."
+			nvm install "${lts_version}"
+		fi
 	done
 
-	# Ensure we are using the version of node we started with
-	info "Switching back to the version of NodeJS we started with."
-	echo
+	current_version="$(get_node_version "current")"
+	if [[ "${current_version}" -ne "${start_version}" ]]; then
+		# Ensure we are using the version of node we started with
+		info "Switching back to the version of NodeJS we started with."
+		echo
 
-	nvm use "$current_version"
+		nvm use "${current_version}"
+	fi
 
 	finish
 }
@@ -206,11 +147,9 @@ on_start() {
 	info "     |-|      This script will attempt to update     |-|     "
 	info "     |-|    the dotfiles repo and system packages.   |-|     "
 	info "     |-|                                             |-|     "
-	warn "     |-|        ONLY ARCHLINUX-BASED SYSTEMS         |-|     "
-	warn "     |-|         ARE CURRENTLY SUPPORTED!!           |-|     "
 	info "     |-|                                             |-|     "
 	info "     |-|          created by @denysdovhan            |-|     "
-	info "     |-|            edited by @BigMikeM              |-|     "
+	info "     |-|            forked by @BigMikeM              |-|     "
 	info "     |-|                                             |-|     "
 
 	echo
@@ -238,7 +177,7 @@ main() {
 	update_system "$*"
 	update_rust "$*"
 	update_all_node "$*"
-	update_npm "$*"
+	npm_update "$*"
 	on_finish "$*"
 }
 
