@@ -22,11 +22,14 @@ rpm_packages=(
 	highlight
 	shellcheck
 	shfmt
-  python
-  golang
+	python
+	golang
+	python3-venv
+	python3-pipx
 )
 
 arch_packages=(
+	base-devel
 	zsh
 	git
 	openssh
@@ -51,8 +54,15 @@ arch_packages=(
 	highlight
 	shellcheck
 	shfmt
-  python
-  golang
+	python
+	golang
 )
 
-export rpm_packages arch_packages
+cargo_packages=(
+	fd-find
+	ripgrep
+	sheldon
+	cargo-update
+)
+
+export rpm_packages arch_packages cargo_packages
