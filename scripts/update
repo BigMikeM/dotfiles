@@ -43,7 +43,16 @@ arch_update() {
 
 	fi
 
+apt_update() {
+	if _exists apt-get; then
+		sudo -v
+		if _exists apt; then
+			sudo apt update && sudo apt upgrade --yes
+			return
+		fi
+		sudo apt-get update && sudo apt-get upgrade --yes
 	fi
+}
 
 	finish
 }
