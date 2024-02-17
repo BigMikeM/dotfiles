@@ -41,9 +41,10 @@ on_start() {
 install_lazygit() {
 	if ! _exists go version; then
 		return 1
-	else
-		go install github.com/jesseduffield/lazygit@latest
 	fi
+	info "Installing lazygit using golang."
+	go install github.com/jesseduffield/lazygit@latest
+
 }
 
 # apt_install() {
