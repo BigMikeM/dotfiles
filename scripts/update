@@ -3,6 +3,7 @@
 # Get System Updates, Update NodeJS/NPM, Update rust/Rustup, etc...
 # Source: https://github.com/sapegin/dotfiles/blob/master/setup/update.sh
 
+set -eu
 trap on_error SIGTERM
 
 # Set directory
