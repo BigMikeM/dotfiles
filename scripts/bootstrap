@@ -54,7 +54,7 @@ install_nvm() {
 
 	info "Installing Node Version Manager."
 	export PROFILE=/dev/null
-	curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+	bash -c "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash" >>/dev/null
 
 	export NVM_DIR="$HOME/.nvm"
 	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
@@ -63,6 +63,7 @@ install_nvm() {
 	nvm install --lts
 
 	read -rp "Would you also like to install the latest version of Node? [y/N]: " -n 1 answer
+	echo
 
 	if [[ "${answer,,}" == "y" ]]; then
 		nvm install node
@@ -84,7 +85,7 @@ install_rustup() {
 
 cargo_install() {
 	info "Installing extras with Cargo."
-	cargo install "${cargo_packages}"
+	cargo install "${cargo_packages[@]}"
 
 	sheldon lock --update
 }
