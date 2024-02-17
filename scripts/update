@@ -62,6 +62,9 @@ apt_update() {
 	fi
 }
 
+cargo_update() {
+	info "Updating packages installed with Cargo."
+	cargo install-update -a
 	finish
 }
 
