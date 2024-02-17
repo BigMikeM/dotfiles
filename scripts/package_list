@@ -24,11 +24,13 @@ rpm_packages=(
 	shfmt
 	python
 	golang
+  bc
 	python3-venv
 	python3-pipx
 )
 
 arch_packages=(
+  yay
 	base-devel
 	zsh
 	git
@@ -42,7 +44,7 @@ arch_packages=(
 	trash-cli
 	brightnessctl
 	playerctl
-	pactl
+	# pactl
 	neovim
 	ranger
 	kitty
@@ -55,7 +57,8 @@ arch_packages=(
 	shellcheck
 	shfmt
 	python
-	golang
+	go
+  bc
 )
 
 cargo_packages=(
