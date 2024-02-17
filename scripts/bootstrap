@@ -64,6 +64,15 @@ install_nvm() {
 	fi
 }
 
+install_rustup() {
+	info "Installing Rustup"
+	curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+	info "Installing latest stable version of Rust and Cargo."
+	rustup default stable
+
+}
+
 # apt_install() {
 #   sudo -v
 #   sudo apt install "${apt_packages[@]}"
