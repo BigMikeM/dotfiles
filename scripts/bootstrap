@@ -125,8 +125,6 @@ set_zsh() {
 }
 main() {
 	on_start
-	# check_software_for_setup "$*"
-	# install_yay "$*"
 	install_software "$*"
 	on_finish "$*"
 }
