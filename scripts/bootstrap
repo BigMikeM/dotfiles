@@ -73,6 +73,13 @@ install_rustup() {
 
 }
 
+cargo_install() {
+	info "Installing extras with Cargo."
+	cargo install "${cargo_packages}"
+
+	sheldon lock --update
+}
+
 # apt_install() {
 #   sudo -v
 #   sudo apt install "${apt_packages[@]}"
