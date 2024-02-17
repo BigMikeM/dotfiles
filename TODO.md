@@ -54,16 +54,18 @@
     sudo pacman -S base-devel fontconfig freetype2 libglvnd sndio cmake \
     git gtk3 python sdl2 vulkan-intel libxkbcommon-x11
     ```
+
 - pipx install jrnl
 - Install neovim:
-    - curl neovim-linux64.tar.gz https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
-    - sudo tar -C /opt/ -xvf neovim-linux54.tar.gz
-- Install nvm: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
+  - curl neovim-linux64.tar.gz <https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz>
+  - sudo tar -C /opt/ -xvf neovim-linux54.tar.gz
+- Install nvm: curl -o- <https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh> | bash
 
 - For Fedora, I need devel files:
-    - `sudo dnf group install "C Development Tools and Libraries" "Development Tools" "Development Libraries"`
-    - `sudo dnf install cmake`
-    - https://rpmfusion.org/Configuration
-    - enable free and non-free repos `sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm`
-    - Appstream data for kde discover and gnome software - `sudo dnf groupupdate core`
+  - `sudo dnf group install "C Development Tools and Libraries" "Development Tools" "Development Libraries"`
+  - `sudo dnf install cmake`
+  - <https://rpmfusion.org/Configuration>
+  - enable free and non-free repos `sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm`
+  - Appstream data for kde discover and gnome software - `sudo dnf groupupdate core`
 
+  - node cleanup
