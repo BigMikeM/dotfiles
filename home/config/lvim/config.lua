@@ -2,7 +2,7 @@
 lvim.log.level = "warn"
 lvim.format_on_save.enabled = false
 -- lvim.colorscheme = "kanagawa-wave" -- Dark -> Light: dragon -> wave -> lotus
-lvim.colorscheme = "catppuccin-macchiato"
+lvim.colorscheme = "catppuccin-mocha"
 lvim.builtin.lualine.options.theme = "catppuccin"
 vim.opt.guifont = "RecMonoDuotone Nerd Font:h12"
 -- vim.opt.colorcolumn = "80,100"
@@ -303,7 +303,7 @@ lvim.plugins = {
 		"rasulomaroff/reactive.nvim",
 		config = function()
 			require("reactive").setup({
-				load = { "catppuccin-macchiato-cursor", "catppuccin-macchiato-cursorline" },
+				load = { "catppuccin-mocha-cursor", "catppuccin-mocha-cursorline" },
 			})
 		end,
 	},
