@@ -92,9 +92,10 @@ rpm_install() {
 
 arch_install() {
 	sudo -v
-	sudo pacman -Sy "${arch_packages[@]}"
+	sudo pacman -Sy --needed "${arch_packages[@]}"
 }
 
+install_lunarvim() {
 install_software() {
 
 	info "Installing system packages."
