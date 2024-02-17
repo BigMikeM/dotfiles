@@ -30,21 +30,21 @@ warn() {
 # End section
 finish() {
 	success "Done!"
-	printf "%s\n" ""
+	printf "\n"
 	sleep 1
 }
 
 on_finish() {
-	printf "%s\n" ""
+	printf "\n"
 	success "Setup was successfully done!"
 	success "Happy Coding!"
 }
 
 on_error() {
-	printf "%s\n" ""
+	printf "\n"
 	error "ERROR"
 	error "${*}"
-	printf "%s\n" ""
+	printf "\n"
 	exit 1
 }
 
@@ -122,4 +122,12 @@ install_npm() {
 	npm install -g "${packages[*]}"
 
 	finish
+}
+
+_current_shell() {
+	printf %s "$(readlink /proc/$$/exe | sed "s/.*\///")"
+}
+
+_user_default_shell() {
+  printf %s "$(awk -F: -v user="$(whoami)" '$1 == user {print $NF}' /etc/passwd | rev | cut -d"/" -f1 | rev)"
 }
