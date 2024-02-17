@@ -24,9 +24,10 @@ POWDER_BLUE=$(tput setaf 153)
 
 ## Styles
 BRIGHT=$(tput bold)
-BLINK=$(tput blink)
-REVERSE=$(tput smso)
-UNDERLINE=$(tput smul)
+# Below seemed to be causing issues on endeavouros
+# BLINK=$(tput blink)
+# REVERSE=$(tput smso)
+# UNDERLINE=$(tput smul)
 BOLD=$(tput bold)
 ## Reset
 NORMAL=$(tput sgr0)
