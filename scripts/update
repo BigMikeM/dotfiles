@@ -41,14 +41,10 @@ arch_update() {
 	sudo -v
 	if _exists pacman; then
 		if _exists yay; then
-			yay -Syu
+			yay -Syu --noconfirm
 			return
 		fi
-		if _exists paru; then
-			paru
-			return
-		fi
-		sudo pacman -Syu
+		sudo pacman -Syu --noconfirm
 	fi
 }
 
@@ -174,9 +170,9 @@ main() {
 	update_dotfiles "$*"
 	update_system "$*"
 	update_rust "$*"
-	# update_all_node "$*"
+	update_all_node "$*"
 	cargo_update
-	npm_update "$*"
+	# npm_update "$*"
 	on_finish "$*"
 }
 
