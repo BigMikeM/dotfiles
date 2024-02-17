@@ -39,8 +39,8 @@ alias o='open'
 alias oo='open .'
 
 # Run scripts
-alias update='source $DOTFILES/scripts/update'
-alias bootstrap='source $DOTFILES/scripts/bootstrap'
+alias update='bash -c $DOTFILES/scripts/update'
+alias bootstrap='bash -c $DOTFILES/scripts/bootstrap'
 
 # Quick jump to dotfiles
 alias dotfiles='e $DOTFILES'
