@@ -185,6 +185,7 @@ main() {
 	update_system "$*"
 	update_rust "$*"
 	update_all_node "$*"
+	cargo_update
 	npm_update "$*"
 	on_finish "$*"
 }
