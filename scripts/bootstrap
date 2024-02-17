@@ -96,6 +96,19 @@ arch_install() {
 }
 
 install_lunarvim() {
+	info "Starting the LunarVim installer."
+	LV_BRANCH='release-1.3/neovim-0.9' bash <(curl -s https://raw.githubusercontent.com/LunarVim/LunarVim/release-1.3/neovim-0.9/utils/installer/install.sh)
+
+	# This is intended for Ubuntu/Snap-based systems.
+	# TODO: Ensure snap command is correct; update nvim snap install location; correct lvim bin location
+	# if _exists snap; then
+	# 	info "Snap detected on your system. ${HOME}/.local/bin/lvim needs to be tweaked if Neovim is installed with Snap."
+	# 	if [[ "$(which nvim)" == "/snap" ]]; then
+	# 		sed -ir "s///g" "${HOME}/.local/bin/lvim"
+	# 	fi
+	# fi
+}
+
 install_software() {
 
 	info "Installing system packages."
