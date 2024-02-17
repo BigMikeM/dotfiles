@@ -38,10 +38,18 @@ rpm_update() {
 
 arch_update() {
 	sudo -v
-	sudo pacman -Syu
-}
-
+	if _exists pacman; then
+		if _exists yay; then
+			yay -Syu
+			return
+		fi
+		if _exists paru; then
+			paru
+			return
+		fi
+		sudo pacman -Syu
 	fi
+}
 
 apt_update() {
 	if _exists apt-get; then
