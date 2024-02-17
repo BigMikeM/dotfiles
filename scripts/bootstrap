@@ -47,6 +47,23 @@ install_lazygit() {
 
 }
 
+install_nvm() {
+	info "Installing Node Version Manager."
+	PROFILE=/dev/null bash -c 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash'
+
+	info "Installing Node LTS."
+	export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+
+	nvm install --lts
+
+	read -rp "Would you also like to install the latest version of Node? [y/N]" -n 1 answer
+
+	if [[ "${answer,,}" == "y" ]]; then
+		nvm install node
+	fi
+}
+
 # apt_install() {
 #   sudo -v
 #   sudo apt install "${apt_packages[@]}"
