@@ -1,4 +1,4 @@
-#! /usr/bin/env zsh
+#! /bin/zsh
 # Export path to root of dotfiles repo
 export DOTFILES="$HOME/.dotfiles"
 export DOTFILES=${DOTFILES:="$HOME/.dotfiles"}
@@ -9,7 +9,7 @@ _exists() {
 
 # Ensure XDG_CONFIG_HOME is set, as it seems not to be sometimes
 if [[ -z $XDG_CONFIG_HOME ]]; then
-	export XDG_CONFIG_HOME="/home/mike/.config/"
+	export XDG_CONFIG_HOME="$HOME/.config/"
 fi
 
 export MANPATH="/usr/local/man:$MANPATH"
@@ -109,15 +109,6 @@ export BAT_THEME="Catppuccin-mocha"
 # Shell plugins
 eval "$(sheldon source)"
 
-# # Sourcing all zsh files from $DOTFILES/lib
-# lib_files=($(find "$DOTFILES/lib" -type f -name "*.zsh"))
-
-# if [[ "${#lib_files[@]}" -gt 0 ]]; then
-# 	for file in "${lib_files[@]}"; do
-# 		source "$file"
-# 	done
-# fi
-#
 if _exists pipx; then
 	autoload -U bashcompinit
 	bashcompinit
