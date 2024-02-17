@@ -118,6 +118,11 @@ install_software() {
 	finish
 }
 
+set_zsh() {
+	info "Default shell will be changed to ZSH."
+
+	chsh -s "$(which zsh)"
+}
 main() {
 	on_start
 	# check_software_for_setup "$*"
