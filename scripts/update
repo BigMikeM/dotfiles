@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # Get System Updates, Update NodeJS/NPM, Update rust/Rustup, etc...
 # Source: https://github.com/sapegin/dotfiles/blob/master/setup/update.sh
@@ -164,17 +164,6 @@ on_start() {
 	echo
 }
 
-on_finish() {
-	success "Done with system update!"
-	success "Happy Coding!"
-}
-
-on_error() {
-	error "ERROR!"
-	error "Something went wrong."
-	exit 1
-}
-
 main() {
 
 	on_start "$*"
@@ -185,7 +174,7 @@ main() {
 	update_dotfiles "$*"
 	update_system "$*"
 	update_rust "$*"
-	update_all_node "$*"
+	# update_all_node "$*"
 	cargo_update
 	npm_update "$*"
 	on_finish "$*"
