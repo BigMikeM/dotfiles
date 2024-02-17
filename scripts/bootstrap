@@ -123,6 +123,17 @@ set_zsh() {
 
 	chsh -s "$(which zsh)"
 }
+
+install_extras() {
+
+	info "Installing external software."
+
+	install_lazygit
+	install_nvm
+	install_rustup
+	install_lunarvim
+}
+
 main() {
 	on_start
 	install_software "$*"
