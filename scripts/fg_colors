@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# TODO: Maybe rename the variables and function to something
+# TODO: Maybe rename the variables and functions to something
 # referencing the fact that these are only foreground/text colors
 
 # Declarations
@@ -69,5 +69,3 @@ bold() {
 export BLACK RED GREEN YELLOW LIME_YELLOW POWDER_BLUE MAGENTA CYAN WHITE BLUE PURPLE
 ## Styles
 export BRIGHT BLINK REVERSE UNDERLINE NORMAL
-## Functions
-export blue black red yellow green white bold
