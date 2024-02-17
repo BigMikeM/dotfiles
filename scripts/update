@@ -41,21 +41,9 @@ arch_update() {
 	sudo pacman -Syu
 }
 
-npm_update() {
-	if ! _exists npm; then
-		return
 	fi
 
-	info "Updating packages installed globally with NPM..."
-	echo
-
-	if _exists nvm; then
-		nvm install-latest-npm
-	else
-		npm install npm -g
 	fi
-
-	npm update -g
 
 	finish
 }
@@ -88,40 +76,40 @@ update_all_node() {
 		return
 	fi
 
-	info "Attempting to update all installed versions of NodeJS."
-	echo
-
-	start_version=$(get_node_version "current")
-	default_node_version=$(get_node_version "default")
+	local start
+	local default
+	start=$(get_node_version "current")
+	default=$(get_node_version "default")
 
 	info "Updating current active version of NodeJS."
 	echo
 
-	nvm install "${start_version}" --latest-npm
+	nvm install "${start}" --latest-npm
 
-	if [[ "${default_node_version}" -ne "${start_version}" ]]; then
+	if [[ "${default}" != "${start}" ]]; then
 		info "Updating default version of NodeJS."
 		echo
 
-		nvm install "${default_node_version}"
+		nvm install "${default}" --latest-npm
 	fi
 
-	nvm_lts_versions | while read -r lts_version; do
+	nvm_lts_versions | while read -r lts; do
 		echo
 
-		if [[ "${lts_version}" -ne "${start_version}" ]]; then
-			info "Updating Node LTS ${lts_version}."
-			nvm install "${lts_version}"
+		if [[ "${lts}" != "${start}" ]] &&
+			[[ "${lts}" != "${default}" ]]; then
+			info "Updating Node LTS ${lts}."
+			nvm install "${lts}" --latest-npm
 		fi
 	done
 
-	current_version="$(get_node_version "current")"
-	if [[ "${current_version}" -ne "${start_version}" ]]; then
+	current="$(get_node_version "current")"
+	if [[ "${current}" != "${start}" ]]; then
 		# Ensure we are using the version of node we started with
 		info "Switching back to the version of NodeJS we started with."
 		echo
 
-		nvm use "${current_version}"
+		nvm use "${current}"
 	fi
 
 	finish
