@@ -111,7 +111,7 @@ install_lunarvim() {
 
 install_software() {
 
-	info "Installing system packages."
+	info "Installing sofware with system package manager."
 
 	"$(find_package_manager)"_install
 
