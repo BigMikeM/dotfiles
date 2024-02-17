@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # Dotfiles and bootstrap installer
 
@@ -30,7 +30,7 @@ on_start() {
 	info "This script will attempt to install and set up desired software."
 	printf "\n"
 
-	read -rp "Would you like to proceed with installation? [y/N] " -n 1 answer
+	read -rp "Would you like to proceed with installation? [y/N]: " -n 1 answer
 	echo
 
 	if [ "${answer,,}" != "y" ]; then
@@ -39,8 +39,8 @@ on_start() {
 }
 
 install_lazygit() {
-	if ! _exists go version; then
-		return 1
+	if ! _exists go || _exists lazygit; then
+		return
 	fi
 	info "Installing lazygit using golang."
 	go install github.com/jesseduffield/lazygit@latest
@@ -48,16 +48,21 @@ install_lazygit() {
 }
 
 install_nvm() {
-	info "Installing Node Version Manager."
-	PROFILE=/dev/null bash -c 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash'
+	if _exists nvm; then
+		return
+	fi
 
-	info "Installing Node LTS."
-	export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+	info "Installing Node Version Manager."
+	export PROFILE=/dev/null
+	curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+
+	export NVM_DIR="$HOME/.nvm"
 	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
+	info "Installing Node LTS."
 	nvm install --lts
 
-	read -rp "Would you also like to install the latest version of Node? [y/N]" -n 1 answer
+	read -rp "Would you also like to install the latest version of Node? [y/N]: " -n 1 answer
 
 	if [[ "${answer,,}" == "y" ]]; then
 		nvm install node
@@ -65,6 +70,10 @@ install_nvm() {
 }
 
 install_rustup() {
+	if _exists rustup; then
+		return
+	fi
+
 	info "Installing Rustup"
 	curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
@@ -80,6 +89,7 @@ cargo_install() {
 	sheldon lock --update
 }
 
+# Debian-based distro support is not ready
 # apt_install() {
 #   sudo -v
 #   sudo apt install "${apt_packages[@]}"
@@ -92,10 +102,14 @@ rpm_install() {
 
 arch_install() {
 	sudo -v
-	sudo pacman -Sy --needed "${arch_packages[@]}"
+	sudo pacman -Sy --needed --noconfirm "${arch_packages[@]}"
 }
 
 install_lunarvim() {
+	if _exists lvim; then
+		return
+	fi
+
 	info "Starting the LunarVim installer."
 	LV_BRANCH='release-1.3/neovim-0.9' bash <(curl -s https://raw.githubusercontent.com/LunarVim/LunarVim/release-1.3/neovim-0.9/utils/installer/install.sh)
 
@@ -119,9 +133,15 @@ install_software() {
 }
 
 set_zsh() {
-	info "Default shell will be changed to ZSH."
+	if ! _exists zsh; then
+		warn "ZSH not found! Other shells are not currently supported"
+		return
+	fi
+	if [[ "$(_user_default_shell)" != "zsh" ]]; then
+		info "Default shell will be changed to ZSH."
 
-	chsh -s "$(which zsh)"
+		chsh -s "$(which zsh)"
+	fi
 }
 
 install_extras() {
@@ -137,6 +157,9 @@ install_extras() {
 main() {
 	on_start
 	install_software "$*"
+	install_extras
+	cargo_install
+	set_zsh
 	on_finish "$*"
 }
 
