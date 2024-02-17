@@ -61,11 +61,11 @@ npm_update() {
 }
 
 nvm_node_version() {
-	printf %s "$(nvm ls "$1" | cut -s -d'.' -f'1,2' | cut -d'v' -f2)"
+	printf %s "$(nvm ls "$1" | cut -s -d'.' -f'1,2' | cut -d'v' -f2 | cut -d'.' -f'1')"
 }
 
 system_node_version() {
-	printf %s "$(node --version | cut -s -d'.' -f'1,2' | cut -d'v' -f2)"
+	printf %s "$(node --version | cut -s -d'.' -f'1,2' | cut -d'v' -f2 | cut -d'.' -f'1')"
 }
 
 get_node_version() {
