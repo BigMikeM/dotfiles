@@ -27,9 +27,11 @@ update_dotfiles() {
 }
 
 update_system() {
+  info "Updating software installed with system package manager."
 	package_manager="$(find_package_manager)"
 
 	"${package_manager}"_update
+  finish
 }
 
 rpm_update() {
@@ -59,7 +61,7 @@ apt_update() {
 	fi
 }
 
-cargo_update() {
+update_cargo() {
 	info "Updating packages installed with Cargo."
 	cargo install-update -a
 	finish
@@ -132,6 +134,14 @@ update_all_node() {
 	finish
 }
 
+update_npm() {
+	info "Updating software installed globally with NPM."
+
+	npm update -g
+
+	finish
+}
+
 update_rust() {
 	if ! _exists rustup; then
 		return
@@ -171,8 +181,8 @@ main() {
 	update_system "$*"
 	update_rust "$*"
 	update_all_node "$*"
-	cargo_update
-	# npm_update "$*"
+	update_cargo
+	update_npm "$*"
 	on_finish "$*"
 }
 
