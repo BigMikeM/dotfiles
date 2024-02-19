@@ -4,7 +4,6 @@ lvim.format_on_save.enabled = false
 -- lvim.colorscheme = "kanagawa-wave" -- Dark -> Light: dragon -> wave -> lotus
 lvim.colorscheme = "catppuccin-mocha"
 lvim.builtin.lualine.options.theme = "catppuccin"
-vim.opt.guifont = "RecMonoDuotone Nerd Font:h12"
 -- vim.opt.colorcolumn = "80,100"
 
 lvim.builtin.treesitter.highlight.enable = true
@@ -329,7 +328,5 @@ require("keymaps.rust")
 require("lang.python")
 require("lang.rust")
 require("theme.kanagawa")
-
-require("nvim-navic").setup({
-	highlight = true,
-})
+require("nvim-navic").setup({ highlight = true })
+require("neovide")
