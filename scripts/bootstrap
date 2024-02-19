@@ -99,6 +99,7 @@ cargo_install() {
 rpm_install() {
 	sudo -v
 	sudo dnf install --refresh -y "${rpm_packages[@]}"
+  sudo dnf group install --with-optional "${rpm_groups[@]}"
 }
 
 arch_install() {

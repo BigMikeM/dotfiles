@@ -3,6 +3,7 @@
 rpm_packages=(
 	zsh
 	git
+	cmake
 	openssh
 	tree
 	lsd
@@ -24,13 +25,23 @@ rpm_packages=(
 	shfmt
 	python
 	golang
-  bc
-	python3-venv
-	python3-pipx
+	bc
+	python3-pylint-venv
+	pipx
+	"https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm"
+	"https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
+	pkg-config
+	openssl-devel
+)
+
+rpm_groups=(
+	c-development
+	development-tools
+	python-science
 )
 
 arch_packages=(
-  yay
+	yay
 	base-devel
 	zsh
 	git
@@ -58,7 +69,11 @@ arch_packages=(
 	shfmt
 	python
 	go
-  bc
+	bc
+	openssl
+	pkg-config
+  pipx
+  python3-venv
 )
 
 cargo_packages=(
@@ -68,4 +83,4 @@ cargo_packages=(
 	cargo-update
 )
 
-export rpm_packages arch_packages cargo_packages
+export rpm_packages rpm_groups arch_packages cargo_packages
