@@ -2,27 +2,16 @@
 
 ## Bootstrap
 
-- Make crossplatform
-- Install rustup
 - Install python
   - pip install black, isort, pynvim, i3ipc(sway)
   - pipx?
-- Install zsh (is there a distro-independant way?)
-- Install lunarvim
-- Install nvm
-  - curl -o- <https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh> | bash
-- Install node
-  - npm install neovim
+- npm install neovim
 - Install neovim (appimage?)
-- Install rustup
-  - Linux: curl --proto '=https' --tlsv1.2 -sSf <https://sh.rustup.rs> | sh
-  - WSL:
-  - cargo install sheldon, fd-find, ripgrep
   - sheldon needs openssl, pkg-config
 - Install Kitty terminal
   - curl -L <https://sw.kovidgoyal.net/kitty/installer.sh> | sh /dev/stdin
 - Install lazygit
-- golang? lua? luarocks?
+- lua? luarocks?
 - Install ranger (via pipx install ranger-fm)
 - Install alacritty?
   - debian dep install: apt install cmake pkg-config libfreetype6-dev libfontconfig1-dev libxcb-xfixes0-dev libxkbcommon-dev python3
@@ -56,16 +45,4 @@
     ```
 
 - pipx install jrnl
-- Install neovim:
-  - curl neovim-linux64.tar.gz <https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz>
-  - sudo tar -C /opt/ -xvf neovim-linux54.tar.gz
-- Install nvm: curl -o- <https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh> | bash
-
-- For Fedora, I need devel files:
-  - `sudo dnf group install "C Development Tools and Libraries" "Development Tools" "Development Libraries"`
-  - `sudo dnf install cmake`
-  - <https://rpmfusion.org/Configuration>
-  - enable free and non-free repos `sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm`
-  - Appstream data for kde discover and gnome software - `sudo dnf groupupdate core`
-
-  - node cleanup
+- node cleanup
