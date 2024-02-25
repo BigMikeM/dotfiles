@@ -7,14 +7,12 @@ _exists() {
 	command -v "$1" >/dev/null 2>&1
 }
 
-# Avoid stupidity with trash-cli:
+# Trash files instead of deleting immediately
 # https://github.com/sindresorhus/trash-cli
-# or use default rm -i
 if _exists trash; then
 	alias rm='trash'
 fi
 
-# Just bcoz cls shorter than clear
 alias cls='clear'
 
 # Folders Shortcuts
@@ -64,6 +62,8 @@ fi
 
 alias git-root='cd $(git rev-parse --show-toplevel)'
 
+# ls with colors and icons
+# Icons require a Nerd Font: https://www.nerdfonts.com/
 if _exists lsd; then
 	unalias ls
 	alias ls='lsd'
@@ -75,24 +75,31 @@ fi
 if _exists bat; then
 	alias cat='bat'
 fi
-# On Debian-based distros, "bat" may be installed as "batcat"
+# On some distros, "bat" may be installed as "batcat"
 if _exists batcat; then
 	alias cat='batcat'
 fi
 
+# Slightly shortened 'clear'
+# Make ranger change directory on exit by default
 if _exists ranger; then
 	alias rd=". ranger"
 fi
 
-# Neovide aliases
+# Slightly shorter way to launch neovide
 if _exists neovide; then
 	alias nd='neovide'
+# Use nevim instead of vim/vi by default
 fi
 
+# Because I have a Microbit to play with
+# https://microbit.org/
 if _exists arm-none-eabi-gdb; then
 	alias agdb='arm-none-eabi-gdb'
 fi
 
+# Slightly shortened way to launch my favority git ui
+# https://github.com/jesseduffield/lazygit
 if _exists lazygit; then
 	alias lg='lazygit'
 fi
