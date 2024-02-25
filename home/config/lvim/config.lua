@@ -2,7 +2,7 @@
 lvim.log.level = "warn"
 lvim.format_on_save.enabled = false
 -- lvim.colorscheme = "kanagawa-wave" -- Dark -> Light: dragon -> wave -> lotus
-lvim.colorscheme = "catppuccin-mocha"
+lvim.colorscheme = "catppuccin-macchiato"
 lvim.builtin.lualine.options.theme = "catppuccin"
 -- vim.opt.colorcolumn = "80,100"
 
@@ -308,25 +308,12 @@ lvim.plugins = {
 	},
 }
 
-vim.api.nvim_create_autocmd("BufEnter", {
-	pattern = { "*.json", "*.jsonc", "*.md" },
-	command = "setlocal wrap",
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = "zsh",
-	callback = function()
-		-- let treesitter use bash highlight for zsh files as well
-		require("nvim-treesitter.highlight").attach(0, "bash")
-	end,
-})
-
 -- Beginning to modularize this enormous config
+require("neovide")
+require("autocmd")
 require("keymaps.lvim")
 require("keymaps.windowpicker")
 require("keymaps.rust")
 require("lang.python")
 require("lang.rust")
-require("theme.kanagawa")
-require("nvim-navic").setup({ highlight = true })
-require("neovide")
+require("themes.kanagawa")
