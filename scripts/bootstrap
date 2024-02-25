@@ -99,7 +99,7 @@ cargo_install() {
 rpm_install() {
 	sudo -v
 	sudo dnf install --refresh -y "${rpm_packages[@]}"
-  sudo dnf group install --with-optional "${rpm_groups[@]}"
+	sudo dnf group install --with-optional "${rpm_groups[@]}"
 }
 
 arch_install() {
@@ -135,11 +135,13 @@ install_software() {
 }
 
 set_zsh() {
+	local shell
 	if ! _exists zsh; then
 		warn "ZSH not found! Other shells are not currently supported"
 		return
 	fi
-	if [[ "$(_user_default_shell)" != "zsh" ]]; then
+	shell="$(_user_default_shell)"
+	if [[ "${shell,,}" != "zsh" ]]; then
 		info "Default shell will be changed to ZSH."
 
 		chsh -s "$(which zsh)"
