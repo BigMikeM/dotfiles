@@ -86,7 +86,7 @@ alias cls='clear'
 
 # Make ranger change directory on exit by default
 if _exists ranger; then
-	alias rd=". ranger"
+	alias ranger=". ranger"
 fi
 
 # Slightly shorter way to launch neovide
