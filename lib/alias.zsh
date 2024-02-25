@@ -13,8 +13,6 @@ if _exists trash; then
 	alias rm='trash'
 fi
 
-alias cls='clear'
-
 # Folders Shortcuts
 [ -d ~/Downloads ] && alias dl='cd ~/Downloads'
 [ -d ~/Desktop ] && alias dt='cd ~/Desktop'
@@ -81,6 +79,8 @@ if _exists batcat; then
 fi
 
 # Slightly shortened 'clear'
+alias cls='clear'
+
 # Make ranger change directory on exit by default
 if _exists ranger; then
 	alias rd=". ranger"
