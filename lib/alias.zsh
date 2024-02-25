@@ -91,7 +91,9 @@ fi
 
 # Slightly shorter way to launch neovide
 if _exists neovide; then
-	alias nd='neovide'
+	alias nv='neovide'
+fi
+
 # Use nevim instead of vim/vi by default
 fi
 
