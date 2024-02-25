@@ -78,6 +78,9 @@ if _exists batcat; then
 	alias cat='batcat'
 fi
 
+# Use colors with grep
+alias grep='grep --color=auto'
+
 # Slightly shortened 'clear'
 alias cls='clear'
 
