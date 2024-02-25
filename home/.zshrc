@@ -14,6 +14,8 @@ fi
 
 export MANPATH="/usr/local/man:$MANPATH"
 
+export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+
 COMPLETION_WAITING_DOTS="true"
 
 # Extend $PATH without duplicates
@@ -52,7 +54,7 @@ if [[ -n "$SSH_CONNECTION" ]]; then
 		export EDITOR='vim'
 	fi
 else
-	export EDITOR='lvim'
+	export EDITOR='nvim'
 fi
 
 # # Better formatting for time command
