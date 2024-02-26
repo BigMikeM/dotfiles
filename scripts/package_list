@@ -102,7 +102,6 @@ arch_packages=(
 	openssl
 	pkg-config
   pipx
-  python3-venv
 )
 
 cargo_packages=(
@@ -113,3 +112,12 @@ cargo_packages=(
 )
 
 export rpm_packages rpm_groups arch_packages cargo_packages
+pipx_packages=(
+  black
+  jrnl
+  pynvim
+  pylint
+  pyllint-venv
+  isort
+)
+
