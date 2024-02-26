@@ -39,6 +39,19 @@ on_start() {
 }
 
 install_lazygit() {
+	if _exists lazygit; then
+		return
+	fi
+
+	info "Now beginning the installation of: [Lazygit from github.com/jesseduffield]"
+	read -rp "Would you like to proceed with this install? [y/N]: " -n 1 answer
+	echo
+
+	if [ "${answer,,}" != "y" ]; then
+		info "Skipping Lazygit installation."
+		exit 1
+	fi
+
 	if ! _exists go || _exists lazygit; then
 		return
 	fi
