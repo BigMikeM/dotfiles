@@ -111,7 +111,6 @@ cargo_packages=(
 	cargo-update
 )
 
-export rpm_packages rpm_groups arch_packages cargo_packages
 pipx_packages=(
   black
   jrnl
@@ -121,3 +120,4 @@ pipx_packages=(
   isort
 )
 
+export rpm_packages rpm_groups arch_packages cargo_packages pipx_packages apt_packages
