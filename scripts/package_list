@@ -33,6 +33,36 @@ rpm_packages=(
 	"https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
 )
 
+apt_packages=(
+  zsh
+  git
+  cmake
+  openssh-client
+  tree
+  lsd
+  bat
+  tldr
+  gh
+  trash-cli
+  brightnessctl
+  playerctl
+  pulseaudio-utils
+  ranger
+  kitty
+  alacritty
+  luarocks
+  atool
+  highlight
+  shellcheck
+  shfmt
+  python
+  golang
+  bc
+  pipx
+  pkg-config
+  libssl-dev
+)
+
 rpm_groups=(
 	c-development
 	development-tools
