@@ -43,7 +43,7 @@ install_lazygit() {
 		return
 	fi
 
-	info "Now beginning the installation of: [Lazygit from github.com/jesseduffield]"
+	info "Now beginning the installation of: [Lazygit] from [github.com/jesseduffield] using [go]"
 	read -rp "Would you like to proceed with this install? [y/N]: " -n 1 answer
 	echo
 
@@ -65,9 +65,8 @@ install_nvm() {
 		return
 	fi
 
-	info "Installing Node Version Manager."
-	export PROFILE=/dev/null
-	bash -c "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash" >>/dev/null
+	info "Now beginning the installation of: [Node Version Manager] from [github.com/nvm-sh/nvm] using [curl]."
+	bash -c "export PROFILE=/dev/null;curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash" >>/dev/null
 
 	export NVM_DIR="$HOME/.nvm"
 	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
@@ -98,7 +97,7 @@ install_rustup() {
 
 install_nonfree_codecs() {
 	if [[ -z "${ASSUME_YES}" ]]; then
-		read -p "Would you like to install non-free software? [y/N]: " response
+		read -rp "Would you like enable and install non-free software? [y/N]: " -n 1 response
 		if [[ "${response,}" != "y" ]]; then
 			echo "Installation of non-free software canceled."
 			return
