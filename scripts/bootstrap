@@ -14,6 +14,8 @@ export SCRIPTS="$DOTFILES/scripts/"
 source "${SCRIPTS}/utils"
 source "${SCRIPTS}/package_list"
 
+PACKAGE_MANAGER="$(find_package_manager)"
+
 on_start() {
 	info "     |-|                                             |-|     "
 	info "     |-|         Custom dotfiles bootstrap.          |-|     "
@@ -68,8 +70,8 @@ install_nvm() {
 	info "Now beginning the installation of: [Node Version Manager] from [github.com/nvm-sh/nvm] using [curl]."
 	bash -c "export PROFILE=/dev/null;curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash" >>/dev/null
 
-	export NVM_DIR="$HOME/.nvm"
-	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+	export NVM_DIR="${HOME}/.nvm"
+	[ -s "${NVM_DIR}/nvm.sh" ] && \. "${NVM_DIR}/nvm.sh" # This loads nvm
 
 	info "Installing Node LTS."
 	nvm install --lts
@@ -170,6 +172,7 @@ install_software() {
 	info "Installing sofware with system package manager."
 
 	"$(find_package_manager)"_install
+	"${PACKAGE_MANAGER}"_install
 
 	finish
 }
@@ -205,7 +208,7 @@ main() {
 	install_extras
 	cargo_install
 	set_zsh
-	on_finish "$*"
+	on_finish
 }
 
 main "$*"
