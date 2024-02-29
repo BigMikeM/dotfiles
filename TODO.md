@@ -5,6 +5,7 @@
 - Install python
   - pip install black, isort, pynvim, i3ipc(sway)
   - pipx?
+  - pipx install jrnl
 - npm install neovim
 - Install neovim (appimage?)
   - sheldon needs openssl, pkg-config
@@ -44,5 +45,4 @@
     git gtk3 python sdl2 vulkan-intel libxkbcommon-x11
     ```
 
-- pipx install jrnl
 - node cleanup
