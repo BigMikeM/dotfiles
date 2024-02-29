@@ -64,64 +64,8 @@ find_package_manager() {
 		printf %s "${manager}"
 	else
 		warn "No supported package manager found."
-		on_error "Unable to complete installation."
+		on_error "Unable to continue."
 	fi
-}
-
-install_zsh() {
-	info "Trying to detect installed Zsh..."
-
-	if ! _exists zsh; then
-		echo "Seems like you don't have Zsh installed!"
-		read -rp "Do you agree to proceed with Zsh installation? [y/N] " -n 1 answer
-		echo
-		if [[ "${answer,,}" != "y" ]]; then
-			exit 1
-		fi
-
-		info "Installing Zsh..."
-
-		if _exists yay; then
-			yay -S --needed zsh
-		elif _exists pacman; then
-			sudo pacman -S zsh
-		else
-			error "Error: Failed to install Zsh!"
-			exit 1
-		fi
-
-		if _exists zsh && [[ -z "$ZSH_VERSION" ]]; then
-			info "Setting up Zsh as default shell..."
-
-			chsh -s "$(command -v zsh)" || error "Error: Could not set Zsh as default shell!"
-		fi
-	else
-		success "You already have Zsh installed. Skipping..."
-	fi
-
-	finish
-}
-
-install_npm() {
-
-	if ! _exists npm; then
-		return
-	fi
-
-	info "Installing global npm packages..."
-
-	packages=(
-		commitizen
-		npkill
-		fkill-cli
-		cz-conventional-changelog
-	)
-
-	echo "Installing: ${packages[*]}"
-
-	npm install -g "${packages[*]}"
-
-	finish
 }
 
 _current_shell() {
@@ -129,5 +73,5 @@ _current_shell() {
 }
 
 _user_default_shell() {
-  printf %s "$(awk -F: -v user="$(whoami)" '$1 == user {print $NF}' /etc/passwd | rev | cut -d"/" -f1 | rev)"
+	printf %s "$(awk -F: -v user="$(whoami)" '$1 == user {print $NF}' /etc/passwd | rev | cut -d"/" -f1 | rev)"
 }
