@@ -45,7 +45,7 @@ install_lazygit() {
 		return
 	fi
 
-	info "Now beginning the installation of: [Lazygit] from [github.com/jesseduffield] using [go]"
+	info "Now beginning the installation of: [Lazygit]"
 	read -rp "Would you like to proceed with this install? [y/N]: " -n 1 answer
 	echo
 
@@ -67,7 +67,7 @@ install_nvm() {
 		return
 	fi
 
-	info "Now beginning the installation of: [Node Version Manager] from [github.com/nvm-sh/nvm] using [curl]."
+	info "Now beginning the installation of: [Node Version Manager]"
 	bash -c "export PROFILE=/dev/null;curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash" >>/dev/null
 
 	export NVM_DIR="${HOME}/.nvm"
@@ -97,24 +97,33 @@ install_rustup() {
 
 }
 
-install_nonfree_codecs() {
+# NOTE: this is untested.
+# enable_nonfree_apt() {
+# 	# Check if non-free repositories are already enabled
+# 	if ! grep -Pq "deb[^#]*non-free.*" /etc/apt/sources.list; then
+# 		# Enable non-free repository
+# 		sudo sed -i '/^deb /s/$/ non-free/' /etc/apt/sources.list
+# 		# Update package list
+# 		sudo apt update
+# 	fi
+# 	# Install non-free codecs package
+# 	# sudo apt install ffmpeg
+# }
+# enable_nonfree_rpm() {
+# 	sudo dnf install "${rpm_nonfree[@]}"
+# }
+
+enable_nonfree_codecs() {
 	if [[ -z "${ASSUME_YES}" ]]; then
 		read -rp "Would you like enable and install non-free software? [y/N]: " -n 1 response
 		if [[ "${response,}" != "y" ]]; then
 			echo "Installation of non-free software canceled."
 			return
 		fi
-
 	fi
 
-	# Enable non-free repository
-	sudo sed -i '/^deb /s/$/ non-free/' /etc/apt/sources.list
+	install_nonfree_"${PACKAGE_MANAGER}"
 
-	# Update package list
-	sudo apt update
-
-	# Install non-free codecs package (e.g., ffmpeg)
-	sudo apt install ffmpeg
 }
 
 cargo_install() {
@@ -124,11 +133,10 @@ cargo_install() {
 	sheldon lock --update
 }
 
-# Debian-based distro support is not ready
-# apt_install() {
-#   sudo -v
-#   sudo apt install "${apt_packages[@]}"
-# }
+apt_install() {
+	sudo -v
+	sudo apt install "${apt_packages[@]}"
+}
 
 rpm_install() {
 	sudo -v
@@ -165,14 +173,27 @@ install_lunarvim() {
 	info "Starting the LunarVim installer."
 	LV_BRANCH='release-1.3/neovim-0.9' bash <(curl -s https://raw.githubusercontent.com/LunarVim/LunarVim/release-1.3/neovim-0.9/utils/installer/install.sh)
 
+	finish
 }
 
 install_software() {
 
 	info "Installing sofware with system package manager."
 
-	"$(find_package_manager)"_install
 	"${PACKAGE_MANAGER}"_install
+
+	finish
+}
+
+npm_install() {
+
+	if ! _exists npm; then
+		return
+	fi
+
+	info "Installing global npm packages..."
+
+	npm install -g "${npm_packages[*]}"
 
 	finish
 }
@@ -201,6 +222,7 @@ install_external_optional() {
 	install_nvm
 	install_lazygit
 	install_lunarvim
+	npm_install
 }
 
 install_external() {

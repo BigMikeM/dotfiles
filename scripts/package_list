@@ -29,38 +29,41 @@ rpm_packages=(
 	pipx
 	pkg-config
 	openssl-devel
+)
+
+rpm_nonfree=(
 	"https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm"
 	"https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
 )
 
 apt_packages=(
-  zsh
-  git
-  cmake
-  openssh-client
-  tree
-  lsd
-  bat
-  tldr
-  gh
-  trash-cli
-  brightnessctl
-  playerctl
-  pulseaudio-utils
-  ranger
-  kitty
-  alacritty
-  luarocks
-  atool
-  highlight
-  shellcheck
-  shfmt
-  python
-  golang
-  bc
-  pipx
-  pkg-config
-  libssl-dev
+	zsh
+	git
+	cmake
+	openssh-client
+	tree
+	lsd
+	bat
+	tldr
+	gh
+	trash-cli
+	brightnessctl
+	playerctl
+	pulseaudio-utils
+	ranger
+	kitty
+	alacritty
+	luarocks
+	atool
+	highlight
+	shellcheck
+	shfmt
+	python
+	golang
+	bc
+	pipx
+	pkg-config
+	libssl-dev
 )
 
 rpm_groups=(
@@ -101,7 +104,7 @@ arch_packages=(
 	bc
 	openssl
 	pkg-config
-  pipx
+	pipx
 )
 
 cargo_packages=(
@@ -112,12 +115,19 @@ cargo_packages=(
 )
 
 pipx_packages=(
-  black
-  jrnl
-  pynvim
-  pylint
-  pyllint-venv
-  isort
+	black
+	jrnl
+	pynvim
+	pylint
+	pyllint-venv
+	isort
 )
 
-export rpm_packages rpm_groups arch_packages cargo_packages pipx_packages apt_packages
+npm_packages=(
+	commitizen
+	npkill
+	fkill-cli
+	cz-conventional-changelog
+)
+
+export rpm_packages rpm_groups rpm_nonfree arch_packages cargo_packages pipx_packages apt_packages npm_packages
