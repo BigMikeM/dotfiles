@@ -50,15 +50,15 @@ on_error() {
 
 find_package_manager() {
 	local manager=""
-	# if _exists apt; then
-	# 	manager="apt"
-	# fi
 	if _exists dnf; then
 		manager="rpm"
 	fi
 	if _exists pacman; then
 		manager="arch"
 	fi
+	# if _exists apt; then
+	# 	manager="apt"
+	# fi
 
 	if [[ -n "${manager}" ]]; then
 		printf %s "${manager}"
