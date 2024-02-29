@@ -191,22 +191,30 @@ set_zsh() {
 	fi
 }
 
-install_extras() {
+install_external_required() {
+	install_rustup
+	cargo_install
+	pipx_install
+}
+
+install_external_optional() {
+	install_nvm
+	install_lazygit
+	install_lunarvim
+}
+
+install_external() {
 
 	info "Installing external software."
 
-	install_lazygit
-	install_nvm
-	install_rustup
-	install_lunarvim
-	pipx_install
+	install_external_required
+	install_external_optional
 }
 
 main() {
 	on_start
-	install_software "$*"
-	install_extras
-	cargo_install
+	install_software
+	install_external
 	set_zsh
 	on_finish
 }
