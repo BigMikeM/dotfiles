@@ -2,7 +2,7 @@
 
 # Dotfiles and bootstrap installer
 
-set -eu
+# set -eu
 IFS=$'\t\n'
 trap on_error SIGTERM
 

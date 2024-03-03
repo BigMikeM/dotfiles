@@ -58,7 +58,8 @@ apt_packages=(
 	highlight
 	shellcheck
 	shfmt
-	python
+	python3
+	python-is-python3
 	golang
 	bc
 	pipx
