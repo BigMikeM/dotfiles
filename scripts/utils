@@ -30,21 +30,21 @@ warn() {
 # End section
 finish() {
 	success "Done!"
-	printf "\n"
+	echo
 	sleep 1
 }
 
 on_finish() {
-	printf "\n"
+	echo
 	success "Setup was successfully done!"
 	success "Happy Coding!"
 }
 
 on_error() {
-	printf "\n"
+	echo
 	error "ERROR"
 	error "${*}"
-	printf "\n"
+	echo
 	exit 1
 }
 
@@ -56,9 +56,9 @@ find_package_manager() {
 	if _exists pacman; then
 		manager="arch"
 	fi
-	if _exists apt; then
-		manager="apt"
-	fi
+	# if _exists apt; then
+	# 	manager="apt"
+	# fi
 
 	if [[ -n "${manager}" ]]; then
 		printf %s "${manager}"
