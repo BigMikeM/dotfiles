@@ -36,6 +36,7 @@ on_start() {
 	echo
 
 	if [ "${answer,,}" != "y" ]; then
+		info "Exiting Script."
 		exit 1
 	fi
 }
@@ -134,18 +135,15 @@ cargo_install() {
 }
 
 apt_install() {
-	sudo -v
 	sudo apt install "${apt_packages[@]}"
 }
 
 rpm_install() {
-	sudo -v
 	sudo dnf install --refresh -y "${rpm_packages[@]}"
 	sudo dnf group install --with-optional "${rpm_groups[@]}"
 }
 
 arch_install() {
-	sudo -v
 	sudo pacman -Sy --needed --noconfirm "${arch_packages[@]}"
 }
 
