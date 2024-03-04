@@ -39,6 +39,10 @@ on_start() {
 		info "Exiting Script."
 		exit 1
 	fi
+
+	echo "Please enter your password to get started:"
+	sudo -v
+
 }
 
 install_lazygit() {
