@@ -98,20 +98,20 @@ install_rustup() {
 }
 
 # NOTE: this is untested.
-# enable_nonfree_apt() {
-# 	# Check if non-free repositories are already enabled
-# 	if ! grep -Pq "deb[^#]*non-free.*" /etc/apt/sources.list; then
-# 		# Enable non-free repository
-# 		sudo sed -i '/^deb /s/$/ non-free/' /etc/apt/sources.list
-# 		# Update package list
-# 		sudo apt update
-# 	fi
-# 	# Install non-free codecs package
-# 	# sudo apt install ffmpeg
-# }
-# enable_nonfree_rpm() {
-# 	sudo dnf install "${rpm_nonfree[@]}"
-# }
+enable_nonfree_apt() {
+	# Check if non-free repositories are already enabled
+	if ! grep -Pq "deb[^#]*non-free.*" /etc/apt/sources.list; then
+		# Enable non-free repository
+		sudo sed -i '/^deb /s/$/ non-free/' /etc/apt/sources.list
+		# Update package list
+		sudo apt update
+	fi
+	# Install non-free codecs package
+	sudo apt install ffmpeg
+}
+enable_nonfree_rpm() {
+	sudo dnf install "${rpm_nonfree[@]}"
+}
 
 enable_nonfree_codecs() {
 	if [[ -z "${ASSUME_YES}" ]]; then

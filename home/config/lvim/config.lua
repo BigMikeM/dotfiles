@@ -2,7 +2,7 @@
 lvim.log.level = "warn"
 lvim.format_on_save.enabled = false
 -- lvim.colorscheme = "kanagawa-wave" -- Dark -> Light: dragon -> wave -> lotus
-lvim.colorscheme = "catppuccin-macchiato"
+lvim.colorscheme = "catppuccin-mocha"
 lvim.builtin.lualine.options.theme = "catppuccin"
 -- vim.opt.colorcolumn = "80,100"
 
