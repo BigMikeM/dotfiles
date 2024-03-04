@@ -73,7 +73,7 @@ install_nvm() {
 	fi
 
 	info "Now beginning the installation of: [Node Version Manager]"
-	bash -c "export PROFILE=/dev/null;curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash" >>/dev/null
+	bash -c "export PROFILE=/dev/null;curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash"
 
 	export NVM_DIR="${HOME}/.nvm"
 	[ -s "${NVM_DIR}/nvm.sh" ] && \. "${NVM_DIR}/nvm.sh" # This loads nvm
@@ -114,6 +114,7 @@ enable_nonfree_apt() {
 	# Install non-free codecs package
 	sudo apt install ffmpeg
 }
+
 enable_nonfree_rpm() {
 	sudo dnf install "${rpm_nonfree[@]}"
 }
