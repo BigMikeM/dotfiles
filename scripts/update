@@ -35,12 +35,10 @@ update_system() {
 }
 
 rpm_update() {
-	sudo -v
 	sudo dnf upgrade --refresh -y
 }
 
 arch_update() {
-	sudo -v
 	if _exists pacman; then
 		if _exists yay; then
 			yay -Syu --noconfirm
@@ -52,7 +50,6 @@ arch_update() {
 
 apt_update() {
 	if _exists apt-get; then
-		sudo -v
 		if _exists apt; then
 			sudo apt update && sudo apt upgrade --yes
 			return

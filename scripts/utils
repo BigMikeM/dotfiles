@@ -9,22 +9,22 @@ _exists() {
 
 # Informational messages
 info() {
-	printf "%s\n" "${CYAN}${*}${NORMAL}"
+	echo -e "${CYAN}${*}${NORMAL}"
 }
 
 # Success reporter
 success() {
-	printf "%s\n" "${GREEN}${BOLD}${*}${NORMAL}"
+	echo -e "${GREEN}${BOLD}${*}${NORMAL}"
 }
 
 # Error reporter
 error() {
-	printf "%s\n" "${RED}${BOLD}${*}${NORMAL}"
+	echo -e "${RED}${BOLD}${*}${NORMAL}"
 }
 
 # Warning or otherwise important message
 warn() {
-	printf "%s\n" "${YELLOW}${*}${NORMAL}"
+	echo -e "${YELLOW}${*}${NORMAL}"
 }
 
 # End section
