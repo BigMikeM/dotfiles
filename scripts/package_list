@@ -1,5 +1,5 @@
 #!/bin/bash
-# Package lists for supported package managers
+
 rpm_packages=(
 	zsh
 	git
@@ -63,7 +63,25 @@ apt_packages=(
 	bc
 	pipx
 	pkg-config
+	curl
+	gnupg
+	ca-certificates
+	gcc-multilib
+	g++-multilib
+	cmake
 	libssl-dev
+	pkg-config
+	libfreetype6-dev
+	libasound2-dev
+	libexpat1-dev
+	libxcb-composite0-dev
+	libbz2-dev
+	libsndio-dev
+	freeglut3-dev
+	libxmu-dev
+	libxi-dev
+	libfontconfig1-dev
+	libxcursor-devlibssl-dev
 )
 
 rpm_groups=(
@@ -87,7 +105,6 @@ arch_packages=(
 	trash-cli
 	brightnessctl
 	playerctl
-	# pactl
 	neovim
 	ranger
 	kitty
@@ -105,6 +122,15 @@ arch_packages=(
 	openssl
 	pkg-config
 	pipx
+	fontconfig
+	freetype2
+	libglvnd
+	sndio
+	cmake
+	gtk3
+	python
+	sdl2
+	libxkbcommon-x11
 )
 
 cargo_packages=(
