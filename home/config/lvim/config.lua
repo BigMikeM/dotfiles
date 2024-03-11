@@ -255,12 +255,6 @@ lvim.plugins = {
 			})
 		end,
 	},
-	{
-		"tzachar/cmp-tabnine",
-		build = "./install.sh",
-		dependencies = "hrsh7th/nvim-cmp",
-		event = "InsertEnter",
-	},
 	{ "lambdalisue/suda.vim" },
 	{
 		"folke/noice.nvim",
@@ -307,6 +301,18 @@ lvim.plugins = {
 		end,
 	},
 }
+
+table.insert(lvim.plugins, {
+	"zbirenbaum/copilot-cmp",
+	event = "InsertEnter",
+	dependencies = { "zbirenbaum/copilot.lua" },
+	config = function()
+		vim.defer_fn(function()
+			require("copilot").setup() -- https://github.com/zbirenbaum/copilot.lua/blob/master/README.md#setup-and-configuration
+			require("copilot_cmp").setup() -- https://github.com/zbirenbaum/copilot-cmp/blob/master/README.md#configuration
+		end, 100)
+	end,
+})
 
 -- Beginning to modularize this enormous config
 require("neovide")
