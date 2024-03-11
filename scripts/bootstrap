@@ -13,6 +13,7 @@ export SCRIPTS="$DOTFILES/scripts/"
 # Imports
 source "${SCRIPTS}/utils"
 source "${SCRIPTS}/package_list"
+source "${DOTFILES}/bin/appi"
 
 PACKAGE_MANAGER="$(find_package_manager)"
 
@@ -188,6 +189,21 @@ install_software() {
 	finish
 }
 
+install_neovim_appimage() {
+	mkdir -p ~/temp/
+	cd ~/temp/ || on_error "Couldn't move to ~/temp/"
+
+	# Get the download URL for the latest Neovim AppImage
+	download_url=$(curl -s https://api.github.com/repos/neovim/neovim/releases/latest | grep "browser_download_url" | grep "nvim.appimage" | cut -d '"' -f 4 | head -1)
+
+	# Download the latest Neovim AppImage
+	wget "$download_url"
+
+	install_appimage nvim.appimage
+
+	rm -f nvim.appimage
+}
+
 npm_install() {
 
 	if ! _exists npm; then
@@ -222,6 +238,7 @@ install_external_required() {
 }
 
 install_external_optional() {
+	install_neovim_appimage
 	install_nvm
 	install_lazygit
 	install_lunarvim

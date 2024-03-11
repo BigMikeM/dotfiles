@@ -27,11 +27,11 @@ update_dotfiles() {
 }
 
 update_system() {
-  info "Updating software installed with system package manager."
+	info "Updating software installed with system package manager."
 	package_manager="$(find_package_manager)"
 
 	"${package_manager}"_update
-  finish
+	finish
 }
 
 rpm_update() {
