@@ -2,9 +2,10 @@
 lvim.log.level = "warn"
 lvim.format_on_save.enabled = false
 -- lvim.colorscheme = "kanagawa-wave" -- Dark -> Light: dragon -> wave -> lotus
-lvim.colorscheme = "catppuccin-mocha"
-lvim.builtin.lualine.options.theme = "catppuccin"
--- vim.opt.colorcolumn = "80,100"
+lvim.colorscheme = "onenord"
+-- lvim.colorscheme = "catppuccin-mocha"
+-- lvim.builtin.lualine.options.theme = "catppuccin"
+vim.opt.colorcolumn = "80,100"
 
 lvim.builtin.treesitter.highlight.enable = true
 lvim.builtin.treesitter.rainbow.enable = true
@@ -21,6 +22,7 @@ vim.diagnostic.config({ virtual_text = false })
 
 -- Additional Plugins
 lvim.plugins = {
+	-- Color Schemes
 	{
 		"catppuccin/nvim",
 		name = "catppuccin",
@@ -47,7 +49,30 @@ lvim.plugins = {
 			})
 		end,
 	},
-	"simrat39/rust-tools.nvim",
+	{ "savq/melange-nvim" },
+	{ "ellisonleao/gruvbox.nvim", priority = 1000, config = true, opts = ... },
+	{
+		"rmehri01/onenord.nvim",
+		config = function()
+			require("onenord").setup({
+				borders = false,
+				styles = {
+					comments = "italic",
+				},
+			})
+		end,
+	},
+	{ "luisiacc/gruvbox-baby" },
+	{
+		"Shatur/neovim-ayu",
+		config = function()
+			require("ayu").setup({
+				mirage = true,
+			})
+		end,
+	},
+	--- Others... organize and figure out how to modularize plugin lists.
+	{ "simrat39/rust-tools.nvim" },
 	{
 		"saecki/crates.nvim",
 		version = "v0.3.0",
@@ -294,25 +319,40 @@ lvim.plugins = {
 	{ "machakann/vim-sandwich" },
 	{
 		"rasulomaroff/reactive.nvim",
+		-- config = function()
+		-- 	require("reactive").setup({
+		-- 		load = { "catppuccin-mocha-cursor", "catppuccin-mocha-cursorline" },
+		-- 	})
+		-- end,
+	},
+	-- {
+	-- 	"nvimdev/lspsaga.nvim",
+	-- 	config = function()
+	-- 		require("lspsaga").setup({
+	-- 			ui = {
+	-- 				kind = require("onenord.integrations.lspsaga").custom_kind(),
+	-- 			},
+	-- 		})
+	-- 	end,
+	-- 	dependencies = {
+	-- 		"nvim-treesitter/nvim-treesitter", -- optional
+	-- 		"nvim-tree/nvim-web-devicons", -- optional
+	-- 	},
+	-- },
+	{
+		"zbirenbaum/copilot-cmp",
+		event = "InsertEnter",
+		dependencies = { "zbirenbaum/copilot.lua" },
 		config = function()
-			require("reactive").setup({
-				load = { "catppuccin-mocha-cursor", "catppuccin-mocha-cursorline" },
-			})
+			vim.defer_fn(function()
+				-- https://github.com/zbirenbaum/copilot.lua/blob/master/README.md#setup-and-configuration
+				require("copilot").setup()
+				-- https://github.com/zbirenbaum/copilot-cmp/blob/master/README.md#configuration
+				require("copilot_cmp").setup()
+			end, 100)
 		end,
 	},
 }
-
-table.insert(lvim.plugins, {
-	"zbirenbaum/copilot-cmp",
-	event = "InsertEnter",
-	dependencies = { "zbirenbaum/copilot.lua" },
-	config = function()
-		vim.defer_fn(function()
-			require("copilot").setup() -- https://github.com/zbirenbaum/copilot.lua/blob/master/README.md#setup-and-configuration
-			require("copilot_cmp").setup() -- https://github.com/zbirenbaum/copilot-cmp/blob/master/README.md#configuration
-		end, 100)
-	end,
-})
 
 -- Beginning to modularize this enormous config
 require("neovide")
