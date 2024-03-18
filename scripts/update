@@ -15,7 +15,7 @@ source "${SCRIPT_DIR}/utils"
 update_dotfiles() {
 	info "Updating dotfiles..."
 
-	cd "${DOTFILES}" || exit
+	cd "$DOTFILES" || exit
 	git pull origin main
 	./install --except shell
 	cd - >/dev/null 2>&1 || exit
@@ -58,7 +58,7 @@ apt_update() {
 	fi
 }
 
-update_cargo() {
+cargo_update() {
 	info "Updating packages installed with Cargo."
 	cargo install-update -a
 	finish
@@ -100,35 +100,42 @@ update_all_node() {
 	info "Updating current active version of NodeJS."
 	echo
 
-	nvm install "${start}" --latest-npm
+	nvm install "$start" --latest-npm
 
-	if [[ "${default}" != "${start}" ]]; then
+	if [[ "$default" != "$start" ]]; then
 		info "Updating default version of NodeJS."
 		echo
 
-		nvm install "${default}" --latest-npm
+		nvm install "$default" --latest-npm
 	fi
 
 	nvm_lts_versions | while read -r lts; do
 		echo
 
-		if [[ "${lts}" != "${start}" ]] &&
-			[[ "${lts}" != "${default}" ]]; then
+		if [[ "$lts" != "$start" ]] &&
+			[[ "$lts" != "$default" ]]; then
 			info "Updating Node LTS ${lts}."
-			nvm install "${lts}" --latest-npm
+			nvm install "$lts" --latest-npm
 		fi
 	done
 
 	current="$(get_node_version "current")"
-	if [[ "${current}" != "${start}" ]]; then
+	if [[ "$current" != "$start" ]]; then
 		# Ensure we are using the version of node we started with
 		info "Switching back to the version of NodeJS we started with."
 		echo
 
-		nvm use "${current}"
+		nvm use "$current"
 	fi
 
 	finish
+}
+
+flatpak_update() {
+  if _exists flatpak; then
+    info "Updating Flatpak packages..."
+    flatpak update -y
+  fi
 }
 
 update_npm() {
@@ -178,7 +185,8 @@ main() {
 	update_system "$*"
 	update_rust "$*"
 	update_all_node "$*"
-	update_cargo
+	cargo_update
+  flatpak_update
 	update_npm "$*"
 	on_finish "$*"
 }

@@ -19,7 +19,7 @@ convert_color() {
 }
 
 # Read the input file and extract base16 colors
-base16_colors=($(awk '/base[0-9A-Fa-f]+:/ {print $2}' input_file))
+base16_colors=("$(awk '/base[0-9A-Fa-f]+:/ {print $2}' input_file)")
 
 # Convert base16 colors to putty colors
 putty_colors=()

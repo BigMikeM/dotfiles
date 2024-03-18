@@ -12,20 +12,20 @@ install_appimage() {
 	INSTALL_DIR="${HOME}/.local/bin/"
 
 	# Move the AppImage to the installation directory
-	mv "${APPIMAGE_PATH}" "${INSTALL_DIR}"
-	chmod +x "${INSTALL_DIR}/$(basename "${APPIMAGE_PATH}")"
+	mv "$APPIMAGE_PATH" "$INSTALL_DIR"
+	chmod +x "${INSTALL_DIR}/$(basename "$APPIMAGE_PATH")"
 
 	# Create a desktop entry file
-	DESKTOP_FILE="${HOME}/.local/share/applications/$(basename "${APPIMAGE_PATH}" .AppImage).desktop"
+	DESKTOP_FILE="${HOME}/.local/share/applications/$(basename "$APPIMAGE_PATH" .AppImage).desktop"
 	echo "[Desktop Entry]
     Type=Application
-    Name=$(basename "${APPIMAGE_PATH}" .AppImage)
-    Exec=${INSTALL_DIR}/$(basename "${APPIMAGE_PATH}")
-    Icon=${INSTALL_DIR}/$(basename "${APPIMAGE_PATH}").png
-    Categories=Utility;" >"${DESKTOP_FILE}"
+    Name=$(basename "$APPIMAGE_PATH" .AppImage)
+    Exec=${INSTALL_DIR}/$(basename "$APPIMAGE_PATH")
+    Icon=${INSTALL_DIR}/$(basename "$APPIMAGE_PATH").png
+    Categories=Utility;" >"$DESKTOP_FILE"
 
 	# Make the desktop entry executable
-	chmod +x "${DESKTOP_FILE}"
+	chmod +x "$DESKTOP_FILE"
 
 	# Update the system menu
 	update-desktop-database ~/.local/share/applications
@@ -42,9 +42,9 @@ uninstall_appimage() {
 	rm "${INSTALL_DIR}/${APPIMAGE_NAME}"
 
 	# Remove the desktop entry file
-	DESKTOP_FILE="${HOME}/.local/share/applications/$(basename "${APPIMAGE_NAME}" .AppImage).desktop"
-	if [ -f "${DESKTOP_FILE}" ]; then
-		rm "${DESKTOP_FILE}"
+	DESKTOP_FILE="${HOME}/.local/share/applications/$(basename "$APPIMAGE_NAME" .AppImage).desktop"
+	if [ -f "$DESKTOP_FILE" ]; then
+		rm "$DESKTOP_FILE"
 		echo "AppImage uninstalled from the system menu."
 	else
 		echo "Desktop entry file not found. AppImage may not be installed."
@@ -59,13 +59,13 @@ fi
 
 ACTION="$1"
 
-if [ "${ACTION}" == "install" ]; then
+if [ "$ACTION" == "install" ]; then
 	if [ "$#" -ne 2 ]; then
 		echo "Usage: appi install /path/to/appimage"
 		exit 1
 	fi
 	APPIMAGE_PATH="$2"
-	install_appimage "${APPIMAGE_PATH}"
+	install_appimage "$APPIMAGE_PATH"
 elif [ "$ACTION" == "uninstall" ]; then
 	if [ "$#" -ne 2 ]; then
 		echo "Usage: appi uninstall appimage_name"

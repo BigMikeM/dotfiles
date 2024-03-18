@@ -60,8 +60,8 @@ find_package_manager() {
 	# 	manager="apt"
 	# fi
 
-	if [[ -n "${manager}" ]]; then
-		printf %s "${manager}"
+	if [[ -n "$manager" ]]; then
+		printf %s "$manager"
 	else
 		warn "No supported package manager found."
 		on_error "Unable to continue."

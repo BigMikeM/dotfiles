@@ -121,7 +121,7 @@ enable_nonfree_rpm() {
 }
 
 enable_nonfree_codecs() {
-	if [[ -z "${ASSUME_YES}" ]]; then
+	if [[ -z "$ASSUME_YES" ]]; then
 		read -rp "Would you like enable and install non-free software? [y/N]: " -n 1 response
 		if [[ "${response,}" != "y" ]]; then
 			echo "Installation of non-free software canceled."
@@ -129,7 +129,7 @@ enable_nonfree_codecs() {
 		fi
 	fi
 
-	install_nonfree_"${PACKAGE_MANAGER}"
+	install_nonfree_"$PACKAGE_MANAGER"
 
 }
 
@@ -162,7 +162,7 @@ install_lunarvim() {
 		return
 	fi
 
-	if [[ -z "${ASSUME_YES}" ]]; then
+	if [[ -z "$ASSUME_YES" ]]; then
 		info "Now beginning the installation of: [Lunarvim]"
 		read -rp "Would you like to proceed with this install? [y/N]: " -n 1 answer
 		echo
