@@ -138,6 +138,7 @@ cargo_packages=(
 	ripgrep
 	sheldon
 	cargo-update
+  shellharden
 )
 
 pipx_packages=(
