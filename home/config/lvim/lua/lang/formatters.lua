@@ -5,6 +5,7 @@ formatters.setup({
 		command = "shfmt",
 		filetypes = { "shell", "bash", "zsh", "sh" },
 	},
+	{ command = "shellharden", filetypes = { "shell", "bash", "sh" } },
 	{ command = "markdownlint" },
 	{ command = "stylua", filetypes = { "lua" } },
 	{ command = "black" },
