@@ -129,7 +129,7 @@ enable_nonfree_codecs() {
 		fi
 	fi
 
-	install_nonfree_"$PACKAGE_MANAGER"
+	enable_nonfree_"$PACKAGE_MANAGER"
 
 }
 
