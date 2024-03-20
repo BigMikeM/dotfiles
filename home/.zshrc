@@ -54,7 +54,7 @@ if [[ -n "$SSH_CONNECTION" ]]; then
 		export EDITOR='vim'
 	fi
 else
-	export EDITOR='nvim'
+	export EDITOR='lvim'
 fi
 
 # # Better formatting for time command
