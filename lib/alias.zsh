@@ -96,8 +96,8 @@ fi
 
 # Use nevim instead of vim/vi by default
 if _exists nvim; then
-  alias vi='nvim'
-  alias vim='nvim'
+	alias vi='nvim'
+	alias vim='nvim'
 fi
 
 # Because I have a Microbit to play with
