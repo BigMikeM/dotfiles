@@ -132,10 +132,10 @@ update_all_node() {
 }
 
 flatpak_update() {
-  if _exists flatpak; then
-    info "Updating Flatpak packages..."
-    flatpak update -y
-  fi
+	if _exists flatpak; then
+		info "Updating Flatpak packages..."
+		flatpak update -y
+	fi
 }
 
 update_npm() {
@@ -186,7 +186,7 @@ main() {
 	update_rust "$*"
 	update_all_node "$*"
 	cargo_update
-  flatpak_update
+	flatpak_update
 	update_npm "$*"
 	on_finish "$*"
 }
