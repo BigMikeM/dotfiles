@@ -3,9 +3,13 @@
 # Function to convert a base16 color to putty color
 convert_color() {
 	local base16_color=$1
-	local r=$(echo "$base16_color" | cut -c 1-2)
-	local g=$(echo "$base16_color" | cut -c 3-4)
-	local b=$(echo "$base16_color" | cut -c 5-6)
+	local r
+	local g
+	local b
+
+	r=$(echo "$base16_color" | cut -c 1-2)
+	g=$(echo "$base16_color" | cut -c 3-4)
+	b=$(echo "$base16_color" | cut -c 5-6)
 
 	local r_dec=$((16#$r))
 	local g_dec=$((16#$g))
