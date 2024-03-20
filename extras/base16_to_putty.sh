@@ -11,9 +11,9 @@ convert_color() {
 	local g_dec=$((16#$g))
 	local b_dec=$((16#$b))
 
-	local r_putty=$(((r_dec * 65535) / 255))
-	local g_putty=$(((g_dec * 65535) / 255))
-	local b_putty=$(((b_dec * 65535) / 255))
+	local r_putty=$((r_dec * 65535 / 255))
+	local g_putty=$((g_dec * 65535 / 255))
+	local b_putty=$((b_dec * 65535 / 255))
 
 	echo "$r_putty,$g_putty,$b_putty"
 }
