@@ -138,7 +138,7 @@ flatpak_update() {
 	fi
 }
 
-update_npm() {
+npm_update() {
 	info "Updating software installed globally with NPM."
 
 	npm update -g
@@ -187,7 +187,7 @@ main() {
 	update_all_node "$*"
 	cargo_update
 	flatpak_update
-	update_npm "$*"
+	npm_update "$*"
 	on_finish "$*"
 }
 
