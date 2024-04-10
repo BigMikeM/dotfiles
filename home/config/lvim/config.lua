@@ -270,7 +270,7 @@ lvim.plugins = {
 	},
 	{
 		"s1n7ax/nvim-window-picker",
-		version = "1.*",
+		version = "2.*",
 		config = function()
 			require("window-picker").setup({
 				autoselect_one = true,
