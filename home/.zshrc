@@ -27,11 +27,12 @@ _extend_path() {
 	fi
 }
 
+_extend_path "/usr/local/go/bin" # Golang manual installation
+_extend_path "/opt/nvim" # Nvim appimage installation
 _extend_path "$HOME/.local/bin"
 _extend_path "$DOTFILES/bin"
 _extend_path "$HOME/perl5/bin"
 _extend_path "$HOME/go/bin"
-_extend_path "/opt/nvim-linux64/bin"
 _extend_path "$HOME/.npm-global/bin"
 _extend_path "$HOME/.rvm/bin"
 _extend_path "$HOME/.yarn/bin"
