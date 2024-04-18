@@ -2,9 +2,9 @@
 lvim.log.level = "warn"
 lvim.format_on_save.enabled = false
 -- lvim.colorscheme = "kanagawa-wave" -- Dark -> Light: dragon -> wave -> lotus
-lvim.colorscheme = "onenord"
--- lvim.colorscheme = "catppuccin-mocha"
--- lvim.builtin.lualine.options.theme = "catppuccin"
+-- lvim.colorscheme = "tokyonight"
+lvim.colorscheme = "catppuccin-mocha"
+lvim.builtin.lualine.options.theme = "catppuccin"
 vim.opt.colorcolumn = "80,100"
 
 lvim.builtin.treesitter.highlight.enable = true
@@ -327,11 +327,11 @@ lvim.plugins = {
 	{ "machakann/vim-sandwich" },
 	{
 		"rasulomaroff/reactive.nvim",
-		-- config = function()
-		-- 	require("reactive").setup({
-		-- 		load = { "catppuccin-mocha-cursor", "catppuccin-mocha-cursorline" },
-		-- 	})
-		-- end,
+		config = function()
+			require("reactive").setup({
+				load = { "catppuccin-mocha-cursor", "catppuccin-mocha-cursorline" },
+			})
+		end,
 	},
 	-- {
 	-- 	"nvimdev/lspsaga.nvim",
@@ -349,15 +349,14 @@ lvim.plugins = {
 	-- },
 	{
 		"zbirenbaum/copilot-cmp",
+    cmd = "Copilot",
 		event = "InsertEnter",
 		dependencies = { "zbirenbaum/copilot.lua" },
 		config = function()
-			vim.defer_fn(function()
-				-- https://github.com/zbirenbaum/copilot.lua/blob/master/README.md#setup-and-configuration
-				require("copilot").setup()
-				-- https://github.com/zbirenbaum/copilot-cmp/blob/master/README.md#configuration
-				require("copilot_cmp").setup()
-			end, 100)
+			-- https://github.com/zbirenbaum/copilot.lua/blob/master/README.md#setup-and-configuration
+			require("copilot").setup()
+			-- https://github.com/zbirenbaum/copilot-cmp/blob/master/README.md#configuration
+			require("copilot_cmp").setup()
 		end,
 	},
 }

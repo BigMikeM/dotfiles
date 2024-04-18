@@ -2,8 +2,10 @@
 
 # Dotfiles and bootstrap installer
 
+# shellcheck source-path=SCRIPTDIR
+# shellcheck source=scripts/utils
+# shellcheck source=scripts/package_list
 set -eu
-IFS=$'\t\n'
 trap on_error SIGTERM
 
 # Set directory
@@ -13,7 +15,7 @@ export SCRIPTS="$DOTFILES/scripts/"
 # Imports
 source "${SCRIPTS}/utils"
 source "${SCRIPTS}/package_list"
-source "${DOTFILES}/bin/appi"
+#source "${DOTFILES}/bin/appi"
 
 PACKAGE_MANAGER="$(find_package_manager)"
 
@@ -76,8 +78,8 @@ install_nvm() {
 	info "Now beginning the installation of: [Node Version Manager]"
 	bash -c "export PROFILE=/dev/null;curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash"
 
-	export NVM_DIR="${HOME}/.nvm"
-	[ -s "${NVM_DIR}/nvm.sh" ] && \. "${NVM_DIR}/nvm.sh" # This loads nvm
+	export NVM_DIR="$HOME/.config//nvm"
+	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
 	info "Installing Node LTS."
 	nvm install --lts
@@ -100,10 +102,68 @@ install_rustup() {
 
 	info "Installing latest stable version of Rust and Cargo."
 	rustup default stable
+}
+
+install_alacritty() {
+	if _exists alacritty; then
+		return
+	fi
+	info "Now beginning the installation of: [Alacritty]"
+	read -rp "Would you like to proceed with this install? [y/N]: " -n 1 answer
+	echo
+	if [[ "${answer,,}" != "y" ]]; then
+		info "Skipping Alacritty installation."
+		return
+	fi
+	if ! _exists rustup; then
+		warn "Rustup is required to install Alacritty."
+		return
+	fi
+
+	ALACRITTY_BUILD_DIR="$HOME/alacritty"
+
+	info "Installing Alacritty"
+	info "Creating build directory at $ALACRITTY_BUILD_DIR"
+
+	# Installation steps were taken from the Alacritty GitHub repository
+	# https://github.com/alacritty/alacritty/blob/master/INSTALL.md#clone-the-source-code
+
+	# Clone the Alacritty GitHub repository
+	git clone https://github.com/alacritty/alacritty.git "$ALACRITTY_BUILD_DIR"
+	cd "$ALACRITTY_BUILD_DIR" || on_error "Couldn't move to $ALACRITTY_BUILD_DIR."
+
+	# Set stable cargo and build Alacritty
+	rustup override set stable
+	cargo build --release
+
+	# Install terminfo file
+	sudo tic -xe alacritty,alacritty-direct extra/alacritty.info
+
+	# Copy binary to path
+	sudo cp target/release/alacritty /usr/local/bin
+
+	# Create desktop file
+	sudo cp extra/logo/alacritty-term.svg /usr/share/pixmaps/Alacritty.svg
+	sudo desktop-file-install extra/linux/Alacritty.desktop
+	sudo update-desktop-database
+
+	# Install manpages
+	sudo mkdir -p /usr/local/share/man/man1
+	sudo mkdir -p /usr/local/share/man/man5
+	scdoc <extra/man/alacritty.1.scd | gzip -c | sudo tee /usr/local/share/man/man1/alacritty.1.gz >/dev/null
+	scdoc <extra/man/alacritty-msg.1.scd | gzip -c | sudo tee /usr/local/share/man/man1/alacritty-msg.1.gz >/dev/null
+	scdoc <extra/man/alacritty.5.scd | gzip -c | sudo tee /usr/local/share/man/man5/alacritty.5.gz >/dev/null
+	scdoc <extra/man/alacritty-bindings.5.scd | gzip -c | sudo tee /usr/local/share/man/man5/alacritty-bindings.5.gz >/dev/null
+
+	# Install shell completions
+	mkdir -p "${ZDOTDIR:-~}"/.zsh_functions
+	echo 'fpath+=${ZDOTDIR:-~}/.zsh_functions' >>"${ZDOTDIR:-~}"/.zshrc
+	cp extra/completions/_alacritty "${ZDOTDIR:-~}"/.zsh_functions/_alacritty
+
+	info "Alacritty was installed successfully."
 
 }
 
-# NOTE: this is untested.
 enable_nonfree_apt() {
 	# Check if non-free repositories are already enabled
 	if ! grep -Pq "deb[^#]*non-free.*" /etc/apt/sources.list; then
@@ -121,12 +181,10 @@ enable_nonfree_rpm() {
 }
 
 enable_nonfree_codecs() {
-	if [[ -z "$ASSUME_YES" ]]; then
-		read -rp "Would you like enable and install non-free software? [y/N]: " -n 1 response
-		if [[ "${response,}" != "y" ]]; then
-			echo "Installation of non-free software canceled."
-			return
-		fi
+	read -rp "Would you like enable and install non-free software? [y/N]: " -n 1 response
+	if [[ "${response,}" != "y" ]]; then
+		echo "Installation of non-free software canceled."
+		return
 	fi
 
 	enable_nonfree_"$PACKAGE_MANAGER"
@@ -153,8 +211,8 @@ arch_install() {
 	sudo pacman -Sy --needed --noconfirm "${arch_packages[@]}"
 }
 
-pipx_install() {
-	pipx install "${pipx_packages[@]}"
+pip_install() {
+	pip install "${pip_packages[@]}"
 }
 
 install_lunarvim() {
@@ -162,13 +220,11 @@ install_lunarvim() {
 		return
 	fi
 
-	if [[ -z "$ASSUME_YES" ]]; then
-		info "Now beginning the installation of: [Lunarvim]"
-		read -rp "Would you like to proceed with this install? [y/N]: " -n 1 answer
-		echo
-	fi
+	info "Now beginning the installation of: [Lunarvim]"
+	read -rp "Would you like to proceed with this install? [y/N]: " -n 1 answer
+	echo
 
-	if [ "${answer,,}" != "y" ]; then
+	if [[ "${answer,,}" != "y" ]]; then
 		info "Skipping Lunarvim installation."
 		echo
 		return
@@ -190,8 +246,27 @@ install_software() {
 }
 
 install_neovim_appimage() {
+
+	info "This script will attempt to install the latest stable version of Neovim using the appimage."
+	info "This is only necessary if you need a recent version of NeoVim and your distro does not include it."
+	if _exists nvim; then
+		local nvim_version
+		nvim_version="$(nvim -v | head -1 | cut -d"v" -f2)"
+		info "Currently installed version of NeoVim: [$nvim_version]"
+	else
+		info "NeoVim does not appear to be installed."
+	fi
+
+	read -rp "Would you like to proceed with installation? [y/N]: " -n 1 answer
+	echo
+
+	if [[ "${answer,,}" != "y" ]]; then
+		info "Skipping NeoVim Appimage installation."
+		return
+	fi
+
 	mkdir -p ~/temp/
-	cd ~/temp/ || on_error "Couldn't move to ~/temp/"
+	cd "$HOME/temp/" || on_error "Couldn't move to \"$HOME/temp/\"."
 
 	# Get the download URL for the latest Neovim AppImage
 	download_url=$(curl -s https://api.github.com/repos/neovim/neovim/releases/latest | grep "browser_download_url" | grep "nvim.appimage" | cut -d '"' -f 4 | head -1)
@@ -199,9 +274,13 @@ install_neovim_appimage() {
 	# Download the latest Neovim AppImage
 	wget "$download_url"
 
-	install_appimage nvim.appimage
+	sudo mkdir /opt/nvim/
+	sudo mv -f nvim.appimage /opt/nvim/nvim
+
+	info "NeoVim was installed to /opt/nvim/nvim"
 
 	rm -f nvim.appimage
+	cd - || on_error "Unable to change directories."
 }
 
 npm_install() {
@@ -227,14 +306,18 @@ set_zsh() {
 	if [[ "${shell,,}" != "zsh" ]]; then
 		info "Default shell will be changed to ZSH."
 
-		chsh -s "$(which zsh)"
+		read -p "Are you sure you want to change the default shell to ZSH? (y/n) " -n 1 -r
+		echo
+		if [[ $REPLY =~ ^[Yy]$ ]]; then
+			chsh -s "$(which zsh)"
+		fi
 	fi
 }
 
 install_external_required() {
 	install_rustup
 	cargo_install
-	pipx_install
+	pip_install
 }
 
 install_external_optional() {
@@ -242,7 +325,9 @@ install_external_optional() {
 	install_nvm
 	install_lazygit
 	install_lunarvim
-	npm_install
+	# npm_install
+
+	enable_nonfree_codecs
 }
 
 install_external() {

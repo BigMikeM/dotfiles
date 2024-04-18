@@ -6,7 +6,6 @@ rpm_packages=(
 	cmake
 	openssh
 	tree
-	lsd
 	bat
 	tldr
 	gh
@@ -19,22 +18,24 @@ rpm_packages=(
 	kitty
 	alacritty
 	luarocks
+	luacheck
 	atool
 	highlight
 	shellcheck
 	shfmt
 	python
-	golang
 	bc
-	pipx
+	pip
 	pkg-config
 	openssl-devel
 )
 
-rpm_nonfree=(
-	"https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm"
-	"https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
-)
+if command -v rpm >/dev/null 2>&1; then
+	rpm_nonfree=(
+		"https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm"
+		"https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
+	)
+fi
 
 apt_packages=(
 	zsh
@@ -42,7 +43,6 @@ apt_packages=(
 	cmake
 	openssh-client
 	tree
-	lsd
 	bat
 	tldr
 	gh
@@ -54,14 +54,16 @@ apt_packages=(
 	kitty
 	alacritty
 	luarocks
+	lua-check
 	atool
 	highlight
 	shellcheck
 	shfmt
-	python
-	golang
+	python3
+	python3-pip
+  python-is-python3
 	bc
-	pipx
+	pip
 	pkg-config
 	curl
 	gnupg
@@ -81,7 +83,8 @@ apt_packages=(
 	libxmu-dev
 	libxi-dev
 	libfontconfig1-dev
-	libxcursor-devlibssl-dev
+	libxcursor-dev
+	libssl-dev
 )
 
 rpm_groups=(
@@ -98,7 +101,6 @@ arch_packages=(
 	openssh
 	sheldon
 	tree
-	lsd
 	bat
 	tldr
 	github-cli
@@ -111,24 +113,23 @@ arch_packages=(
 	wezterm
 	alacritty
 	luarocks
+	luacheck
 	atool
 	ueberzug
 	highlight
 	shellcheck
 	shfmt
 	python
-	go
 	bc
 	openssl
 	pkg-config
-	pipx
+	pip
 	fontconfig
 	freetype2
 	libglvnd
 	sndio
 	cmake
 	gtk3
-	python
 	sdl2
 	libxkbcommon-x11
 )
@@ -139,14 +140,14 @@ cargo_packages=(
 	sheldon
 	cargo-update
 	shellharden
+	lsd
 )
 
-pipx_packages=(
+pip_packages=(
 	black
 	jrnl
 	pynvim
 	pylint
-	pyllint-venv
 	isort
 )
 
@@ -157,4 +158,4 @@ npm_packages=(
 	cz-conventional-changelog
 )
 
-export rpm_packages rpm_groups rpm_nonfree arch_packages cargo_packages pipx_packages apt_packages npm_packages
+export rpm_packages rpm_groups rpm_nonfree arch_packages cargo_packages pip_packages apt_packages npm_packages

@@ -29,6 +29,7 @@ _extend_path() {
 
 _extend_path "/usr/local/go/bin" # Golang manual installation
 _extend_path "/opt/nvim" # Nvim appimage installation
+_extend_path "/opt/neovide" # neovide appimage installation
 _extend_path "$HOME/.local/bin"
 _extend_path "$DOTFILES/bin"
 _extend_path "$HOME/perl5/bin"
@@ -122,3 +123,4 @@ fi
 if [[ -f "$HOME/.zshlocal" ]]; then
 	source "$HOME/.zshlocal"
 fi
+fpath+=${ZDOTDIR:-~}/.zsh_functions
