@@ -177,7 +177,7 @@ enable_nonfree_apt() {
 }
 
 enable_nonfree_rpm() {
-	sudo dnf install "${rpm_nonfree[@]}"
+	sudo dnf install -y "${rpm_nonfree[@]}"
 }
 
 enable_nonfree_codecs() {
@@ -322,7 +322,7 @@ install_external_required() {
 
 install_external_optional() {
 	install_neovim_appimage
-	install_nvm
+	#install_nvm
 	install_lazygit
 	install_lunarvim
 	# npm_install

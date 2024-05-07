@@ -12,13 +12,11 @@ rpm_packages=(
 	trash-cli
 	brightnessctl
 	playerctl
-	pactl
 	neovim
 	ranger
 	kitty
 	alacritty
 	luarocks
-	luacheck
 	atool
 	highlight
 	shellcheck

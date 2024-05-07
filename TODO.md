@@ -8,3 +8,4 @@
 - Go should be manual install for latest because of lazygit
 - Go needs to then be removed from package lists
 - finish nvim appimage installation with method from page (/opt/nvim/nvim)
+  - source zshrc to run commands after install
