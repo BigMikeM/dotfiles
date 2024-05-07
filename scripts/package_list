@@ -52,7 +52,6 @@ apt_packages=(
 	pulseaudio-utils
 	ranger
 	kitty
-	alacritty
 	luarocks
 	lua-check
 	atool
@@ -61,9 +60,8 @@ apt_packages=(
 	shfmt
 	python3
 	python3-pip
-  python-is-python3
+	python-is-python3
 	bc
-	pip
 	pkg-config
 	curl
 	gnupg
