@@ -349,7 +349,7 @@ lvim.plugins = {
 	-- },
 	{
 		"zbirenbaum/copilot-cmp",
-    cmd = "Copilot",
+		cmd = "Copilot",
 		event = "InsertEnter",
 		dependencies = { "zbirenbaum/copilot.lua" },
 		config = function()

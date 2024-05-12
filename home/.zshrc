@@ -28,8 +28,8 @@ _extend_path() {
 }
 
 _extend_path "/usr/local/go/bin" # Golang manual installation
-_extend_path "/opt/nvim" # Nvim appimage installation
-_extend_path "/opt/neovide" # neovide appimage installation
+_extend_path "/opt/nvim"         # Nvim appimage installation
+_extend_path "/opt/neovide"      # neovide appimage installation
 _extend_path "$HOME/.local/bin"
 _extend_path "$DOTFILES/bin"
 _extend_path "$HOME/perl5/bin"
@@ -109,6 +109,8 @@ zstyle ':omz:plugins:nvm' autoload yes
 # Other stuff
 # ------------------------------------------------------------------------------
 export BAT_THEME="Catppuccin-mocha"
+
+export ELECTRON_OZONE_PLATFORM_HINT='wayland'
 
 # Shell plugins
 eval "$(sheldon source)"

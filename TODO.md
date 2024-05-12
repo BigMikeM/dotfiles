@@ -1,6 +1,7 @@
 # TODO
+
     - Create process for downloading and installing the latest version of Go (needed for latest lazygit install)
-- 
+
 - Continuing with installation after rustup install does not work
 - fix issues with apt installs
 - pipx is not working
