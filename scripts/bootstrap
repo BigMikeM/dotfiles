@@ -348,7 +348,8 @@ install_external_required() {
 
 install_external_optional() {
 	install_neovim_appimage
-	#install_nvm
+	install_nvm
+	install_go
 	install_lazygit
 	install_lunarvim
 	# npm_install
