@@ -333,20 +333,6 @@ lvim.plugins = {
 			})
 		end,
 	},
-	-- {
-	-- 	"nvimdev/lspsaga.nvim",
-	-- 	config = function()
-	-- 		require("lspsaga").setup({
-	-- 			ui = {
-	-- 				kind = require("onenord.integrations.lspsaga").custom_kind(),
-	-- 			},
-	-- 		})
-	-- 	end,
-	-- 	dependencies = {
-	-- 		"nvim-treesitter/nvim-treesitter", -- optional
-	-- 		"nvim-tree/nvim-web-devicons", -- optional
-	-- 	},
-	-- },
 	{
 		"zbirenbaum/copilot-cmp",
 		cmd = "Copilot",
