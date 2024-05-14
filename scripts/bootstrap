@@ -48,6 +48,38 @@ on_start() {
 
 }
 
+install_go() {
+	if _exists go; then
+		return
+	fi
+
+	info "Now beginning the installation of: [Go]"
+	read -rp "Would you like to proceed with this install? [y/N]: " -n 1 answer
+	echo
+
+	if [ "${answer,,}" != "y" ]; then
+		info "Skipping Go installation."
+		exit 1
+	fi
+
+	info "Installing Go."
+
+	# Fetch the latest version of Go from the official website
+	local latest_version
+	latest_version=$(curl 'https://golang.org/VERSION?m=text') ||
+		on_error "Couldn't fetch the latest version of Go."
+
+	# Download the latest version
+	curl -O "https://dl.google.com/go/${latest_version}.linux-amd64.tar.gz"
+
+	# Unpack the tarball
+	sudo tar -C /usr/local -xzf "${latest_version}.linux-amd64.tar.gz"
+
+	# Remove the downloaded tarball
+	rm "${latest_version}.linux-amd64.tar.gz"
+
+}
+
 install_lazygit() {
 	if _exists lazygit; then
 		return
