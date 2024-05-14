@@ -31,7 +31,7 @@ warn() {
 finish() {
 	success "Done!"
 	echo
-	sleep 1
+	sleep 5
 }
 
 on_finish() {
