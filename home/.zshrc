@@ -27,9 +27,9 @@ _extend_path() {
 	fi
 }
 
-_extend_path "/usr/local/go/bin" # Golang manual installation
-_extend_path "/opt/nvim"         # Nvim appimage installation
-_extend_path "/opt/neovide"      # neovide appimage installation
+_extend_path "/usr/local/go/bin"   # Golang manual installation
+_extend_path "/usr/local/bin/nvim" # Nvim appimage installation
+_extend_path "/opt/neovide"        # neovide appimage installation
 _extend_path "$HOME/.local/bin"
 _extend_path "$DOTFILES/bin"
 _extend_path "$HOME/perl5/bin"
