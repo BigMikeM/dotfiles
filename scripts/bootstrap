@@ -108,8 +108,9 @@ install_nvm() {
 	info "Now beginning the installation of: [Node Version Manager]"
 	bash -c "export PROFILE=/dev/null;curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash"
 
-	export NVM_DIR="$HOME/.config//nvm"
-	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+	# Source the nvm script to make nvm available in the current shell session
+	export NVM_DIR="$HOME/.nvm"
+	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
 	info "Installing Node LTS."
 	nvm install --lts
@@ -131,6 +132,7 @@ install_rustup() {
 	curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 	info "Installing latest stable version of Rust and Cargo."
+	source "$HOME/.cargo/env"
 	rustup default stable
 }
 
