@@ -334,18 +334,7 @@ lvim.plugins = {
 		-- 	})
 		-- end,
 	},
-	{
-		"zbirenbaum/copilot-cmp",
-		cmd = "Copilot",
-		event = "InsertEnter",
-		dependencies = { "zbirenbaum/copilot.lua" },
-		config = function()
-			-- https://github.com/zbirenbaum/copilot.lua/blob/master/README.md#setup-and-configuration
-			require("copilot").setup()
-			-- https://github.com/zbirenbaum/copilot-cmp/blob/master/README.md#configuration
-			require("copilot_cmp").setup()
-		end,
-	},
+	{ "github/copilot.vim" },
 }
 
 -- Beginning to modularize this enormous config
@@ -354,6 +343,7 @@ require("autocmd")
 require("keymaps.lvim")
 require("keymaps.windowpicker")
 require("keymaps.rust")
+require("keymaps.copilot")
 require("lang.python")
 require("lang.rust")
 require("themes.kanagawa")
