@@ -16,7 +16,7 @@ export MANPATH="/usr/local/man:$MANPATH"
 
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
-COMPLETION_WAITING_DOTS="true"
+export COMPLETION_WAITING_DOTS="true"
 
 # Extend $PATH without duplicates
 _extend_path() {
@@ -83,13 +83,13 @@ fi
 # ------------------------------------------------------------------------------
 # Oh My Zsh
 # ------------------------------------------------------------------------------
-ZSH_DISABLE_COMPFIX=true
-ZSH_THEME='gozilla'
+export ZSH_DISABLE_COMPFIX=true
+export ZSH_THEME='gozilla'
 
 # OMZ is managed by Sheldon
 export ZSH="$HOME/.local/share/sheldon/repos/github.com/ohmyzsh/ohmyzsh"
 
-plugins=(
+export plugins=(
 	history-substring-search
 	git
 	npm
@@ -111,6 +111,9 @@ zstyle ':omz:plugins:nvm' autoload yes
 export BAT_THEME="Catppuccin-mocha"
 
 export ELECTRON_OZONE_PLATFORM_HINT='wayland'
+
+# I like vim.
+set -o vi
 
 # Shell plugins
 eval "$(sheldon source)"
