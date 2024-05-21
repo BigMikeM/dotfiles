@@ -2,8 +2,8 @@
 
 # Dotfiles and bootstrap installer
 
-# shellcheck source=utils
-# shellcheck source=package_list
+# shellcheck source="./utils"
+# shellcheck source="./package_list"
 set -eu
 trap on_error SIGTERM
 
@@ -12,8 +12,8 @@ export DOTFILES="$HOME/.dotfiles"
 export SCRIPTS="$DOTFILES/scripts/"
 
 # Imports
-source "utils"
-source "package_list"
+source "${SCRIPTS}/utils"
+source "${SCRIPTS}/package_list"
 
 PACKAGE_MANAGER="$(find_package_manager)"
 
@@ -347,7 +347,7 @@ install_external_required() {
 }
 
 install_external_optional() {
-	install_neovim_appimage
+	install_neovim
 	install_nvm
 	install_go
 	install_lazygit
