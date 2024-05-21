@@ -1,10 +1,10 @@
 -- general
 lvim.log.level = "warn"
 lvim.format_on_save.enabled = false
--- lvim.colorscheme = "kanagawa-wave" -- Dark -> Light: dragon -> wave -> lotus
+lvim.colorscheme = "kanagawa-wave" -- Dark -> Light: dragon -> wave -> lotus
 -- lvim.colorscheme = "tokyonight"
-lvim.colorscheme = "catppuccin-mocha"
-lvim.builtin.lualine.options.theme = "catppuccin"
+-- lvim.colorscheme = "catppuccin-mocha"
+-- lvim.builtin.lualine.options.theme = "catppuccin"
 vim.opt.colorcolumn = "80,100"
 
 lvim.builtin.treesitter.highlight.enable = true
@@ -327,11 +327,11 @@ lvim.plugins = {
 	{ "machakann/vim-sandwich" },
 	{
 		"rasulomaroff/reactive.nvim",
-		config = function()
-			require("reactive").setup({
-				load = { "catppuccin-mocha-cursor", "catppuccin-mocha-cursorline" },
-			})
-		end,
+		-- config = function()
+		-- 	require("reactive").setup({
+		-- 		load = { "catppuccin-mocha-cursor", "catppuccin-mocha-cursorline" },
+		-- 	})
+		-- end,
 	},
 	{
 		"zbirenbaum/copilot-cmp",
