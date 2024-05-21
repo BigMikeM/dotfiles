@@ -289,6 +289,7 @@ lvim.plugins = {
 		end,
 	},
 	{ "lambdalisue/suda.vim" },
+	{ "JoosepAlviste/nvim-ts-context-commentstring" },
 	{
 		"folke/noice.nvim",
 		event = "VeryLazy",
