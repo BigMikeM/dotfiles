@@ -188,7 +188,7 @@ lvim.plugins = {
 			require("nvim-ts-autotag").setup()
 		end,
 	},
-	{ "p00f/nvim-ts-rainbow" },
+	{ "hiphish/rainbow-delimiters.nvim" },
 	{
 		"folke/lsp-colors.nvim",
 		event = "BufRead",

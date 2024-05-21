@@ -21,14 +21,14 @@ require("kanagawa").setup({
 				TelescopeResultsBorder = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
 				TelescopePreviewNormal = { bg = theme.ui.bg_dim },
 				TelescopePreviewBorder = { bg = theme.ui.bg_dim, fg = theme.ui.bg_dim },
-				-- Custom rainbow brackets support: (only set up for wave)
-				rainbowcol1 = { fg = palette.sakuraPink },
-				rainbowcol2 = { fg = palette.oniViolet },
-				rainbowcol3 = { fg = palette.surimiOrange },
-				rainbowcol4 = { fg = palette.lightBlue },
-				rainbowcol5 = { fg = palette.springViolet1 },
-				rainbowcol6 = { fg = palette.boatYellow1 },
-				rainbowcol7 = { fg = palette.peachRed },
+				-- Custom rainbow delimiters support: (only set up for wave)
+				RainbowDelimiterCyan = { fg = palette.sakuraPink },
+				RainbowDelimiterGreen = { fg = palette.oniViolet },
+				RainbowDelimiterOrange = { fg = palette.surimiOrange },
+				RainbowDelimiterBlue = { fg = palette.lightBlue },
+				RainbowDelimiterViolet = { fg = palette.springViolet1 },
+				RainbowDelimiterYellow = { fg = palette.boatYellow1 },
+				RainbowDelimiterRed = { fg = palette.peachRed },
 				-- Darker background for popups to contrast with editor view
 				Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
 				PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2 },
