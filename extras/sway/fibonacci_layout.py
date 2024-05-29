@@ -1,5 +1,8 @@
 #!/usr/bin/env python
-# Created by olemartinorg https://github.com/olemartinorg/sway-alternating-layout/blob/master/alternating_layouts.py
+"""Python script for providing a Fibonacci layout for Sway (or i3) via
+    i3ipc"""
+# Created by olemartinorg
+# https://github.com/olemartinorg/sway-alternating-layout/blob/master/alternating_layouts.py
 
 import getopt
 import os
@@ -44,6 +47,7 @@ def set_layout(sway, _):
 
 
 def print_help():
+    """Print help message."""
     print("Usage: " + sys.argv[0] + " [-p path/to/pid.file]")
     print("")
     print("Options:")
