@@ -282,6 +282,40 @@ lvim.plugins = {
 		ft = { "markdown" },
 	},
 	{
+		"nvim-treesitter/nvim-treesitter-textobjects",
+		config = function()
+			require("nvim-treesitter.configs").setup({
+				textobjects = {
+					select = {
+						enable = true,
+						lookahead = true,
+						keymaps = {
+							["af"] = { query = "@function.outer", desc = "selct outer function." },
+							["if"] = { query = "@function.inner", desc = "select inner function." },
+							["ac"] = { query = "@class.outer", desc = "select outer part of class region." },
+							["ic"] = { query = "@class.inner", desc = "select inner part of class retion." },
+							["as"] = { query = "@scope", query_group = "locals", desc = "select language scope." },
+						},
+					},
+					selection_modes = {
+						["@paramater.outer"] = "v",
+						["@function.outer"] = "v",
+						["@class.outer"] = "<c-v>",
+					},
+					swap = {
+						enable = true,
+						swap_next = {
+							["<leader>a"] = "@parameter.inner",
+						},
+						swap_previous = {
+							["<leader>a"] = "@parameter.inner",
+						},
+					},
+				},
+			})
+		end,
+	},
+	{
 		"s1n7ax/nvim-window-picker",
 		version = "2.*",
 		config = function()
