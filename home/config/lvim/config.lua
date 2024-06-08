@@ -72,6 +72,10 @@ lvim.plugins = {
 		end,
 	},
 	--- Others... organize and figure out how to modularize plugin lists.
+	{
+		"mizlan/iswap.nvim",
+		event = "VeryLazy",
+	},
 	{ "simrat39/rust-tools.nvim" },
 	{
 		"saecki/crates.nvim",
