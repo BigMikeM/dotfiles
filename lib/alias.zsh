@@ -117,6 +117,11 @@ if _exists register-python-argcomplete3; then
 	alias register-python-argcomplete='register-python-argcomplete3'
 fi
 
+## Copilot alias
+if _exists gh copilot; then
+  alias copilot='gh copilot'
+fi
+
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
