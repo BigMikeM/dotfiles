@@ -2,9 +2,6 @@
 lvim.log.level = "warn"
 lvim.format_on_save.enabled = false
 lvim.colorscheme = "kanagawa-wave" -- Dark -> Light: dragon -> wave -> lotus
--- lvim.colorscheme = "tokyonight"
--- lvim.colorscheme = "catppuccin-mocha"
--- lvim.builtin.lualine.options.theme = "catppuccin"
 vim.opt.colorcolumn = "80,100"
 
 lvim.builtin.treesitter.highlight.enable = true
@@ -22,61 +19,7 @@ vim.diagnostic.config({ virtual_text = false })
 
 -- Additional Plugins
 lvim.plugins = {
-	-- Color Schemes
-	{
-		"catppuccin/nvim",
-		name = "catppuccin",
-		config = function()
-			require("catppuccin").setup({
-				integrations = {
-					notify = true,
-					ts_rainbow = true,
-					noice = true,
-					neotest = true,
-					mason = true,
-					hop = true,
-					neotree = true,
-					which_key = true,
-					window_picker = true,
-					sandwich = true,
-					navic = {
-						enabled = true,
-					},
-					illuminate = {
-						enabled = true,
-					},
-				},
-			})
-		end,
-	},
-	{ "savq/melange-nvim" },
-	{ "ellisonleao/gruvbox.nvim", priority = 1000, config = true, opts = ... },
-	{
-		"rmehri01/onenord.nvim",
-		config = function()
-			require("onenord").setup({
-				borders = false,
-				styles = {
-					comments = "italic",
-				},
-			})
-		end,
-	},
-	{ "luisiacc/gruvbox-baby" },
-	{
-		"Shatur/neovim-ayu",
-		config = function()
-			require("ayu").setup({
-				mirage = true,
-			})
-		end,
-	},
-	--- Others... organize and figure out how to modularize plugin lists.
-	{
-		"mizlan/iswap.nvim",
-		event = "VeryLazy",
-	},
-	{ "simrat39/rust-tools.nvim" },
+	{ "mrcjkb/rustaceanvim", version = "^4", lazy = false },
 	{
 		"saecki/crates.nvim",
 		version = "v0.3.0",
@@ -231,14 +174,6 @@ lvim.plugins = {
 		end,
 	},
 	{
-		"iamcco/markdown-preview.nvim",
-		build = "cd app && npm install",
-		ft = "markdown",
-		config = function()
-			vim.g.mkdp_auto_start = 1
-		end,
-	},
-	{
 		"folke/todo-comments.nvim",
 		event = "BufRead",
 		config = function()
@@ -271,15 +206,6 @@ lvim.plugins = {
 		config = function()
 			require("inc_rename").setup()
 		end,
-	},
-	{
-		"iamcco/markdown-preview.nvim",
-		cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-		build = "cd app && yarn install",
-		init = function()
-			vim.g.mkdp_filetypes = { "markdown" }
-		end,
-		ft = { "markdown" },
 	},
 	{
 		"nvim-treesitter/nvim-treesitter-textobjects",
@@ -340,57 +266,39 @@ lvim.plugins = {
 	{
 		"folke/noice.nvim",
 		event = "VeryLazy",
-		opts = {
-			-- add any options here
-		},
 		dependencies = {
-			-- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
 			"MunifTanjim/nui.nvim",
-			-- OPTIONAL:
-			--   `nvim-notify` is only needed, if you want to use the notification view.
-			--   If not available, we use `mini` as the fallback
 			"rcarriga/nvim-notify",
 		},
 		config = function()
 			require("noice").setup({
 				lsp = {
-					-- override markdown rendering so that **cmp** and other plugins use **Treesitter**
 					override = {
 						["vim.lsp.util.convert_input_to_markdown_lines"] = true,
 						["vim.lsp.util.stylize_markdown"] = true,
 						["cmp.entry.get_documentation"] = true,
 					},
 				},
-				-- you can enable a preset for easier configuration
 				presets = {
-					bottom_search = false, -- use a classic bottom cmdline for search
-					command_palette = true, -- position the cmdline and popupmenu together
-					long_message_to_split = true, -- long messages will be sent to a split
-					inc_rename = true, -- enables an input dialog for inc-rename.nvim
-					lsp_doc_border = true, -- add a border to hover docs and signature help
+					bottom_search = false,
+					command_palette = true,
+					long_message_to_split = true,
+					inc_rename = true,
+					lsp_doc_border = true,
 				},
 			})
 		end,
 	},
 	{ "machakann/vim-sandwich" },
-	{
-		"rasulomaroff/reactive.nvim",
-		-- config = function()
-		-- 	require("reactive").setup({
-		-- 		load = { "catppuccin-mocha-cursor", "catppuccin-mocha-cursorline" },
-		-- 	})
-		-- end,
-	},
+	{ "rasulomaroff/reactive.nvim" },
 	{ "github/copilot.vim" },
+	{ "gbprod/substitute.nvim" },
 }
 
 -- Beginning to modularize this enormous config
 require("neovide")
 require("autocmd")
-require("keymaps.lvim")
-require("keymaps.windowpicker")
-require("keymaps.rust")
-require("keymaps.copilot")
+require("keymaps")
 require("lang.python")
 require("lang.rust")
 require("themes.kanagawa")
