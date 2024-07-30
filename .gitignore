@@ -7,6 +7,7 @@ node_modules
 .vscode
 *.lock.json
 *.zwc
-home/config/kitty/kitty.conf.bak
+kitty.conf.bak
 lazy-lock.json
 user-dirs.locale
+current-theme.conf*
