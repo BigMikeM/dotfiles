@@ -39,7 +39,7 @@ return {
   { import = "astrocommunity.workflow.bad-practices-nvim" },
   { import = "astrocommunity.split-and-window.colorful-winsep-nvim" },
   { import = "astrocommunity.split-and-window.windows-nvim" },
-  { import = "astrocommunity.split-and-window.minimap-vim" },
+  { import = "astrocommunity.split-and-window.mini-map" },
   { import = "astrocommunity.programming-language-support.csv-vim" },
   { import = "astrocommunity.neovim-lua-development.lazydev-nvim" },
   { import = "astrocommunity.programming-language-support.nvim-jqx" },
