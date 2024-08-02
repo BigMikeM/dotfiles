@@ -4,6 +4,5 @@ vsync = true
 maximized = false
 srgb = false
 idle = true
-neovim-bin = "/home/mike/.local/bin/lvim" # in reality found dynamically on $PATH if unset
 frame = "full"
 title-hidden = true
