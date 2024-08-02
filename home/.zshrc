@@ -1,4 +1,4 @@
-#! /bin/zsh
+#!/bin/zsh
 # Export path to root of dotfiles repo
 export DOTFILES="$HOME/.dotfiles"
 export DOTFILES=${DOTFILES:="$HOME/.dotfiles"}
