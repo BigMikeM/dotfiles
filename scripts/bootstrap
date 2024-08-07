@@ -36,7 +36,7 @@ on_start() {
 	read -rp "Would you like to proceed with installation? [y/N]: " -n 1 answer
 	echo
 
-	if [ "${answer,,}" != "y" ]; then
+	if [[ "${answer,,}" != "y" ]]; then
 		info "Exiting Script."
 		exit 1
 	fi
@@ -215,10 +215,10 @@ install_neovim() {
 		info "NeoVim does not appear to be installed."
 	fi
 
-	read -rp "Would you like to proceed with installation? [y/N]: " -n 1 answer
+	read -rp "Would you like to proceed with installation? [y/N]: " -n 1 REPLY
 	echo
 
-	if [[ "${answer,,}" != "y" ]]; then
+	if [[ "${REPLY,,}" != ^[Yy]$ ]]; then
 		info "Skipping NeoVim Appimage installation."
 		return
 	fi
