@@ -256,7 +256,7 @@ set_zsh() {
 install_external_required() {
 	install_rustup
 	cargo_install
-	pip_install
+	# pip_install
 }
 
 install_external_optional() {

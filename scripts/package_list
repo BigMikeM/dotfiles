@@ -110,6 +110,7 @@ arch_packages=(
 	alacritty
 	luarocks
 	luacheck
+	lua-lanes
 	atool
 	ueberzug
 	highlight
@@ -119,7 +120,12 @@ arch_packages=(
 	bc
 	openssl
 	pkg-config
-	pip
+	python-black
+	python-pynvim
+	python-pylint
+	python-isort
+	jrnl
+	ruff
 	fontconfig
 	freetype2
 	libglvnd
