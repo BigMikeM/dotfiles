@@ -2,8 +2,6 @@
 
 # Dotfiles and bootstrap installer
 
-# shellcheck source="./utils"
-# shellcheck source="./package_list"
 set -eu
 trap on_error SIGTERM
 
