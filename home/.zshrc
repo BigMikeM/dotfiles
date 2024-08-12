@@ -115,9 +115,6 @@ export ELECTRON_OZONE_PLATFORM_HINT='wayland'
 # I like vim.
 set -o vi
 
-# Shell plugins
-eval "$(sheldon source)"
-
 if _exists pipx; then
 	autoload -U bashcompinit
 	bashcompinit
@@ -129,3 +126,6 @@ if [[ -f "$HOME/.zshlocal" ]]; then
 	source "$HOME/.zshlocal"
 fi
 fpath+=${ZDOTDIR:-~}/.zsh_functions
+
+# Shell plugins
+eval "$(sheldon source)"
