@@ -18,6 +18,8 @@ return {
   { import = "astrocommunity.editing-support.ultimate-autopair-nvim" },
   { import = "astrocommunity.editing-support.suda-vim" },
   { import = "astrocommunity.editing-support.text-case-nvim" },
+  { import = "astrocommunity.lsp.nvim-lsp-file-operations" },
+  { import = "astrocommunity.motion.hop-nvim" },
   { import = "astrocommunity.neovim-lua-development.lazydev-nvim" },
   { import = "astrocommunity.pack.lua" },
   { import = "astrocommunity.pack.rust" },
@@ -36,6 +38,7 @@ return {
   { import = "astrocommunity.programming-language-support.csv-vim" },
   { import = "astrocommunity.programming-language-support.nvim-jqx" },
   { import = "astrocommunity.recipes.neovide" },
+  { import = "astrocommunity.search.nvim-spectre" },
   { import = "astrocommunity.split-and-window.colorful-winsep-nvim" },
   { import = "astrocommunity.split-and-window.windows-nvim" },
   { import = "astrocommunity.split-and-window.mini-map" },
@@ -43,6 +46,7 @@ return {
   { import = "astrocommunity.syntax.vim-easy-align" },
   { import = "astrocommunity.syntax.vim-cool" },
   { import = "astrocommunity.syntax.hlargs-nvim" },
+  { import = "astrocommunity.utility.noice-nvim" },
   { import = "astrocommunity.workflow.bad-practices-nvim" },
   -- import/override with your plugins folder
 }
