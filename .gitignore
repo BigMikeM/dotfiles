@@ -11,3 +11,4 @@ kitty.conf.bak
 lazy-lock.json
 user-dirs.locale
 current-theme.conf*
+home/config/kitty/current-theme.conf
