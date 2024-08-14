@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Simple script to use brightnessctl up by given percentage
+# Simple script to use brightnessctl down by given percentage
 # Usage: bown <number>
 
 amount=$1
