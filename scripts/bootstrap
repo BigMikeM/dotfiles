@@ -62,11 +62,12 @@ install_go() {
 
 	# Fetch the latest version of Go from the official website
 	local latest_version
-	latest_version=$(curl 'https://golang.org/VERSION?m=text') ||
+	latest_version=$(curl -s 'https://go.dev/VERSION?m=text' | head -1) ||
 		on_error "Couldn't fetch the latest version of Go."
 
 	# Download the latest version
-	curl -O "https://dl.google.com/go/${latest_version}.linux-amd64.tar.gz"
+	# https://go.dev/dl/go1.23.0.src.tar.gz
+	curl -LO "https://go.dev/dl/${latest_version}.linux-amd64.tar.gz"
 
 	# Unpack the tarball
 	sudo tar -C /usr/local -xzf "${latest_version}.linux-amd64.tar.gz"
@@ -213,10 +214,10 @@ install_neovim() {
 		info "NeoVim does not appear to be installed."
 	fi
 
-	read -rp "Would you like to proceed with installation? [y/N]: " -n 1 REPLY
+	read -rp "Would you like to proceed with installation? [y/N]: " -n 1 answer
 	echo
 
-	if [[ "${REPLY,,}" != ^[Yy]$ ]]; then
+	if [[ "${answer,,}" != "y" ]]; then
 		info "Skipping NeoVim Appimage installation."
 		return
 	fi
