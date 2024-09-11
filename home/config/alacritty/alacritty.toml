@@ -38,7 +38,8 @@ foreground = "0xc8c093"
 size = 11.0
 
 [font.normal]
-family = "CommitMono Nerd Font"
+# family = "CommitMono Nerd Font"
+family = "MartianMono Nerd Font"
 
 [window]
 opacity = 0.99
