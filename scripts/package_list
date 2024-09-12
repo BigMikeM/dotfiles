@@ -146,19 +146,4 @@ cargo_packages=(
 	lsd
 )
 
-pip_packages=(
-	black
-	jrnl
-	pynvim
-	pylint
-	isort
-)
-
-npm_packages=(
-	commitizen
-	npkill
-	fkill-cli
-	cz-conventional-changelog
-)
-
 export rpm_packages rpm_groups rpm_nonfree arch_packages cargo_packages pip_packages apt_packages npm_packages
