@@ -40,8 +40,8 @@ rpm_update() {
 
 arch_update() {
 	if _exists pacman; then
-		if _exists yay; then
-			yay -Syu --noconfirm
+		if _exists paru; then
+			paru -Syu --noconfirm
 			return
 		fi
 		sudo pacman -Syu --noconfirm
