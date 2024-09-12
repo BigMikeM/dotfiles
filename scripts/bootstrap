@@ -155,10 +155,6 @@ arch_install() {
 	sudo pacman -Sy --needed --noconfirm "${arch_packages[@]}"
 }
 
-pip_install() {
-	pip install "${pip_packages[@]}"
-}
-
 install_astronvim() {
 	info "Now beginning the installation of: [AstroNvim]"
 	read -rp "Would you like to proceed with this install? [y/N]: " -n 1 answer
@@ -255,7 +251,6 @@ set_zsh() {
 install_external_required() {
 	install_rustup
 	cargo_install
-	# pip_install
 }
 
 install_external_optional() {
