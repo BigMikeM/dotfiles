@@ -128,10 +128,14 @@ install_rustup() {
 	fi
 
 	info "Installing Rustup"
-	curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+	if _exists paru; then
+		paru -S rustup
+	else
+		curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
-	info "Installing latest stable version of Rust and Cargo."
-	source "$HOME/.cargo/env"
+		info "Installing latest stable version of Rust and Cargo."
+		source "$HOME/.cargo/env"
+	fi
 	rustup default stable
 }
 
@@ -168,21 +172,21 @@ install_astronvim() {
 
 	info "Starting the AstroNvim installer."
 	# Back up existing Neovim configuration
-	[[ -d ~/.config/nvim ]] &&
-		info "Backing up current NeoVim configuration to ~/.config/nvim.bak"
-	mv ~/.config/nvim ~/.config/nvim.bak
+	[[ -d $HOME/.config/nvim ]] &&
+		info "Backing up current NeoVim configuration to $HOME/.config/nvim.bak"
+	mv "$HOME"/.config/nvim "$HOME"/.config/nvim.bak
 	# Clean existing NeoVim folders
-	if [[ -d ~/.local/share/nvim ]]; then
+	if [[ -d $HOME/.local/share/nvim ]]; then
 		info "Backing up local NeoVim folders."
-		info 'mv ~/.local/share/nvim -> ~/.local/share/nvim.bak'
-		mv ~/.local/share/nvim ~/.local/share/nvim.bak
-		info '~/.local/state/nvim -> ~/.local/state/nvim.bak'
-		mv ~/.local/state/nvim ~/.local/state/nvim.bak
-		info '~/.cache/nvim -> ~/.cache/nvim.bak'
-		mv ~/.cache/nvim ~/.cache/nvim.bak
+		info "mv $HOME/.local/share/nvim -> $HOME/.local/share/nvim.bak"
+		mv "$HOME"/.local/share/nvim "$HOME"/.local/share/nvim.bak
+		info "$HOME/.local/state/nvim -> $HOME/.local/state/nvim.bak"
+		mv "$HOME"/.local/state/nvim "$HOME"/.local/state/nvim.bak
+		info "$HOME/.cache/nvim -> $HOME/.cache/nvim.bak"
+		mv "$HOME"/.cache/nvim "$HOME"/.cache/nvim.bak
 	fi
-	git clone --depth 1 https://github.com/AstroNvim/template ~/.config/nvim
-	rm -rf ~/.config/nvim/.git
+	git clone --depth 1 https://github.com/AstroNvim/template "$HOME"/.config/nvim
+	rm -rf "$HOME"/.config/nvim/.git
 
 	info "AstroNvim installed successfully."
 	info "Please run NeoVim (nvim) after bootstrap finishes to complete the installation of AstroNvim."
@@ -240,9 +244,9 @@ set_zsh() {
 	if [[ "${shell,,}" != "zsh" ]]; then
 		info "Default shell will be changed to ZSH."
 
-		read -p "Are you sure you want to change the default shell to ZSH? (y/n) " -n 1 -r
+		read -rp "Are you sure you want to change the default shell to ZSH? (y/n) " -n 1 -r answer
 		echo
-		if [[ $REPLY =~ ^[Yy]$ ]]; then
+		if [[ "${answer,,}" != "y" ]]; then
 			chsh -s "$(which zsh)"
 		fi
 	fi
