@@ -135,6 +135,7 @@ arch_packages=(
 	gtk3
 	sdl2
 	libxkbcommon-x11
+	arch-gaming-meta
 )
 
 cargo_packages=(
