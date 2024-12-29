@@ -112,9 +112,6 @@ export BAT_THEME="Catppuccin-mocha"
 
 export ELECTRON_OZONE_PLATFORM_HINT='wayland'
 
-# I like vim.
-set -o vi
-
 if _exists pipx; then
 	autoload -U bashcompinit
 	bashcompinit
