@@ -35,7 +35,39 @@ if command -v rpm >/dev/null 2>&1; then
 	)
 fi
 
+wsl_packages=(
+	git
+	cmake
+	openssh-client
+	tree
+	bat
+	tldr
+	gh
+	trash-cli
+	ranger
+	luarocks
+	lua-check
+	atool
+	highlight
+	shellcheck
+	shfmt
+	python3
+	python-is-python3
+	python3-venv
+	bc
+	pkg-config
+	curl
+	gnupg
+	ca-certificates
+	gcc-multilib
+	g++-multilib
+	cmake
+	pkg-config
+	build-essential
+)
+
 apt_packages=(
+	build-essential
 	zsh
 	git
 	cmake
@@ -147,4 +179,4 @@ cargo_packages=(
 	lsd
 )
 
-export rpm_packages rpm_groups rpm_nonfree arch_packages cargo_packages pip_packages apt_packages npm_packages
+export rpm_packages rpm_groups rpm_nonfree arch_packages cargo_packages pip_packages apt_packages npm_packages wsl_packages

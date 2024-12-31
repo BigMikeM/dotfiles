@@ -58,6 +58,10 @@ apt_update() {
 	fi
 }
 
+apt-wsl_update() {
+	apt_update
+}
+
 cargo_update() {
 	info "Updating packages installed with Cargo."
 	cargo install-update -a

@@ -150,6 +150,10 @@ apt_install() {
 	sudo apt install "${apt_packages[@]}"
 }
 
+apt-wsl_install() {
+	sudo apt install "${wsl_packages[@]}"
+}
+
 rpm_install() {
 	sudo dnf install --refresh -y "${rpm_packages[@]}"
 	sudo dnf group install --with-optional "${rpm_groups[@]}"

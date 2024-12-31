@@ -58,6 +58,9 @@ find_package_manager() {
 	fi
 	if _exists apt; then
 		manager="apt"
+		if [[ "$(uname -r)" == *WSL2* ]]; then
+			manager="apt-wsl"
+		fi
 	fi
 
 	if [[ -n "$manager" ]]; then
