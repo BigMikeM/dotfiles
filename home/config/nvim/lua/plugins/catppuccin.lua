@@ -21,6 +21,8 @@ return {
         treesitter = true,
         notify = true,
         indent_blankline = { enabled = true },
+        ufo = true,
+        window_picker = true,
       },
     },
   },
