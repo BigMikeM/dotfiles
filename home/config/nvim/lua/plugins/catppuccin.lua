@@ -2,6 +2,7 @@ return {
   { -- further customize the options set by the community
     "catppuccin",
     opts = {
+      flavour = "mocha",
       integrations = {
         sandwich = true,
         alpha = true,
