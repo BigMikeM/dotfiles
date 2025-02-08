@@ -46,5 +46,7 @@ return {
   { import = "astrocommunity.syntax.vim-easy-align" },
   { import = "astrocommunity.syntax.vim-cool" },
   { import = "astrocommunity.syntax.hlargs-nvim" },
+  { import = "astrocommunity.game.leetcode-nvim" },
+  { import = "astrocommunity.utility.noice-nvim" },
   -- { import = "astrocommunity.workflow.bad-practices-nvim" },
 }
