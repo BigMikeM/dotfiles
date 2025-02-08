@@ -20,7 +20,6 @@ return {
   { import = "astrocommunity.editing-support.text-case-nvim" },
   { import = "astrocommunity.lsp.nvim-lsp-file-operations" },
   { import = "astrocommunity.motion.hop-nvim" },
-  { import = "astrocommunity.neovim-lua-development.lazydev-nvim" },
   { import = "astrocommunity.pack.lua" },
   { import = "astrocommunity.pack.rust" },
   { import = "astrocommunity.pack.python-ruff" },
