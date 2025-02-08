@@ -70,7 +70,7 @@ install_go() {
 	curl -LO "https://go.dev/dl/${latest_version}.linux-amd64.tar.gz"
 
 	# Unpack the tarball
-	sudo tar -C /usr/local -xzf "${latest_version}.linux-amd64.tar.gz"
+	sudo tar -C /usr/local -xzf "go${latest_version}.linux-amd64.tar.gz"
 
 	# Remove the downloaded tarball
 	rm "${latest_version}.linux-amd64.tar.gz"
