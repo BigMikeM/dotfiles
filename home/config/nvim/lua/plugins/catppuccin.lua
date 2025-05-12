@@ -24,6 +24,7 @@ return {
         indent_blankline = { enabled = true },
         ufo = true,
         window_picker = true,
+        copilot_vim = true,
       },
     },
   },

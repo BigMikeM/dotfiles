@@ -12,7 +12,7 @@ return {
       },
     },
     overrides = function(colors)
-      local theme = colors.theme
+      -- local theme = colors.theme
       local palette = colors.palette
       return {
         -- Borderless Telescope UI:
@@ -32,11 +32,11 @@ return {
         RainbowDelimiterGreen = { fg = palette.dragonBlue },
         RainbowDelimiterViolet = { fg = palette.lightBlue },
         RainbowDelimiterCyan = { fg = palette.boatYellow2 },
-        -- Darker background for popups to contrast with editor view
-        Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
-        PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2 },
-        PmenuSbar = { bg = theme.ui.bg_m1 },
-        PmenuThumb = { bg = theme.ui.bg_p2 },
+        -- -- Darker background for popups to contrast with editor view
+        -- Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
+        -- PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2 },
+        -- PmenuSbar = { bg = theme.ui.bg_m1 },
+        -- PmenuThumb = { bg = theme.ui.bg_p2 },
       }
     end,
   },
