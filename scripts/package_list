@@ -10,8 +10,6 @@ rpm_packages=(
 	tldr
 	gh
 	trash-cli
-	brightnessctl
-	playerctl
 	neovim
 	ranger
 	kitty
