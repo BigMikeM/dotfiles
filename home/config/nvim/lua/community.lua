@@ -1,3 +1,5 @@
+-- if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
+
 -- AstroCommunity: import any community modules here
 -- We import this file in `lazy_setup.lua` before the `plugins/` folder.
 -- This guarantees that the specs are processed before any user plugins.
@@ -12,7 +14,7 @@ return {
   { import = "astrocommunity.completion.copilot-cmp" },
   { import = "astrocommunity.editing-support.nvim-regexplainer" },
   { import = "astrocommunity.editing-support.dial-nvim" },
-  { import = "astrocommunity.editing-support.multicursors-nvim" },
+  -- { import = "astrocommunity.editing-support.multicursors-nvim" }, -- Temporarily disabled due to error about config
   { import = "astrocommunity.editing-support.refactoring-nvim" },
   { import = "astrocommunity.editing-support.vim-move" },
   { import = "astrocommunity.editing-support.ultimate-autopair-nvim" },
@@ -46,6 +48,5 @@ return {
   { import = "astrocommunity.syntax.vim-cool" },
   { import = "astrocommunity.syntax.hlargs-nvim" },
   { import = "astrocommunity.game.leetcode-nvim" },
-  { import = "astrocommunity.utility.noice-nvim" },
   -- { import = "astrocommunity.workflow.bad-practices-nvim" },
 }
