@@ -1,19 +1,202 @@
 #!/bin/bash
 
 # Dotfiles and bootstrap installer
+# Enhanced with better error handling, CLI options, and progress tracking
 
-set -eu
-trap on_error SIGTERM
+# Configuration
+SKIP_CONFIRMATION=false
+SKIP_GO=false
+SKIP_NVM=false
+SKIP_RUST=false
+SKIP_NEOVIM=false
+SKIP_ASTRONVIM=false
+SKIP_GITUI=false
+DRY_RUN=false
+VERBOSE=false
+AUTO_YES=false
+
+# Progress tracking
+declare -a COMPLETED_TASKS=()
+declare -a FAILED_TASKS=()
 
 # Set directory
 export DOTFILES="$HOME/.dotfiles"
 export SCRIPTS="$DOTFILES/scripts/"
+
+# Error handling
+on_error() {
+	local exit_code=$?
+	error "Script failed with exit code: $exit_code"
+	error "Last command: $BASH_COMMAND"
+	show_summary
+	exit "$exit_code"
+}
+
+set -euo pipefail
+trap on_error ERR SIGTERM SIGINT
 
 # Imports
 source "${SCRIPTS}/utils"
 source "${SCRIPTS}/package_list"
 
 PACKAGE_MANAGER="$(find_package_manager)"
+
+usage() {
+	cat <<EOF
+Usage: $0 [OPTIONS]
+
+OPTIONS:
+    -h, --help          Show this help message
+    -y, --yes           Skip all confirmation prompts (auto-yes)
+    -d, --dry-run       Show what would be installed without executing
+    -v, --verbose       Enable verbose output
+    --skip-go           Skip Go installation
+    --skip-nvm          Skip NVM/Node.js installation
+    --skip-rust         Skip Rust installation
+    --skip-neovim       Skip Neovim installation
+    --skip-astronvim    Skip AstroNvim installation
+    --skip-gitui        Skip GitUI installation
+    --dotfiles-path     Specify dotfiles path (default: $HOME/.dotfiles)
+
+Examples:
+    $0                  # Interactive installation
+    $0 --yes            # Auto-install everything
+    $0 --dry-run        # Show what would be installed
+    $0 --skip-go --skip-gitui  # Skip specific components
+EOF
+}
+
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+	case $1 in
+	-h | --help)
+		usage
+		exit 0
+		;;
+	-y | --yes)
+		AUTO_YES=true
+		shift
+		;;
+	-d | --dry-run)
+		DRY_RUN=true
+		shift
+		;;
+	-v | --verbose)
+		VERBOSE=true
+		shift
+		;;
+	--skip-go)
+		SKIP_GO=true
+		shift
+		;;
+	--skip-nvm)
+		SKIP_NVM=true
+		shift
+		;;
+	--skip-rust)
+		SKIP_RUST=true
+		shift
+		;;
+	--skip-neovim)
+		SKIP_NEOVIM=true
+		shift
+		;;
+	--skip-astronvim)
+		SKIP_ASTRONVIM=true
+		shift
+		;;
+	--skip-gitui)
+		SKIP_GITUI=true
+		shift
+		;;
+	--dotfiles-path)
+		DOTFILES="$2"
+		SCRIPTS="$DOTFILES/scripts/"
+		shift 2
+		;;
+	*)
+		error "Unknown option: $1"
+		usage
+		exit 1
+		;;
+	esac
+done
+
+run_command() {
+	local cmd="$*"
+	if [[ "$VERBOSE" == true ]]; then
+		info "Running: $cmd"
+	fi
+
+	if [[ "$DRY_RUN" == true ]]; then
+		info "[DRY RUN] Would execute: $cmd"
+		return 0
+	fi
+
+	eval "$cmd"
+}
+
+track_task() {
+	local task_name="$1"
+	local task_function="$2"
+
+	info "Starting: $task_name"
+
+	if "$task_function"; then
+		COMPLETED_TASKS+=("$task_name")
+		success "✓ $task_name completed"
+	else
+		FAILED_TASKS+=("$task_name")
+		error "✗ $task_name failed"
+	fi
+	echo
+}
+
+show_summary() {
+	echo
+	info "=============== BOOTSTRAP SUMMARY ==============="
+
+	if [[ ${#COMPLETED_TASKS[@]} -gt 0 ]]; then
+		success "Completed tasks:"
+		printf '  ✓ %s\n' "${COMPLETED_TASKS[@]}"
+	fi
+
+	if [[ ${#FAILED_TASKS[@]} -gt 0 ]]; then
+		error "Failed tasks:"
+		printf '  ✗ %s\n' "${FAILED_TASKS[@]}"
+	fi
+
+	info "================================================"
+}
+
+confirm_action() {
+	local message="$1"
+	local default="${2:-n}"
+
+	if [[ "$AUTO_YES" == true ]]; then
+		info "$message [AUTO-YES]"
+		return 0
+	fi
+
+	if [[ "$DRY_RUN" == true ]]; then
+		info "[DRY RUN] Would ask: $message"
+		return 0
+	fi
+
+	local prompt="$message [y/N]: "
+	if [[ "$default" == "y" ]]; then
+		prompt="$message [Y/n]: "
+	fi
+
+	read -rp "$prompt" -n 1 answer
+	echo
+
+	if [[ "$default" == "y" ]]; then
+		[[ "${answer,,}" != "n" ]]
+	else
+		[[ "${answer,,}" == "y" ]]
+	fi
+}
 
 on_start() {
 	info "     |-|                                             |-|     "
@@ -28,188 +211,242 @@ on_start() {
 	info "     |-|            forked by @BigMikeM              |-|     "
 	info "     |-|                                             |-|     "
 
-	info "This script will attempt to install and set up desired software."
-	echo
-
-	read -rp "Would you like to proceed with installation? [y/N]: " -n 1 answer
-	echo
-
-	if [[ "${answer,,}" != "y" ]]; then
-		info "Exiting Script."
-		exit 1
+	if [[ "$DRY_RUN" == true ]]; then
+		info "     |-|              DRY RUN MODE                |-|     "
 	fi
 
-	echo "Please enter your password to get started:"
-	sudo -v
+	echo
 
+	if ! confirm_action "Would you like to proceed with installation?" "n"; then
+		info "Exiting Script."
+		exit 0
+	fi
+
+	if [[ "$DRY_RUN" == false ]]; then
+		echo "Please enter your password to get started:"
+		sudo -v
+
+		# Keep sudo alive
+		while true; do
+			sudo -n true
+			sleep 60
+			kill -0 "$$" || exit
+		done 2>/dev/null &
+	fi
 }
 
 install_go() {
 	if _exists go; then
-		return
+		info "Go is already installed."
+		return 0
 	fi
 
-	info "Now beginning the installation of: [Go]"
-	read -rp "Would you like to proceed with this install? [y/N]: " -n 1 answer
-	echo
+	if [[ "$SKIP_GO" == true ]]; then
+		info "Skipping Go installation (--skip-go flag)."
+		return 0
+	fi
 
-	if [ "${answer,,}" != "y" ]; then
+	if ! confirm_action "Would you like to install Go?"; then
 		info "Skipping Go installation."
-		exit 1
+		return 0
 	fi
 
 	info "Installing Go."
 
 	# Fetch the latest version of Go from the official website
 	local latest_version
-	latest_version=$(curl -s 'https://go.dev/VERSION?m=text' | head -1) ||
-		on_error "Couldn't fetch the latest version of Go."
+	if [[ "$DRY_RUN" == false ]]; then
+		latest_version=$(curl -s 'https://go.dev/VERSION?m=text' | head -1) ||
+			on_error "Couldn't fetch the latest version of Go."
+	else
+		latest_version="go1.23.0" # Example for dry run
+	fi
 
 	# Download the latest version
-	# https://go.dev/dl/go1.23.0.src.tar.gz
-	curl -LO "https://go.dev/dl/${latest_version}.linux-amd64.tar.gz"
+	run_command "curl -LO 'https://go.dev/dl/${latest_version}.linux-amd64.tar.gz'"
 
 	# Unpack the tarball
-	sudo tar -C /usr/local -xzf "${latest_version}.linux-amd64.tar.gz"
+	run_command "sudo tar -C /usr/local -xzf '${latest_version}.linux-amd64.tar.gz'"
 
 	# Remove the downloaded tarball
-	rm "${latest_version}.linux-amd64.tar.gz"
+	run_command "rm '${latest_version}.linux-amd64.tar.gz'"
 
+	return 0
 }
 
-install_lazygit() {
-	if _exists lazygit; then
-		return
+install_gitui() {
+	if _exists gitui; then
+		info "GitUI is already installed."
+		return 0
 	fi
 
-	info "Now beginning the installation of: [Lazygit]"
-	read -rp "Would you like to proceed with this install? [y/N]: " -n 1 answer
-	echo
-
-	if [ "${answer,,}" != "y" ]; then
-		info "Skipping Lazygit installation."
-		exit 1
+	if [[ "$SKIP_GITUI" == true ]]; then
+		info "Skipping GitUI installation (--skip-gitui flag)."
+		return 0
 	fi
 
-	if ! _exists go || _exists lazygit; then
-		return
+	if ! confirm_action "Would you like to install GitUI?"; then
+		info "Skipping GitUI installation."
+		return 0
 	fi
-	info "Installing lazygit using golang."
-	go install github.com/jesseduffield/lazygit@latest
 
+	info "GitUI will be installed via system package manager."
+	info "Make sure 'gitui' is included in your package lists."
+
+	return 0
 }
 
 install_nvm() {
 	if _exists nvm; then
-		return
+		info "NVM is already installed."
+		return 0
 	fi
 
-	info "Now beginning the installation of: [Node Version Manager]"
-	bash -c "export PROFILE=/dev/null;curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash"
-
-	# Source the nvm script to make nvm available in the current shell session
-	export NVM_DIR="$HOME/.nvm"
-	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-
-	info "Installing Node LTS."
-	nvm install --lts
-
-	read -rp "Would you also like to install the latest version of Node? [y/N]: " -n 1 answer
-	echo
-
-	if [[ "${answer,,}" == "y" ]]; then
-		nvm install node
+	if [[ "$SKIP_NVM" == true ]]; then
+		info "Skipping NVM installation (--skip-nvm flag)."
+		return 0
 	fi
+
+	if ! confirm_action "Would you like to install Node Version Manager (NVM)?"; then
+		info "Skipping NVM installation."
+		return 0
+	fi
+
+	info "Installing Node Version Manager."
+	run_command "export PROFILE=/dev/null; curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash"
+
+	if [[ "$DRY_RUN" == false ]]; then
+		# Source the nvm script to make nvm available in the current shell session
+		export NVM_DIR="$HOME/.nvm"
+		[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+		info "Installing Node LTS."
+		run_command "nvm install --lts"
+
+		if confirm_action "Would you also like to install the latest version of Node?"; then
+			run_command "nvm install node"
+		fi
+	else
+		info "[DRY RUN] Would install Node LTS and optionally latest Node"
+	fi
+
+	return 0
 }
 
 install_rustup() {
 	if _exists rustup; then
-		return
+		info "Rustup is already installed."
+		return 0
+	fi
+
+	if [[ "$SKIP_RUST" == true ]]; then
+		info "Skipping Rust installation (--skip-rust flag)."
+		return 0
+	fi
+
+	if ! confirm_action "Would you like to install Rust?"; then
+		info "Skipping Rust installation."
+		return 0
 	fi
 
 	info "Installing Rustup"
 	if _exists paru; then
-		paru -S rustup
+		run_command "paru -S rustup"
 	else
-		curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+		run_command "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y"
 
-		info "Installing latest stable version of Rust and Cargo."
-		source "$HOME/.cargo/env"
+		if [[ "$DRY_RUN" == false ]]; then
+			info "Installing latest stable version of Rust and Cargo."
+			source "$HOME/.cargo/env"
+		fi
 	fi
-	rustup default stable
+
+	run_command "rustup default stable"
+	return 0
 }
 
 cargo_install() {
 	info "Installing extras with Cargo."
-	cargo install "${cargo_packages[@]}"
-
-	sheldon lock --update
+	if [[ "$DRY_RUN" == false ]]; then
+		run_command "cargo install ${cargo_packages[*]}"
+		run_command "sheldon lock --update"
+	else
+		info "[DRY RUN] Would install: ${cargo_packages[*]}"
+		info "[DRY RUN] Would run: sheldon lock --update"
+	fi
+	return 0
 }
 
 apt_install() {
-	sudo apt install "${apt_packages[@]}"
+	run_command "sudo apt update"
+	run_command "sudo apt install -y ${apt_packages[*]}"
 }
 
 apt-wsl_install() {
-	sudo apt install "${wsl_packages[@]}"
+	run_command "sudo apt update"
+	run_command "sudo apt install -y ${wsl_packages[*]}"
 }
 
 rpm_install() {
-	sudo dnf install --refresh -y "${rpm_packages[@]}"
-	sudo dnf group install "${rpm_groups[@]}"
+	run_command "sudo dnf install --refresh -y ${rpm_packages[*]}"
+	run_command "sudo dnf group install -y ${rpm_groups[*]}"
 }
 
 arch_install() {
-	sudo pacman -Sy --needed --noconfirm "${arch_packages[@]}"
+	run_command "sudo pacman -Sy --needed --noconfirm ${arch_packages[*]}"
 }
 
 install_astronvim() {
-	info "Now beginning the installation of: [AstroNvim]"
-	read -rp "Would you like to proceed with this install? [y/N]: " -n 1 answer
-	echo
+	if [[ "$SKIP_ASTRONVIM" == true ]]; then
+		info "Skipping AstroNvim installation (--skip-astronvim flag)."
+		return 0
+	fi
 
-	if [[ "${answer,,}" != "y" ]]; then
+	if ! confirm_action "Would you like to install AstroNvim?"; then
 		info "Skipping AstroNvim installation."
-		echo
-		return
+		return 0
 	fi
 
 	info "Starting the AstroNvim installer."
+
 	# Back up existing Neovim configuration
-	[[ -d $HOME/.config/nvim ]] &&
+	if [[ -d $HOME/.config/nvim ]]; then
 		info "Backing up current NeoVim configuration to $HOME/.config/nvim.bak"
-	mv "$HOME"/.config/nvim "$HOME"/.config/nvim.bak
+		run_command "mv '$HOME/.config/nvim' '$HOME/.config/nvim.bak'"
+	fi
+
 	# Clean existing NeoVim folders
 	if [[ -d $HOME/.local/share/nvim ]]; then
 		info "Backing up local NeoVim folders."
-		info "mv $HOME/.local/share/nvim -> $HOME/.local/share/nvim.bak"
-		mv "$HOME"/.local/share/nvim "$HOME"/.local/share/nvim.bak
-		info "$HOME/.local/state/nvim -> $HOME/.local/state/nvim.bak"
-		mv "$HOME"/.local/state/nvim "$HOME"/.local/state/nvim.bak
-		info "$HOME/.cache/nvim -> $HOME/.cache/nvim.bak"
-		mv "$HOME"/.cache/nvim "$HOME"/.cache/nvim.bak
+		run_command "mv '$HOME/.local/share/nvim' '$HOME/.local/share/nvim.bak'"
+		run_command "mv '$HOME/.local/state/nvim' '$HOME/.local/state/nvim.bak'"
+		run_command "mv '$HOME/.cache/nvim' '$HOME/.cache/nvim.bak'"
 	fi
-	git clone --depth 1 https://github.com/AstroNvim/template "$HOME"/.config/nvim
-	rm -rf "$HOME"/.config/nvim/.git
 
-	info "AstroNvim installed successfully."
+	run_command "git clone --depth 1 https://github.com/AstroNvim/template '$HOME/.config/nvim'"
+	run_command "rm -rf '$HOME/.config/nvim/.git'"
+
+	success "AstroNvim installed successfully."
 	info "Please run NeoVim (nvim) after bootstrap finishes to complete the installation of AstroNvim."
-	finish
+
+	return 0
 }
 
 install_software() {
-
-	info "Installing sofware with system package manager."
-
+	info "Installing software with system package manager."
 	"${PACKAGE_MANAGER}"_install
-
-	finish
+	return 0
 }
 
 install_neovim() {
+	if [[ "$SKIP_NEOVIM" == true ]]; then
+		info "Skipping Neovim installation (--skip-neovim flag)."
+		return 0
+	fi
 
 	info "This script will attempt to install the latest stable version of Neovim using the appimage."
 	info "This is only necessary if you need a recent version of NeoVim and your distro does not include it."
+
 	if _exists nvim; then
 		local nvim_version
 		nvim_version="$(nvim -v | head -1 | cut -d"v" -f2)"
@@ -218,71 +455,83 @@ install_neovim() {
 		info "NeoVim does not appear to be installed."
 	fi
 
-	read -rp "Would you like to proceed with installation? [y/N]: " -n 1 answer
-	echo
-
-	if [[ "${answer,,}" != "y" ]]; then
+	if ! confirm_action "Would you like to proceed with Neovim AppImage installation?"; then
 		info "Skipping NeoVim Appimage installation."
-		return
+		return 0
 	fi
 
 	# Download the latest Neovim AppImage
-	wget -O /tmp/nvim.appimage https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+	run_command "wget -O /tmp/nvim.appimage https://github.com/neovim/neovim/releases/latest/download/nvim.appimage"
 
 	# Make the downloaded file executable
-	chmod +x /tmp/nvim.appimage
+	run_command "chmod +x /tmp/nvim.appimage"
 
 	# Move the AppImage to /usr/local
-	sudo mv /tmp/nvim.appimage /usr/local/bin/nvim
+	run_command "sudo mv /tmp/nvim.appimage /usr/local/bin/nvim"
 
-	info "NeoVim AppImage installed successfully."
+	success "NeoVim AppImage installed successfully."
+	return 0
 }
 
 set_zsh() {
 	local shell
 	if ! _exists zsh; then
 		warn "ZSH not found! Other shells are not currently supported"
-		return
+		return 1
 	fi
+
 	shell="$(_user_default_shell)"
 	if [[ "${shell,,}" != "zsh" ]]; then
 		info "Default shell will be changed to ZSH."
 
-		read -rp "Are you sure you want to change the default shell to ZSH? (y/n) " -n 1 -r answer
-		echo
-		if [[ "${answer,,}" != "y" ]]; then
-			chsh -s "$(which zsh)"
+		if confirm_action "Are you sure you want to change the default shell to ZSH?" "y"; then
+			run_command "chsh -s '$(which zsh)'"
 		fi
+	else
+		info "ZSH is already the default shell."
 	fi
+
+	return 0
 }
 
 install_external_required() {
-	install_rustup
-	cargo_install
+	if [[ "$SKIP_RUST" == false ]]; then
+		track_task "Rust Installation" install_rustup
+		track_task "Cargo Packages" cargo_install
+	fi
 }
 
 install_external_optional() {
-	install_neovim
-	install_nvm
-	install_go
-	install_lazygit
-	install_astronvim
+	if [[ "$SKIP_NEOVIM" == false ]]; then
+		track_task "Neovim Installation" install_neovim
+	fi
+	if [[ "$SKIP_NVM" == false ]]; then
+		track_task "NVM Installation" install_nvm
+	fi
+	if [[ "$SKIP_GO" == false ]]; then
+		track_task "Go Installation" install_go
+	fi
+	if [[ "$SKIP_GITUI" == false ]]; then
+		track_task "GitUI Installation" install_gitui
+	fi
+	if [[ "$SKIP_ASTRONVIM" == false ]]; then
+		track_task "AstroNvim Installation" install_astronvim
+	fi
 }
 
 install_external() {
-
 	info "Installing external software."
-
 	install_external_required
 	install_external_optional
 }
 
 main() {
 	on_start
-	install_software
+	track_task "System Packages" install_software
 	install_external
-	set_zsh
+	track_task "Shell Setup" set_zsh
+	show_summary
 	on_finish
 }
 
-main "$*"
+main "$@"

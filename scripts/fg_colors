@@ -1,72 +1,157 @@
 #!/bin/bash
+# Color definitions and formatting functions for terminal output
+# Enhanced with additional colors and better organization
 
-# TODO: Maybe rename the variables and functions to something
-# referencing the fact that these are only foreground/text colors
-
-# Declarations
-
-## Colors
-
-### 8 Base colors
-BLACK=$(tput setaf 0)
-RED=$(tput setaf 1)
-GREEN=$(tput setaf 2)
-YELLOW=$(tput setaf 3)
-BLUE=$(tput setaf 4)
-MAGENTA=$(tput setaf 5)
-CYAN=$(tput setaf 6)
-WHITE=$(tput setaf 7)
-
-### Extended colors
-PURPLE=$(tput setaf 125)
-LIME_YELLOW=$(tput setaf 190)
-POWDER_BLUE=$(tput setaf 153)
-
-## Styles
-BRIGHT=$(tput bold)
-# Below seemed to be causing issues on endeavouros
-# BLINK=$(tput blink)
-# REVERSE=$(tput smso)
-# UNDERLINE=$(tput smul)
-BOLD=$(tput bold)
-## Reset
-NORMAL=$(tput sgr0)
-
-# Formatting functions
-
-## Colors
-black() {
-	printf "%s" "${BLACK}${*}${NORMAL}"
+# Check if terminal supports colors
+_supports_color() {
+    [[ -t 1 ]] && [[ "${TERM:-}" != "dumb" ]] && command -v tput >/dev/null 2>&1
 }
 
-blue() {
-	printf "%s" "${BLUE}${*}${NORMAL}"
+# Initialize colors only if supported
+if _supports_color; then
+    # 8 Base ANSI colors
+    BLACK=$(tput setaf 0)
+    RED=$(tput setaf 1)
+    GREEN=$(tput setaf 2)
+    YELLOW=$(tput setaf 3)
+    BLUE=$(tput setaf 4)
+    MAGENTA=$(tput setaf 5)
+    CYAN=$(tput setaf 6)
+    WHITE=$(tput setaf 7)
+
+    # Bright variants (8-15)
+    BRIGHT_BLACK=$(tput setaf 8)
+    BRIGHT_RED=$(tput setaf 9)
+    BRIGHT_GREEN=$(tput setaf 10)
+    BRIGHT_YELLOW=$(tput setaf 11)
+    BRIGHT_BLUE=$(tput setaf 12)
+    BRIGHT_MAGENTA=$(tput setaf 13)
+    BRIGHT_CYAN=$(tput setaf 14)
+    BRIGHT_WHITE=$(tput setaf 15)
+
+    # Extended 256 colors (selected useful ones)
+    ORANGE=$(tput setaf 208)
+    PURPLE=$(tput setaf 125)
+    LIME_YELLOW=$(tput setaf 190)
+    POWDER_BLUE=$(tput setaf 153)
+    DARK_GRAY=$(tput setaf 240)
+    LIGHT_GRAY=$(tput setaf 250)
+
+    # Background colors
+    BG_BLACK=$(tput setab 0)
+    BG_RED=$(tput setab 1)
+    BG_GREEN=$(tput setab 2)
+    BG_YELLOW=$(tput setab 3)
+    BG_BLUE=$(tput setab 4)
+    BG_MAGENTA=$(tput setab 5)
+    BG_CYAN=$(tput setab 6)
+    BG_WHITE=$(tput setab 7)
+
+    # Text formatting
+    BOLD=$(tput bold)
+    DIM=$(tput dim)
+    ITALIC=$(tput sitm)
+    UNDERLINE=$(tput smul)
+    BLINK=$(tput blink)
+    REVERSE=$(tput rev)
+    STRIKETHROUGH=$(tput smxx)
+
+    # Reset
+    NORMAL=$(tput sgr0)
+else
+    # Fallback: no colors for non-supporting terminals
+    BLACK="" RED="" GREEN="" YELLOW="" BLUE="" MAGENTA="" CYAN="" WHITE=""
+    BRIGHT_BLACK="" BRIGHT_RED="" BRIGHT_GREEN="" BRIGHT_YELLOW=""
+    BRIGHT_BLUE="" BRIGHT_MAGENTA="" BRIGHT_CYAN="" BRIGHT_WHITE=""
+    ORANGE="" PURPLE="" LIME_YELLOW="" POWDER_BLUE="" DARK_GRAY="" LIGHT_GRAY=""
+    BG_BLACK="" BG_RED="" BG_GREEN="" BG_YELLOW="" BG_BLUE="" BG_MAGENTA="" BG_CYAN="" BG_WHITE=""
+    BOLD="" DIM="" ITALIC="" UNDERLINE="" BLINK="" REVERSE="" STRIKETHROUGH=""
+    NORMAL=""
+fi
+
+# Color functions for easy text coloring
+black() { printf "%s" "${BLACK}${*}${NORMAL}"; }
+red() { printf "%s" "${RED}${*}${NORMAL}"; }
+green() { printf "%s" "${GREEN}${*}${NORMAL}"; }
+yellow() { printf "%s" "${YELLOW}${*}${NORMAL}"; }
+blue() { printf "%s" "${BLUE}${*}${NORMAL}"; }
+magenta() { printf "%s" "${MAGENTA}${*}${NORMAL}"; }
+cyan() { printf "%s" "${CYAN}${*}${NORMAL}"; }
+white() { printf "%s" "${WHITE}${*}${NORMAL}"; }
+
+# Bright color functions
+bright_black() { printf "%s" "${BRIGHT_BLACK}${*}${NORMAL}"; }
+bright_red() { printf "%s" "${BRIGHT_RED}${*}${NORMAL}"; }
+bright_green() { printf "%s" "${BRIGHT_GREEN}${*}${NORMAL}"; }
+bright_yellow() { printf "%s" "${BRIGHT_YELLOW}${*}${NORMAL}"; }
+bright_blue() { printf "%s" "${BRIGHT_BLUE}${*}${NORMAL}"; }
+bright_magenta() { printf "%s" "${BRIGHT_MAGENTA}${*}${NORMAL}"; }
+bright_cyan() { printf "%s" "${BRIGHT_CYAN}${*}${NORMAL}"; }
+bright_white() { printf "%s" "${BRIGHT_WHITE}${*}${NORMAL}"; }
+
+# Extended color functions
+orange() { printf "%s" "${ORANGE}${*}${NORMAL}"; }
+purple() { printf "%s" "${PURPLE}${*}${NORMAL}"; }
+lime_yellow() { printf "%s" "${LIME_YELLOW}${*}${NORMAL}"; }
+powder_blue() { printf "%s" "${POWDER_BLUE}${*}${NORMAL}"; }
+dark_gray() { printf "%s" "${DARK_GRAY}${*}${NORMAL}"; }
+light_gray() { printf "%s" "${LIGHT_GRAY}${*}${NORMAL}"; }
+
+# Style functions
+bold() { printf "%s" "${BOLD}${*}${NORMAL}"; }
+dim() { printf "%s" "${DIM}${*}${NORMAL}"; }
+italic() { printf "%s" "${ITALIC}${*}${NORMAL}"; }
+underline() { printf "%s" "${UNDERLINE}${*}${NORMAL}"; }
+blink() { printf "%s" "${BLINK}${*}${NORMAL}"; }
+reverse() { printf "%s" "${REVERSE}${*}${NORMAL}"; }
+strikethrough() { printf "%s" "${STRIKETHROUGH}${*}${NORMAL}"; }
+
+# Combination functions for common use cases
+error_text() { printf "%s" "${BOLD}${RED}${*}${NORMAL}"; }
+warning_text() { printf "%s" "${BOLD}${YELLOW}${*}${NORMAL}"; }
+success_text() { printf "%s" "${BOLD}${GREEN}${*}${NORMAL}"; }
+info_text() { printf "%s" "${CYAN}${*}${NORMAL}"; }
+debug_text() { printf "%s" "${DIM}${PURPLE}${*}${NORMAL}"; }
+
+# Header functions for better organization
+header1() { printf "%s\n" "${BOLD}${BRIGHT_BLUE}${*}${NORMAL}"; }
+header2() { printf "%s\n" "${BOLD}${BLUE}${*}${NORMAL}"; }
+header3() { printf "%s\n" "${BOLD}${CYAN}${*}${NORMAL}"; }
+
+# Utility function to print color palette
+show_colors() {
+    echo "Basic Colors:"
+    echo "$(black "Black") $(red "Red") $(green "Green") $(yellow "Yellow")"
+    echo "$(blue "Blue") $(magenta "Magenta") $(cyan "Cyan") $(white "White")"
+    echo
+    echo "Bright Colors:"
+    echo "$(bright_black "Bright Black") $(bright_red "Bright Red") $(bright_green "Bright Green") $(bright_yellow "Bright Yellow")"
+    echo "$(bright_blue "Bright Blue") $(bright_magenta "Bright Magenta") $(bright_cyan "Bright Cyan") $(bright_white "Bright White")"
+    echo
+    echo "Extended Colors:"
+    echo "$(orange "Orange") $(purple "Purple") $(lime_yellow "Lime Yellow") $(powder_blue "Powder Blue")"
+    echo "$(dark_gray "Dark Gray") $(light_gray "Light Gray")"
+    echo
+    echo "Styles:"
+    echo "$(bold "Bold") $(dim "Dim") $(italic "Italic") $(underline "Underline")"
+    echo "$(blink "Blink") $(reverse "Reverse") $(strikethrough "Strikethrough")"
+    echo
+    echo "Message Types:"
+    echo "$(error_text "Error message") $(warning_text "Warning message")"
+    echo "$(success_text "Success message") $(info_text "Info message") $(debug_text "Debug message")"
 }
 
-red() {
-	printf "%s" "${RED}${*}${NORMAL}"
-}
+# Export color variables
+export BLACK RED GREEN YELLOW BLUE MAGENTA CYAN WHITE
+export BRIGHT_BLACK BRIGHT_RED BRIGHT_GREEN BRIGHT_YELLOW BRIGHT_BLUE BRIGHT_MAGENTA BRIGHT_CYAN BRIGHT_WHITE
+export ORANGE PURPLE LIME_YELLOW POWDER_BLUE DARK_GRAY LIGHT_GRAY
+export BG_BLACK BG_RED BG_GREEN BG_YELLOW BG_BLUE BG_MAGENTA BG_CYAN BG_WHITE
+export BOLD DIM ITALIC UNDERLINE BLINK REVERSE STRIKETHROUGH NORMAL
 
-yellow() {
-	printf "%s" "${YELLOW}${*}${NORMAL}"
-}
-
-green() {
-	printf "%s" "${GREEN}${*}${NORMAL}"
-}
-
-white() {
-	printf "%s" "${WHITE}${*}${NORMAL}"
-}
-
-## Styles
-bold() {
-	printf "%s" "${BOLD}${*}${NORMAL}"
-}
-
-# Exports
-
-## Colors
-export BLACK RED GREEN YELLOW LIME_YELLOW POWDER_BLUE MAGENTA CYAN WHITE BLUE PURPLE
-## Styles
-export BRIGHT BLINK REVERSE UNDERLINE NORMAL
+# Export functions
+export -f black red green yellow blue magenta cyan white
+export -f bright_black bright_red bright_green bright_yellow bright_blue bright_magenta bright_cyan bright_white
+export -f orange purple lime_yellow powder_blue dark_gray light_gray
+export -f bold dim italic underline blink reverse strikethrough
+export -f error_text warning_text success_text info_text debug_text
+export -f header1 header2 header3 show_colors _supports_color

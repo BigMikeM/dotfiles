@@ -1,10 +1,64 @@
 #!/bin/bash
 # Utility functions for use in other scripts
+# Enhanced with better error handling and additional utilities
 
 source "${DOTFILES}/scripts/fg_colors"
 
+# Check if command exists
 _exists() {
 	command -v "$1" >/dev/null 2>&1
+}
+
+# Check if running in container
+_is_container() {
+	[[ -f /.dockerenv ]] || [[ -f /run/.containerenv ]] || grep -q container /proc/1/cgroup 2>/dev/null
+}
+
+# Check if running in WSL
+_is_wsl() {
+	[[ "$(uname -r)" == *WSL* ]] || [[ -n "${WSL_DISTRO_NAME:-}" ]]
+}
+
+# Check if running as root
+_is_root() {
+	[[ $EUID -eq 0 ]]
+}
+
+# Check if directory is writable
+_is_writable() {
+	local dir="$1"
+	[[ -d "$dir" && -w "$dir" ]]
+}
+
+# Check if file is readable
+_is_readable() {
+	local file="$1"
+	[[ -f "$file" && -r "$file" ]]
+}
+
+# Get distribution name
+_get_distro() {
+	if [[ -f /etc/os-release ]]; then
+		source /etc/os-release
+		echo "$ID"
+	elif [[ -f /etc/redhat-release ]]; then
+		echo "rhel"
+	elif [[ -f /etc/debian_version ]]; then
+		echo "debian"
+	else
+		echo "unknown"
+	fi
+}
+
+# Get system architecture
+_get_arch() {
+	case "$(uname -m)" in
+	x86_64 | amd64) echo "amd64" ;;
+	aarch64 | arm64) echo "arm64" ;;
+	armv7l) echo "armv7" ;;
+	i386 | i686) echo "386" ;;
+	*) uname -m ;;
+	esac
 }
 
 # Informational messages
@@ -19,62 +73,196 @@ success() {
 
 # Error reporter
 error() {
-	echo -e "${RED}${BOLD}${*}${NORMAL}"
+	echo -e "${RED}${BOLD}${*}${NORMAL}" >&2
 }
 
 # Warning or otherwise important message
 warn() {
-	echo -e "${YELLOW}${*}${NORMAL}"
+	echo -e "${YELLOW}${*}${NORMAL}" >&2
+}
+
+# Debug messages (only shown if DEBUG=1)
+debug() {
+	if [[ "${DEBUG:-0}" == "1" ]]; then
+		echo -e "${PURPLE}[DEBUG] ${*}${NORMAL}" >&2
+	fi
+}
+
+# Progress indicator
+progress() {
+	local current="$1"
+	local total="$2"
+	local message="$3"
+	local percent=$((current * 100 / total))
+	printf "\r${CYAN}[%3d%%] %s${NORMAL}" "$percent" "$message"
+	if [[ "$current" -eq "$total" ]]; then
+		echo
+	fi
 }
 
 # End section
 finish() {
 	success "Done!"
 	echo
-	sleep 5
+	sleep 2
 }
 
+# Script completion message
 on_finish() {
 	echo
 	success "Setup was successfully done!"
 	success "Happy Coding!"
 }
 
+# Error handler with context
 on_error() {
+	local exit_code=${1:-$?}
+	local line_number=${2:-$LINENO}
 	echo
-	error "ERROR"
-	error "${*}"
+	error "ERROR on line $line_number"
+	error "Exit code: $exit_code"
+	if [[ $# -gt 2 ]]; then
+		error "Message: ${*:3}"
+	fi
 	echo
-	exit 1
+	exit "$exit_code"
 }
 
+# Enhanced package manager detection
 find_package_manager() {
 	local manager=""
+	local distro
+	distro="$(_get_distro)"
+
+	# Try to detect based on available commands first
 	if _exists dnf; then
 		manager="rpm"
-	fi
-	if _exists pacman; then
+	elif _exists yum && [[ ! -f /usr/bin/dnf ]]; then
+		manager="rpm" # Old RHEL/CentOS
+	elif _exists pacman; then
 		manager="arch"
-	fi
-	if _exists apt; then
+	elif _exists apt; then
 		manager="apt"
-		if [[ "$(uname -r)" == *WSL2* ]]; then
+		if _is_wsl; then
 			manager="apt-wsl"
 		fi
+	elif _exists apt-get; then
+		manager="apt"
+		if _is_wsl; then
+			manager="apt-wsl"
+		fi
+	elif _exists zypper; then
+		manager="suse"
+	elif _exists emerge; then
+		manager="gentoo"
+	elif _exists apk; then
+		manager="alpine"
 	fi
 
 	if [[ -n "$manager" ]]; then
+		debug "Detected package manager: $manager"
 		printf %s "$manager"
 	else
-		warn "No supported package manager found."
-		on_error "Unable to continue."
+		warn "No supported package manager found for distribution: $distro"
+		on_error 1 "$LINENO" "Unable to continue without package manager."
 	fi
 }
 
+# Get current shell
 _current_shell() {
-	printf %s "$(readlink /proc/$$/exe | sed "s/.*\///")"
+	if [[ -n "${SHELL:-}" ]]; then
+		basename "$SHELL"
+	else
+		basename "$(readlink /proc/$$/exe 2>/dev/null || echo bash)"
+	fi
 }
 
+# Get user's default shell
 _user_default_shell() {
-	printf %s "$(awk -F: -v user="$(whoami)" '$1 == user {print $NF}' /etc/passwd | rev | cut -d"/" -f1 | rev)"
+	if _exists getent; then
+		getent passwd "$(whoami)" | cut -d: -f7 | xargs basename
+	else
+		awk -F: -v user="$(whoami)" '$1 == user {print $NF}' /etc/passwd | xargs basename
+	fi
 }
+
+# Check if user has sudo privileges
+_has_sudo() {
+	sudo -n true 2>/dev/null
+}
+
+# Safe file backup
+backup_file() {
+	local file="$1"
+	local backup_dir="${2:-$HOME/.config/backups}"
+
+	if [[ ! -f "$file" ]]; then
+		warn "File does not exist: $file"
+		return 1
+	fi
+
+	mkdir -p "$backup_dir"
+	local backup_name="$(basename "$file").$(date +%Y%m%d_%H%M%S).bak"
+	local backup_path="$backup_dir/$backup_name"
+
+	cp "$file" "$backup_path"
+	success "Backed up $file to $backup_path"
+}
+
+# Safe directory creation
+ensure_dir() {
+	local dir="$1"
+	local mode="${2:-755}"
+
+	if [[ ! -d "$dir" ]]; then
+		mkdir -p "$dir"
+		chmod "$mode" "$dir"
+		debug "Created directory: $dir"
+	fi
+}
+
+# Download file with progress
+download_file() {
+	local url="$1"
+	local output="$2"
+	local description="${3:-Downloading file}"
+
+	info "$description..."
+
+	if _exists curl; then
+		curl -fsSL --progress-bar -o "$output" "$url"
+	elif _exists wget; then
+		wget -q --show-progress -O "$output" "$url"
+	else
+		error "Neither curl nor wget found. Cannot download files."
+		return 1
+	fi
+}
+
+# Retry function for unreliable operations
+retry() {
+	local max_attempts="$1"
+	local delay="$2"
+	shift 2
+	local cmd="$*"
+
+	local attempt=1
+	while [[ $attempt -le $max_attempts ]]; do
+		if eval "$cmd"; then
+			return 0
+		fi
+
+		warn "Attempt $attempt/$max_attempts failed. Retrying in ${delay}s..."
+		sleep "$delay"
+		((attempt++))
+	done
+
+	error "All $max_attempts attempts failed for: $cmd"
+	return 1
+}
+
+# Export functions for use in other scripts
+export -f _exists _is_container _is_wsl _is_root _is_writable _is_readable
+export -f _get_distro _get_arch _current_shell _user_default_shell _has_sudo
+export -f info success error warn debug progress finish on_finish on_error
+export -f find_package_manager backup_file ensure_dir download_file retry

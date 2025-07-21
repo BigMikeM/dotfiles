@@ -1,31 +1,78 @@
 #!/bin/bash
+# Package definitions for different distributions and package managers
+# Enhanced with better organization and additional packages
+#
+# Package Priority Strategy:
+# 1. System packages (rpm, apt, pacman) - Highest priority
+# 2. Cargo packages - For tools better maintained via Rust ecosystem
+# 3. Python/Node packages - For development tools
+# 4. Snap packages - Only for apps that work better as snaps (VS Code)
+# 5. Flatpak packages - Only for apps exclusive to flatpak or officially supported
 
+# Fedora/RHEL/CentOS packages (DNF/YUM)
 rpm_packages=(
+	# Core development tools
 	zsh
 	git
 	cmake
 	openssh
+	gcc
+	gcc-c++
+	make
+
+	# System utilities
 	tree
 	bat
 	tldr
 	gh
 	trash-cli
+	bc
+	curl
+	wget
+	unzip
+	zip
+
+	# Development tools
 	neovim
 	ranger
-	kitty
-	alacritty
 	luarocks
 	atool
 	highlight
 	shellcheck
 	shfmt
-	python
-	bc
-	pip
+	python3
+	python3-pip
+	python3-devel
+	nodejs
+	npm
+
+	# Git tools
+	gitui
+
+	# Terminal emulators
+	kitty
+	alacritty
+
+	# GUI Applications
+	firefox
+	gimp
+	vlc
+
+	# Libraries and dependencies
 	pkg-config
 	openssl-devel
+	fontconfig-devel
+	freetype-devel
+	libX11-devel
+	libXext-devel
+	libXrandr-devel
+	libXi-devel
+	libXcursor-devel
+	mesa-libGL-devel
+	alsa-lib-devel
 )
 
+# RPM Fusion repositories (if available)
 if command -v rpm >/dev/null 2>&1; then
 	rpm_nonfree=(
 		"https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm"
@@ -33,15 +80,37 @@ if command -v rpm >/dev/null 2>&1; then
 	)
 fi
 
+# DNF package groups
+rpm_groups=(
+	"C Development Tools and Libraries"
+	"Development Tools"
+)
+
+# WSL-specific packages (lighter set)
 wsl_packages=(
+	# Core essentials
 	git
 	cmake
 	openssh-client
+	gcc
+	g++
+	make
+	build-essential
+
+	# Utilities
 	tree
 	bat
 	tldr
 	gh
 	trash-cli
+	bc
+	curl
+	wget
+	unzip
+	zip
+	jq
+
+	# Development tools
 	ranger
 	luarocks
 	lua-check
@@ -49,57 +118,96 @@ wsl_packages=(
 	highlight
 	shellcheck
 	shfmt
+
+	# Python ecosystem
 	python3
+	python3-pip
 	python-is-python3
 	python3-venv
-	bc
+	python3-dev
+
+	# Node.js
+	nodejs
+	npm
+
+	# Libraries
 	pkg-config
-	curl
-	gnupg
+	libssl-dev
 	ca-certificates
-	gcc-multilib
-	g++-multilib
-	cmake
-	pkg-config
-	build-essential
+	gnupg
 )
 
+# Ubuntu/Debian packages (APT)
 apt_packages=(
+	# Core development
 	build-essential
 	zsh
 	git
 	cmake
 	openssh-client
+	gcc
+	g++
+	make
+
+	# System utilities
 	tree
 	bat
 	tldr
 	gh
 	trash-cli
+	bc
+	curl
+	wget
+	unzip
+	zip
+	jq
+	htop
+	neofetch
+
+	# Desktop utilities (if not WSL)
 	brightnessctl
 	playerctl
 	pulseaudio-utils
+
+	# Development tools
 	ranger
-	kitty
 	luarocks
 	lua-check
 	atool
 	highlight
 	shellcheck
 	shfmt
+
+	# Git tools
+	gitui
+
+	# Terminal emulators
+	kitty
+
+	# GUI Applications
+	firefox
+	firefox-esr
+	gimp
+	vlc
+
+	# Python ecosystem
 	python3
 	python3-pip
 	python-is-python3
 	python3-venv
-	bc
+	python3-dev
+
+	# Node.js
+	nodejs
+	npm
+
+	# Libraries and dependencies
 	pkg-config
-	curl
-	gnupg
+	libssl-dev
 	ca-certificates
+	gnupg
 	gcc-multilib
 	g++-multilib
-	cmake
-	libssl-dev
-	pkg-config
 	libfreetype6-dev
 	libasound2-dev
 	libexpat1-dev
@@ -111,34 +219,52 @@ apt_packages=(
 	libxi-dev
 	libfontconfig1-dev
 	libxcursor-dev
-	libssl-dev
+	libx11-dev
+	libxext-dev
+	libxrandr-dev
+	mesa-common-dev
+	libgl1-mesa-dev
 )
 
-rpm_groups=(
-	c-development
-	development-tools
-	python-science
-)
-
+# Arch Linux packages (Pacman)
 arch_packages=(
+	# AUR helper
 	yay
+
+	# Core development
 	base-devel
 	zsh
 	git
 	openssh
-	sheldon
+	gcc
+	make
+	cmake
+
+	# System utilities
 	tree
 	bat
 	tldr
 	github-cli
 	trash-cli
+	bc
+	curl
+	wget
+	unzip
+	zip
+	jq
+	htop
+	neofetch
+
+	# Shell and terminal
+	sheldon
+
+	# Desktop utilities
 	brightnessctl
 	playerctl
+
+	# Development tools
 	neovim
 	ranger
-	kitty
-	wezterm
-	alacritty
 	luarocks
 	luacheck
 	lua-lanes
@@ -147,34 +273,147 @@ arch_packages=(
 	highlight
 	shellcheck
 	shfmt
+
+	# Terminal emulators
+	kitty
+	wezterm
+	alacritty
+
+	# GUI Applications
+	firefox
+	gimp
+	vlc
+
+	# Python ecosystem
 	python
-	bc
-	openssl
-	pkg-config
+	python-pip
 	python-black
 	python-pynvim
 	python-pylint
 	python-isort
+
+	# Additional tools
 	jrnl
 	ruff
+
+	# Git tools
+	gitui
+
+	# Libraries
+	pkg-config
+	openssl
 	fontconfig
 	freetype2
 	libglvnd
 	sndio
-	cmake
 	gtk3
 	sdl2
 	libxkbcommon-x11
-	arch-gaming-meta
+
+	# Gaming (optional)
+	# arch-gaming-meta
 )
 
+# Rust packages (Cargo) - Only packages not available or better via cargo
 cargo_packages=(
+	# Core utilities (newer/better than system packages)
 	fd-find
 	ripgrep
+
+	# Shell management
 	sheldon
+
+	# Development tools
 	cargo-update
-	shellharden
+	cargo-watch
+	cargo-edit
+	cargo-outdated
+
+	# File tools (cargo versions are more up-to-date)
 	lsd
+	du-dust
+
+	# Shell utilities
+	shellharden
+
+	# Additional tools (cargo-exclusive or better versions)
+	tokei     # Count lines of code
+	hyperfine # Benchmarking tool
+	bandwhich # Network utilization by process
+	bottom    # System monitor (cargo version is better)
+	starship  # Cross-shell prompt
 )
 
-export rpm_packages rpm_groups rpm_nonfree arch_packages cargo_packages pip_packages apt_packages npm_packages wsl_packages
+# Python packages (pip)
+pip_packages=(
+	# Core tools
+	wheel
+	setuptools
+
+	# Development tools
+	black
+	isort
+	flake8
+	mypy
+	pylint
+	pytest
+
+	# Jupyter ecosystem
+	jupyter
+	jupyterlab
+
+	# Data science essentials
+	numpy
+	pandas
+	matplotlib
+
+	# Other utilities
+	requests
+	pyyaml
+	rich
+	typer
+)
+
+# Node.js packages (npm)
+npm_packages=(
+	# Core utilities
+	npm-check-updates
+
+	# Development tools
+	typescript
+	ts-node
+	eslint
+	prettier
+
+	# Build tools
+	webpack
+	vite
+
+	# Utilities
+	http-server
+	json-server
+
+	# Documentation
+	markdown-cli
+
+	# Package management
+	pnpm
+	yarn
+)
+
+# Additional package arrays for other package managers
+# Snap packages - only for packages that work better as snaps
+snap_packages=(
+	code # VS Code - better as snap for auto-updates and extensions
+)
+
+# Flatpak packages - only for packages that work better as flatpaks or are only available as flatpaks
+flatpak_packages=(
+	com.github.tchx84.Flatseal # Flatpak permission manager
+	com.discordapp.Discord     # Discord - official flatpak support
+	com.spotify.Client         # Spotify - only available as flatpak
+)
+
+# Export all package arrays
+export rpm_packages rpm_groups rpm_nonfree arch_packages cargo_packages
+export pip_packages apt_packages npm_packages wsl_packages snap_packages flatpak_packages
