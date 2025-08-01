@@ -3,13 +3,13 @@
 -- fit in the normal config locations above can go here
 
 -- Set up custom filetypes
-vim.filetype.add {
-  extension = {
-    zsh = "sh",
-    sh = "sh",
-  },
-  filename = {
-    [".zshrc"] = "sh",
-    [".zshenv"] = "sh",
-  },
-}
+-- vim.filetype.add {
+--   extension = {
+--     zsh = "sh",
+--     sh = "sh",
+--   },
+--   filename = {
+--     [".zshrc"] = "sh",
+--     [".zshenv"] = "sh",
+--   },
+-- }

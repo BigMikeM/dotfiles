@@ -366,9 +366,7 @@ class open_with(Command):
     def tab(self, tabnum):
         return self._tab_through_executables()
 
-    def _get_app_flags_mode(
-        self, string
-    ):  # pylint: disable=too-many-branches,too-many-statements
+    def _get_app_flags_mode(self, string):  # pylint: disable=too-many-branches,too-many-statements
         """Extracts the application, flags and mode from a string.
 
         examples:
@@ -1162,7 +1160,7 @@ class chmod(Command):
         if not mode_str:
             if self.quantifier is None:
                 self.fm.notify(
-                    "Syntax: chmod <octal number> " "or specify a quantifier",
+                    "Syntax: chmod <octal number> or specify a quantifier",
                     bad=True,
                 )
                 return
@@ -1236,10 +1234,10 @@ class bulkrename(Command):
         with tempfile.NamedTemporaryFile() as cmdfile:
             script_lines = []
             script_lines.append(
-                "# This file will be executed when you close" " the editor."
+                "# This file will be executed when you close the editor."
             )
             script_lines.append(
-                "# Please double-check everything, clear the" " file to abort."
+                "# Please double-check everything, clear the file to abort."
             )
             new_dirs = []
             for old, new in zip(filenames, new_filenames):

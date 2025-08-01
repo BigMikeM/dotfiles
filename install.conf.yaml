@@ -7,7 +7,7 @@
     shell:
       stdout: true
       stderr: true
-- clean: ['~']
+- clean: ["~"]
 - create:
     - ~/.config
     - ~/Notes

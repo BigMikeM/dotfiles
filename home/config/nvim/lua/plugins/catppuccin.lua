@@ -2,7 +2,7 @@ return {
   { -- further customize the options set by the community
     "catppuccin",
     opts = {
-      flavour = "mocha",
+      flavour = "macchiato",
       integrations = {
         sandwich = true,
         alpha = true,
@@ -25,6 +25,7 @@ return {
         ufo = true,
         window_picker = true,
         copilot_vim = true,
+        dashboard = true,
       },
     },
   },

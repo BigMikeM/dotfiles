@@ -8,13 +8,35 @@ frame = "full"
 title-hidden = true
 
 [font]
-normal = ["Monaspace Neon"]
-italic = ["Monaspace Radon"]
-bold = [{ family = "Monaspace Neon", style = "Bold" }]
-bold_italic = [{ family = "Monaspace Radon", style = "Bold" }]
+# normal = ["Monaspace Neon"]
+# italic = ["Monaspace Radon"]
+# bold = [{ family = "Monaspace Neon", style = "Bold" }]
+# bold_italic = [{ family = "Monaspace Radon", style = "Bold" }]
+normal = ["RecMonoDuotone Nerd Font Mono"]
+# italic = ["RecMonoDuotone Nerd Font"]
+# bold = ["RecMonoDuotone Nerd Font"]
+# bold_italic = ["RecMonoDuotone Nerd Font"]
 size = 14.0
 
 [font.features]
+"RecMonoDuotoneNF" = [
+  "dlig",
+  "ss01",
+  "ss02",
+  "ss07",
+  "ss08",
+  "+calt",
+  "+liga"
+]
+"RecMonoDuotone Nerd Font" = [
+  "dlig",
+  "ss01",
+  "ss02",
+  "ss07",
+  "ss08",
+  "+calt",
+  "+liga"
+]
 "Monaspace Neon" = [
   "+liga",
   "+calt",
