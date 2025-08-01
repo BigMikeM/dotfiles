@@ -1,198 +1,398 @@
 #!/bin/bash
 
-# Get System Updates, Update NodeJS/NPM, Update rust/Rustup, etc...
+# Get System Updates, Update NodeJS/NPM, Update Rust/Rustup, etc...
 # Source: https://github.com/sapegin/dotfiles/blob/master/setup/update.sh
+# Enhanced with better error handling, CLI options, and progress tracking
 
-set -eu
-trap on_error SIGTERM
+# Configuration
+SKIP_SYSTEM=false
+SKIP_NODE=false
+SKIP_RUST=false
+DRY_RUN=false
+VERBOSE=false
+CREATE_BACKUP=false
+
+# Progress tracking
+declare -a COMPLETED_TASKS=()
+declare -a FAILED_TASKS=()
 
 # Set directory
-export DOTFILES=${1:-"$HOME/.dotfiles"}
+export DOTFILES="$HOME/.dotfiles"
 SCRIPT_DIR="${DOTFILES}/scripts"
+
+# Error handling
+on_error() {
+    local exit_code=$?
+    error "Script failed with exit code: $exit_code"
+    error "Last command: $BASH_COMMAND"
+    show_summary
+    exit "$exit_code"
+}
+
+set -euo pipefail
+trap on_error ERR SIGTERM SIGINT
 
 source "${SCRIPT_DIR}/utils"
 
+usage() {
+    cat <<EOF
+Usage: $0 [OPTIONS]
+
+OPTIONS:
+    -h, --help          Show this help message
+    -s, --skip-system   Skip system package updates
+    -n, --skip-node     Skip Node.js updates
+    -r, --skip-rust     Skip Rust updates
+    -d, --dry-run       Show what would be updated without executing
+    -v, --verbose       Enable verbose output
+    -b, --backup        Create backup before updating
+    --dotfiles-path     Specify dotfiles path (default: $HOME/.dotfiles)
+
+Examples:
+    $0                  # Update everything
+    $0 --skip-system    # Skip system updates
+    $0 --dry-run        # Show what would be updated
+    $0 -v --backup      # Verbose mode with backup
+EOF
+}
+
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+    -h | --help)
+        usage
+        exit 0
+        ;;
+    -s | --skip-system)
+        SKIP_SYSTEM=true
+        shift
+        ;;
+    -n | --skip-node)
+        SKIP_NODE=true
+        shift
+        ;;
+    -r | --skip-rust)
+        SKIP_RUST=true
+        shift
+        ;;
+    -d | --dry-run)
+        DRY_RUN=true
+        shift
+        ;;
+    -v | --verbose)
+        VERBOSE=true
+        shift
+        ;;
+    -b | --backup)
+        CREATE_BACKUP=true
+        shift
+        ;;
+    --dotfiles-path)
+        DOTFILES="$2"
+        SCRIPT_DIR="${DOTFILES}/scripts"
+        shift 2
+        ;;
+    *)
+        error "Unknown option: $1"
+        usage
+        exit 1
+        ;;
+    esac
+done
+
+run_command() {
+    local cmd="$*"
+    if [[ "$VERBOSE" == true ]]; then
+        info "Running: $cmd"
+    fi
+
+    if [[ "$DRY_RUN" == true ]]; then
+        info "[DRY RUN] Would execute: $cmd"
+        return 0
+    fi
+
+    eval "$cmd"
+}
+
+track_task() {
+    local task_name="$1"
+    local task_function="$2"
+
+    info "Starting: $task_name"
+
+    if "$task_function"; then
+        COMPLETED_TASKS+=("$task_name")
+        success "✓ $task_name completed"
+    else
+        FAILED_TASKS+=("$task_name")
+        error "✗ $task_name failed"
+    fi
+    echo
+}
+
+show_summary() {
+    echo
+    info "=============== UPDATE SUMMARY ==============="
+
+    if [[ ${#COMPLETED_TASKS[@]} -gt 0 ]]; then
+        success "Completed tasks:"
+        printf '  ✓ %s\n' "${COMPLETED_TASKS[@]}"
+    fi
+
+    if [[ ${#FAILED_TASKS[@]} -gt 0 ]]; then
+        error "Failed tasks:"
+        printf '  ✗ %s\n' "${FAILED_TASKS[@]}"
+    fi
+
+    info "=============================================="
+}
+
+create_backup() {
+    local backup_dir="$HOME/.dotfiles_backup_$(date +%Y%m%d_%H%M%S)"
+
+    if [[ "$DRY_RUN" == false ]]; then
+        info "Creating backup at: $backup_dir"
+        run_command "cp -r '$DOTFILES' '$backup_dir'"
+        success "Backup created successfully"
+    else
+        info "[DRY RUN] Would create backup at: $backup_dir"
+    fi
+}
+
 update_dotfiles() {
-	info "Updating dotfiles..."
+    info "Updating dotfiles..."
 
-	cd "$DOTFILES" || exit
-	git pull origin main
-	./install --except shell
-	cd - >/dev/null 2>&1 || exit
+    run_command "cd '$DOTFILES' || exit"
+    run_command "git pull origin main"
+    run_command "./install --except shell"
+    run_command "cd - >/dev/null 2>&1 || exit"
 
-	info "Updating shell plugins with Sheldon..."
-	sheldon lock --update
+    info "Updating shell plugins with Sheldon..."
+    run_command "sheldon lock --update"
 
-	finish
+    return 0
 }
 
 update_system() {
-	info "Updating software installed with system package manager."
-	package_manager="$(find_package_manager)"
+    info "Updating software installed with system package manager."
+    package_manager="$(find_package_manager)"
 
-	"${package_manager}"_update
-	finish
+    "${package_manager}"_update
+    return 0
 }
 
 rpm_update() {
-	sudo dnf upgrade --refresh -y
+    run_command "sudo dnf upgrade --refresh -y"
 }
 
 arch_update() {
-	if _exists pacman; then
-		if _exists paru; then
-			paru -Syu --noconfirm
-			return
-		fi
-		sudo pacman -Syu --noconfirm
-	fi
+    if _exists pacman; then
+        if _exists paru; then
+            run_command "paru -Syu --noconfirm"
+            return 0
+        fi
+        run_command "sudo pacman -Syu --noconfirm"
+    fi
 }
 
 apt_update() {
-	if _exists apt-get; then
-		if _exists apt; then
-			sudo apt update && sudo apt upgrade --yes
-			return
-		fi
-		sudo apt-get update && sudo apt-get upgrade --yes
-	fi
+    if _exists apt; then
+        run_command "sudo apt update && sudo apt upgrade -y"
+    elif _exists apt-get; then
+        run_command "sudo apt-get update && sudo apt-get upgrade -y"
+    fi
 }
 
 apt-wsl_update() {
-	apt_update
+    apt_update
 }
 
-cargo_update() {
-	info "Updating packages installed with Cargo."
-	cargo install-update -a
-	finish
+homebrew_update() {
+    if _exists brew; then
+        info "Updating Homebrew packages..."
+        run_command "brew update && brew upgrade"
+        run_command "brew cleanup"
+        return 0
+    fi
+    return 1
 }
 
-nvm_node_version() {
-	printf %s "$(nvm ls "$1" | cut -s -d'.' -f'1,2' | cut -d'v' -f2 | cut -d'.' -f'1')"
-}
-
-system_node_version() {
-	printf %s "$(node --version | cut -s -d'.' -f'1,2' | cut -d'v' -f2 | cut -d'.' -f'1')"
-}
-
-get_node_version() {
-	if _exists nvm; then
-		printf %s "$(nvm_node_version "$1")"
-	else
-		printf %s "$(system_node_version)"
-	fi
-}
-
-nvm_lts_versions() {
-	printf "%s\n" "$(nvm ls | grep "lts" | grep -Fv 'N/A' | grep -Fv '*' | cut -d'v' -f2 | cut -d'.' -f'1')"
-}
-
-update_all_node() {
-	if ! _exists nvm; then
-		info "Node Version Manager (nvm) not found. Unable to automatically update NodeJS."
-		echo
-
-		return
-	fi
-
-	local start
-	local default
-	start=$(get_node_version "current")
-	default=$(get_node_version "default")
-
-	info "Updating current active version of NodeJS."
-	echo
-
-	nvm install "$start" --latest-npm
-
-	if [[ "$default" != "$start" ]]; then
-		info "Updating default version of NodeJS."
-		echo
-
-		nvm install "$default" --latest-npm
-	fi
-
-	nvm_lts_versions | while read -r lts; do
-		echo
-
-		if [[ "$lts" != "$start" ]] &&
-			[[ "$lts" != "$default" ]]; then
-			info "Updating Node LTS ${lts}."
-			nvm install "$lts" --latest-npm
-		fi
-	done
-
-	current="$(get_node_version "current")"
-	if [[ "$current" != "$start" ]]; then
-		# Ensure we are using the version of node we started with
-		info "Switching back to the version of NodeJS we started with."
-		echo
-
-		nvm use "$current"
-	fi
-
-	finish
+snap_update() {
+    if _exists snap; then
+        info "Updating Snap packages..."
+        run_command "sudo snap refresh"
+        return 0
+    fi
+    return 1
 }
 
 flatpak_update() {
-	if _exists flatpak; then
-		info "Updating Flatpak packages..."
-		flatpak update -y
-	fi
+    if _exists flatpak; then
+        info "Updating Flatpak packages..."
+        run_command "flatpak update -y"
+        return 0
+    fi
+    return 1
+}
+
+cargo_update() {
+    info "Updating packages installed with Cargo."
+    if _exists cargo-install-update; then
+        run_command "cargo install-update -a"
+        return 0
+    else
+        error "cargo-install-update not found. Install with: cargo install cargo-update"
+        return 1
+    fi
+}
+
+nvm_node_version() {
+    printf %s "$(nvm ls "$1" | cut -s -d'.' -f'1,2' | cut -d'v' -f2 | cut -d'.' -f'1')"
+}
+
+system_node_version() {
+    printf %s "$(node --version | cut -s -d'.' -f'1,2' | cut -d'v' -f2 | cut -d'.' -f'1')"
+}
+
+get_node_version() {
+    if _exists nvm; then
+        printf %s "$(nvm_node_version "$1")"
+    else
+        printf %s "$(system_node_version)"
+    fi
+}
+
+nvm_lts_versions() {
+    printf "%s\n" "$(nvm ls | grep "lts" | grep -Fv 'N/A' | grep -Fv '*' | cut -d'v' -f2 | cut -d'.' -f'1')"
+}
+
+update_all_node() {
+    if ! _exists nvm; then
+        info "Node Version Manager (nvm) not found. Unable to automatically update NodeJS."
+        return 1
+    fi
+
+    local start
+    local default
+    start=$(get_node_version "current")
+    default=$(get_node_version "default")
+
+    info "Updating current active version of NodeJS."
+    echo
+
+    run_command "nvm install '$start' --latest-npm"
+
+    if [[ "$default" != "$start" ]]; then
+        info "Updating default version of NodeJS."
+        echo
+
+        run_command "nvm install '$default' --latest-npm"
+    fi
+
+    if [[ "$DRY_RUN" == false ]]; then
+        nvm_lts_versions | while read -r lts; do
+            echo
+
+            if [[ "$lts" != "$start" ]] &&
+                [[ "$lts" != "$default" ]]; then
+                info "Updating Node LTS ${lts}."
+                run_command "nvm install '$lts' --latest-npm"
+            fi
+        done
+    else
+        info "[DRY RUN] Would update LTS versions: $(nvm_lts_versions | tr '\n' ' ')"
+    fi
+
+    current="$(get_node_version "current")"
+    if [[ "$current" != "$start" ]]; then
+        # Ensure we are using the version of node we started with
+        info "Switching back to the version of NodeJS we started with."
+        echo
+
+        run_command "nvm use '$current'"
+    fi
+
+    return 0
 }
 
 npm_update() {
-	info "Updating software installed globally with NPM."
-
-	npm update -g
-
-	finish
+    info "Updating software installed globally with NPM."
+    run_command "npm update -g"
+    return 0
 }
 
 update_rust() {
-	if ! _exists rustup; then
-		return
-	fi
+    if ! _exists rustup; then
+        return 1
+    fi
 
-	info "Updating Rust..."
-	echo
+    info "Updating Rust..."
+    echo
 
-	rustup update
-
-	finish
+    run_command "rustup update"
+    return 0
 }
 
 on_start() {
-	info "     |-|                                             |-|     "
-	info "     |-|           Custom update utility.            |-|     "
-	info "     |-|                                             |-|     "
-	info "     |-|      This script will attempt to update     |-|     "
-	info "     |-|    the dotfiles repo and system packages.   |-|     "
-	info "     |-|                                             |-|     "
-	info "     |-|                                             |-|     "
-	info "     |-|          created by @denysdovhan            |-|     "
-	info "     |-|            forked by @BigMikeM              |-|     "
-	info "     |-|                                             |-|     "
+    info "     |-|                                             |-|     "
+    info "     |-|           Custom update utility.            |-|     "
+    info "     |-|                                             |-|     "
+    info "     |-|      This script will attempt to update     |-|     "
+    info "     |-|    the dotfiles repo and system packages.   |-|     "
+    info "     |-|                                             |-|     "
+    info "     |-|                                             |-|     "
+    info "     |-|          created by @denysdovhan            |-|     "
+    info "     |-|            forked by @BigMikeM              |-|     "
+    info "     |-|                                             |-|     "
 
-	echo
+    if [[ "$DRY_RUN" == true ]]; then
+        info "     |-|              DRY RUN MODE                |-|     "
+    fi
+
+    echo
 }
 
 main() {
+    on_start
 
-	on_start "$*"
+    # Create backup if requested
+    if [[ "$CREATE_BACKUP" == true ]]; then
+        track_task "Backup Creation" create_backup
+    fi
 
-	echo "Please enter your password to get started:"
-	sudo -v
+    if [[ "$DRY_RUN" == false ]]; then
+        echo "Please enter your password to get started:"
+        sudo -v
 
-	update_dotfiles "$*"
-	update_system "$*"
-	update_rust "$*"
-	update_all_node "$*"
-	cargo_update
-	flatpak_update
-	npm_update "$*"
-	on_finish "$*"
+        # Keep sudo alive
+        while true; do
+            sudo -n true
+            sleep 60
+            kill -0 "$$" || exit
+        done 2>/dev/null &
+    fi
+
+    track_task "Dotfiles Update" update_dotfiles
+
+    if [[ "$SKIP_SYSTEM" == false ]]; then
+        track_task "System Update" update_system
+        track_task "Flatpak Update" flatpak_update
+        track_task "Snap Update" snap_update
+        track_task "Homebrew Update" homebrew_update
+    fi
+
+    if [[ "$SKIP_RUST" == false ]]; then
+        track_task "Rust Update" update_rust
+        track_task "Cargo Update" cargo_update
+    fi
+
+    if [[ "$SKIP_NODE" == false ]]; then
+        track_task "Node.js Update" update_all_node
+        track_task "NPM Update" npm_update
+    fi
+
+    show_summary
+    on_finish
 }
 
-main "$*"
+main

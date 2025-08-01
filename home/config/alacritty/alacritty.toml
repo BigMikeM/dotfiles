@@ -35,12 +35,13 @@ background = "0x2d4f67"
 foreground = "0xc8c093"
 
 [font]
-size = 13.0
+size = 14.0
 
 [font.normal]
 # family = "CommitMono Nerd Font"
 # family = "MartianMono Nerd Font"
-family = "MonaspiceNe Nerd Font Mono"
+# family = "Monaspace Neon"
+family = "RecMonoDuotone Nerd Font"
 
 [window]
 opacity = 0.99
