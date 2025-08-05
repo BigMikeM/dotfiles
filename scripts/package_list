@@ -43,8 +43,7 @@ rpm_packages=(
 	python3
 	python3-pip
 	python3-devel
-	nodejs
-	npm
+	# Note: nodejs and npm are managed via nvm
 
 	# Git tools
 	gitui
@@ -126,9 +125,7 @@ wsl_packages=(
 	python3-venv
 	python3-dev
 
-	# Node.js
-	nodejs
-	npm
+	# Note: Node.js and npm are managed via nvm
 
 	# Libraries
 	pkg-config
@@ -374,10 +371,12 @@ pip_packages=(
 	typer
 )
 
-# Node.js packages (npm)
+# Node.js packages (npm) - Installed via nvm-managed Node.js
 npm_packages=(
-	# Core utilities
+	# Package management
 	npm-check-updates
+	pnpm
+	yarn
 
 	# Development tools
 	typescript
@@ -387,18 +386,41 @@ npm_packages=(
 
 	# Build tools
 	webpack
+	webpack-cli
 	vite
 
 	# Utilities
 	http-server
 	json-server
+	live-server
 
 	# Documentation
 	markdown-cli
 
-	# Package management
-	pnpm
-	yarn
+	# Testing
+	jest
+	mocha
+
+	# Linting and formatting
+	standard
+	jshint
+
+	# Development servers
+	nodemon
+	concurrently
+
+	# Package auditing
+	npm-audit-resolver
+
+	# Global CLI tools
+	create-react-app
+	create-next-app
+	create-vue
+
+	# Additional useful tools
+	forever
+	pm2
+	serve
 )
 
 # Additional package arrays for other package managers
