@@ -50,5 +50,5 @@ return {
   { import = "astrocommunity.game.leetcode-nvim" },
   { import = "astrocommunity.utility.noice-nvim" },
   { import = "astrocommunity.markdown-and-latex.render-markdown-nvim" },
-  { import = "astrocommunity.ai.kurama622-llm-nvim" },
+  -- { import = "astrocommunity.ai.kurama622-llm-nvim" },
 }
