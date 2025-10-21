@@ -12,9 +12,7 @@ _is_wsl() {
 	[[ "$(uname -r)" == *WSL* ]] || [[ -n "${WSL_DISTRO_NAME:-}" ]]
 }
 
-_is_macos() {
-	[[ "$OSTYPE" == darwin* ]]
-}
+
 
 _is_linux() {
 	[[ "$OSTYPE" == linux* ]]
@@ -145,9 +143,7 @@ alias glogall='git log --oneline --decorate --graph --all'
 alias glast='git log -1 HEAD'
 
 # Open aliases with platform detection
-if _is_macos; then
-	alias open='open'
-elif _is_wsl; then
+if _is_wsl; then
 	alias open='explorer.exe'
 elif _is_linux && _exists xdg-open; then
 	alias open='xdg-open'

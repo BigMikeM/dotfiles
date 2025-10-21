@@ -52,9 +52,9 @@ if _supports_color; then
     DIM=$(tput dim)
     ITALIC=$(tput sitm)
     UNDERLINE=$(tput smul)
-    BLINK=$(tput blink)
-    REVERSE=$(tput rev)
-    STRIKETHROUGH=$(tput smxx)
+    # BLINK=$(tput blink)
+    # REVERSE=$(tput rev)
+    # STRIKETHROUGH=$(tput smxx)
 
     # Reset
     NORMAL=$(tput sgr0)
