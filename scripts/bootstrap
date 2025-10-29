@@ -1,4 +1,5 @@
 #!/bin/bash
+# -*- mode: sh -*-
 
 # Dotfiles and bootstrap installer
 # Enhanced with better error handling, CLI options, and progress tracking
@@ -51,7 +52,7 @@ OPTIONS:
     -d, --dry-run       Show what would be installed without executing
     -v, --verbose       Enable verbose output
     --skip-go           Skip Go installation
-    --skip-nvm          Skip NVM/Node.js installation
+    --skip-nvm          Skip NVM/Node.js installation (also skips npm packages)
     --skip-rust         Skip Rust installation
     --skip-neovim       Skip Neovim installation
     --skip-astronvim    Skip AstroNvim installation
@@ -63,6 +64,9 @@ Examples:
     $0 --yes            # Auto-install everything
     $0 --dry-run        # Show what would be installed
     $0 --skip-go --skip-gitui  # Skip specific components
+
+Note: npm packages are installed via nvm-managed Node.js. If you skip NVM
+installation, npm packages will also be skipped.
 EOF
 }
 
@@ -322,6 +326,8 @@ install_nvm() {
 
 		info "Installing Node LTS."
 		run_command "nvm install --lts"
+		run_command "nvm use --lts"
+		run_command "nvm alias default lts/*"
 
 		if confirm_action "Would you also like to install the latest version of Node?"; then
 			run_command "nvm install node"
@@ -374,6 +380,110 @@ cargo_install() {
 		info "[DRY RUN] Would install: ${cargo_packages[*]}"
 		info "[DRY RUN] Would run: sheldon lock --update"
 	fi
+	return 0
+}
+
+# New function to install npm packages via nvm
+npm_install() {
+	# Check if we should skip npm installation
+	if [[ "$SKIP_NVM" == true ]]; then
+		info "Skipping NPM packages installation (NVM was skipped)."
+		return 0
+	fi
+
+	# Check if npm is available (either via nvm or system)
+	if ! _exists npm; then
+		warn "npm not found. Make sure Node.js is installed via nvm."
+		return 1
+	fi
+
+	if [[ ${#npm_packages[@]} -eq 0 ]]; then
+		info "No npm packages to install."
+		return 0
+	fi
+
+	if ! confirm_action "Would you like to install npm packages globally?"; then
+		info "Skipping npm packages installation."
+		return 0
+	fi
+
+	info "Installing npm packages globally via nvm-managed Node.js."
+
+	# Ensure we're using the nvm environment
+	if [[ "$DRY_RUN" == false ]] && [[ -s "$HOME/.nvm/nvm.sh" ]]; then
+		source "$HOME/.nvm/nvm.sh"
+		# Use the default version
+		nvm use default 2>/dev/null || nvm use node 2>/dev/null || nvm use lts/* 2>/dev/null
+	fi
+
+	# Show current node/npm versions
+	if [[ "$DRY_RUN" == false ]]; then
+		info "Using Node.js: $(node --version 2>/dev/null || echo 'not found')"
+		info "Using npm: $(npm --version 2>/dev/null || echo 'not found')"
+		info "npm prefix: $(npm config get prefix 2>/dev/null || echo 'not found')"
+	fi
+
+	# Install packages one by one for better error handling
+	local failed_packages=()
+	for package in "${npm_packages[@]}"; do
+		if [[ "$DRY_RUN" == true ]]; then
+			info "[DRY RUN] Would install: npm install -g $package"
+		else
+			info "Installing: $package"
+			if ! run_command "npm install -g '$package'"; then
+				warn "Failed to install npm package: $package"
+				failed_packages+=("$package")
+			fi
+		fi
+	done
+
+	# Report any failures
+	if [[ ${#failed_packages[@]} -gt 0 ]]; then
+		warn "Failed to install the following npm packages:"
+		printf '  - %s\n' "${failed_packages[@]}"
+		return 1
+	fi
+
+	success "All npm packages installed successfully."
+	return 0
+}
+
+# New function to install Python packages
+pip_install() {
+	if [[ ${#pip_packages[@]} -eq 0 ]]; then
+		info "No pip packages to install."
+		return 0
+	fi
+
+	if ! _exists pip3 && ! _exists pip; then
+		warn "pip not found. Make sure Python is installed."
+		return 1
+	fi
+
+	if ! confirm_action "Would you like to install Python packages?"; then
+		info "Skipping pip packages installation."
+		return 0
+	fi
+
+	info "Installing Python packages."
+
+	# Use pip3 if available, fallback to pip
+	local pip_cmd="pip3"
+	if ! _exists pip3; then
+		pip_cmd="pip"
+	fi
+
+	# Upgrade pip first
+	run_command "$pip_cmd install --upgrade pip"
+
+	# Install packages
+	if [[ "$DRY_RUN" == true ]]; then
+		info "[DRY RUN] Would install: $pip_cmd install --user ${pip_packages[*]}"
+	else
+		# Install to user directory to avoid system conflicts
+		run_command "$pip_cmd install --user ${pip_packages[*]}"
+	fi
+
 	return 0
 }
 
@@ -460,14 +570,17 @@ install_neovim() {
 		return 0
 	fi
 
+	local package_name="nvim-linux-x86_64.appimage"
+	local download_link="https://github.com/neovim/neovim/releases/download/v0.11.3/$package_name"
+
 	# Download the latest Neovim AppImage
-	run_command "wget -O /tmp/nvim.appimage https://github.com/neovim/neovim/releases/latest/download/nvim.appimage"
+	run_command "wget -O /tmp/nvim $download_link"
 
 	# Make the downloaded file executable
-	run_command "chmod +x /tmp/nvim.appimage"
+	run_command "chmod +x /tmp/nvim"
 
 	# Move the AppImage to /usr/local
-	run_command "sudo mv /tmp/nvim.appimage /usr/local/bin/nvim"
+	run_command "sudo mv /tmp/nvim /usr/local/bin/nvim"
 
 	success "NeoVim AppImage installed successfully."
 	return 0
@@ -507,6 +620,8 @@ install_external_optional() {
 	fi
 	if [[ "$SKIP_NVM" == false ]]; then
 		track_task "NVM Installation" install_nvm
+		# Install npm packages after nvm is set up
+		track_task "NPM Packages" npm_install
 	fi
 	if [[ "$SKIP_GO" == false ]]; then
 		track_task "Go Installation" install_go
@@ -517,12 +632,28 @@ install_external_optional() {
 	if [[ "$SKIP_ASTRONVIM" == false ]]; then
 		track_task "AstroNvim Installation" install_astronvim
 	fi
+
+	# Install Python packages
+	track_task "Python Packages" pip_install
 }
 
 install_external() {
 	info "Installing external software."
 	install_external_required
 	install_external_optional
+}
+
+on_finish() {
+	info "=============================================="
+	info "Bootstrap installation completed!"
+	info ""
+	info "Next steps:"
+	info "1. Restart your terminal or run 'source ~/.zshrc'"
+	info "2. If NVM was installed, run 'node --version' to verify"
+	info "3. If AstroNvim was installed, run 'nvim' to complete setup"
+	info "4. Customize your configuration in ~/.zshlocal"
+	info ""
+	success "Happy coding! 🚀"
 }
 
 main() {
@@ -535,3 +666,5 @@ main() {
 }
 
 main "$@"
+
+# vim: ft=sh
