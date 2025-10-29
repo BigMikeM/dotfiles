@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# Empty the Trash on all mounted volumes and the main HDD
-# Also, clear Apple’s System Logs to improve shell startup speed
+# Empty trash-like directories on Linux (user cache/tmp)
 #
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles
 
-sudo rm -rfv /Volumes/*/.Trashes
-sudo rm -rfv "$HOME"/.Trash
-sudo rm -rfv /private/var/log/asl/*.asl
+# Linux-friendly cleanup (safe defaults)
+rm -rfv "$HOME"/.local/share/Trash/* 2>/dev/null || true
+rm -rfv "$HOME"/.cache/* 2>/dev/null || true
+sudo rm -rfv /root/.local/share/Trash/* 2>/dev/null || true

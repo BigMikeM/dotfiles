@@ -5,11 +5,6 @@
 # Online editor: https://geoff.greer.fm/lscolors/
 # LS_COLORS Generator: https://github.com/trapd00r/LS_COLORS
 
-# Platform detection
-_is_macos() {
-    [[ "$OSTYPE" == darwin* ]]
-}
-
 _is_gnu_ls() {
     ls --version 2>/dev/null | grep -q "GNU"
 }
@@ -19,13 +14,8 @@ _supports_truecolor() {
 }
 
 # Enhanced LS_COLORS with comprehensive file type support
-if _is_macos && ! _is_gnu_ls; then
-    # BSD/macOS LSCOLORS format (11 pairs of foreground/background)
-    # Order: di ln so pi ex bd cd su sg ow ow
-    export LSCOLORS="Gxfxcxdxbxegedabagacab"
-else
-    # GNU LS_COLORS format - much more comprehensive
-    export LS_COLORS='
+# GNU LS_COLORS format - much more comprehensive
+export LS_COLORS='
 # Base file types
 no=00:fi=00:di=01;34:ln=00;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=41;33;01:mi=00;05;37;41:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=00;32:
 
@@ -72,8 +62,7 @@ no=00:fi=00:di=01;34:ln=00;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01
 *.log=00;90:*.err=01;31:*.error=01;31:*.warning=01;33:*.warn=01;33:*.info=00;36:*.debug=00;35:'
 
     # Remove newlines and extra spaces
-    export LS_COLORS=$(echo "$LS_COLORS" | tr -d '\n' | sed 's/[[:space:]]*//g')
-fi
+export LS_COLORS=$(echo "$LS_COLORS" | tr -d '\n' | sed 's/[[:space:]]*//g')
 
 # Configure zsh completion colors to match ls colors
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
