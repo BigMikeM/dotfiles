@@ -363,6 +363,17 @@ install_rustup() {
 
 		if [[ "$DRY_RUN" == false ]]; then
 			info "Installing latest stable version of Rust and Cargo."
+			# Source cargo env to make rustup/cargo available in current session
+			if [[ -f "$HOME/.cargo/env" ]]; then
+				source "$HOME/.cargo/env"
+			fi
+		fi
+	fi
+
+	# Ensure rustup is available before running default command
+	if [[ "$DRY_RUN" == false ]]; then
+		# Re-source cargo env if needed
+		if ! _exists rustup && [[ -f "$HOME/.cargo/env" ]]; then
 			source "$HOME/.cargo/env"
 		fi
 	fi
@@ -572,17 +583,26 @@ install_neovim() {
 
 	local package_name="nvim-linux-x86_64.appimage"
 	local download_link="https://github.com/neovim/neovim/releases/download/v0.11.3/$package_name"
+	local install_dir="/opt/nvim"
+	local install_path="$install_dir/nvim"
+
+	# Create installation directory
+	run_command "sudo mkdir -p '$install_dir'"
 
 	# Download the latest Neovim AppImage
-	run_command "wget -O /tmp/nvim $download_link"
+	run_command "wget -O /tmp/nvim.appimage '$download_link'"
 
 	# Make the downloaded file executable
-	run_command "chmod +x /tmp/nvim"
+	run_command "chmod +x /tmp/nvim.appimage"
 
-	# Move the AppImage to /usr/local
-	run_command "sudo mv /tmp/nvim /usr/local/bin/nvim"
+	# Move the AppImage to /opt/nvim/
+	run_command "sudo mv /tmp/nvim.appimage '$install_path'"
 
-	success "NeoVim AppImage installed successfully."
+	# Create symlink in /usr/local/bin for system-wide access
+	run_command "sudo ln -sf '$install_path' /usr/local/bin/nvim"
+
+	success "NeoVim AppImage installed successfully to $install_path"
+	info "Symlinked to /usr/local/bin/nvim for system-wide access"
 	return 0
 }
 
@@ -647,8 +667,21 @@ on_finish() {
 	info "=============================================="
 	info "Bootstrap installation completed!"
 	info ""
+
+	# Auto-source zshrc if zsh is installed and this is a zsh session
+	if _exists zsh && [[ -n "$ZSH_VERSION" ]] && [[ -f "$HOME/.zshrc" ]]; then
+		info "Reloading shell configuration..."
+		if [[ "$DRY_RUN" == false ]]; then
+			source "$HOME/.zshrc"
+			success "Shell configuration reloaded!"
+		else
+			info "[DRY RUN] Would reload shell configuration"
+		fi
+		info ""
+	fi
+
 	info "Next steps:"
-	info "1. Restart your terminal or run 'source ~/.zshrc'"
+	info "1. If not using zsh: Restart your terminal or run 'exec zsh'"
 	info "2. If NVM was installed, run 'node --version' to verify"
 	info "3. If AstroNvim was installed, run 'nvim' to complete setup"
 	info "4. Customize your configuration in ~/.zshlocal"

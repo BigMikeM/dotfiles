@@ -13,3 +13,10 @@ git -C "$DOTBOT_DIR" submodule sync --quiet --recursive
 git submodule update --init --recursive "$DOTBOT_DIR"
 
 "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "$BASEDIR" -c "$CONFIG" "${@}"
+
+# Source zshrc if zsh is the current shell and zshrc exists
+if [[ -n "$ZSH_VERSION" ]] && [[ -f "$HOME/.zshrc" ]]; then
+	echo "Sourcing ~/.zshrc to apply changes..."
+	source "$HOME/.zshrc"
+	echo "Shell configuration reloaded!"
+fi
