@@ -228,6 +228,7 @@ glog        # Pretty git log graph
 ```bash
 update      # Run update script
 bootstrap   # Run bootstrap script
+check-docs  # Check if documentation needs updating
 dotfiles    # Edit dotfiles repo
 reload      # Reload shell config
 ```
@@ -345,16 +346,31 @@ This is a personal dotfiles repository, but you're welcome to:
 3. Test on multiple distributions if possible
 4. Update documentation for significant changes
 
+### Documentation Maintenance
+
+**⚠️ IMPORTANT:** When making significant changes, update the [Copilot Instructions](.github/copilot-instructions.md) file.
+
+**Update the Copilot Instructions when:**
+- ✏️ Adding/removing scripts or utilities
+- 🔧 Changing core functionality in bootstrap/update scripts
+- 📦 Modifying package lists or installation strategies
+- ⚙️ Adding new configuration files or tools
+- 📋 Changing coding standards or best practices
+- 🐧 Updating supported distributions or requirements
+- 📝 Adding new shell aliases or functions
+
+**Also update:**
+- `README.md` - User-facing documentation
+- `TODO.md` - Track completed/planned features
+- Function comments in scripts for significant logic changes
+
+This ensures GitHub Copilot has accurate context for assisting with the repository.
+
 ## 📝 TODO
 
-Current planned improvements:
+This project is feature-complete for personal use. All major planned improvements have been implemented!
 
-- [ ] Fix continuing installation after rustup install
-- [ ] Complete nvim appimage installation method
-- [ ] Auto-source zshrc after installation
-- [ ] Add rnvimr toggle shortcut (ranger nvim integration)
-
-See [TODO.md](TODO.md) for full list.
+See [TODO.md](TODO.md) for any future enhancement ideas.
 
 ## 📜 License
 

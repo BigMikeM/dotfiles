@@ -1,5 +1,17 @@
 # GitHub Copilot Instructions for Dotfiles Repository
 
+> **⚠️ MAINTENANCE NOTE:** This file should be kept in sync with repository changes.
+>
+> **When to update this file:**
+> - Adding/removing scripts or utilities
+> - Changing core functionality in bootstrap/update scripts
+> - Modifying package lists or installation strategies
+> - Adding new configuration files or tools
+> - Changing coding standards or best practices
+> - Updating supported distributions or requirements
+>
+> **Last Updated:** October 29, 2025
+
 ## Project Overview
 
 This is a personal Linux dotfiles repository for maintaining consistent configurations across multiple distributions and installations. It's based on [denysdovhan/dotfiles](https://github.com/denysdovhan/dotfiles) but heavily customized for personal use. The repository uses [Dotbot](https://github.com/anishathalye/dotbot) as its installation framework.
@@ -593,11 +605,12 @@ track_task "System Packages" install_software
 
 ## TODO List (from TODO.md)
 
-Current known issues and planned improvements:
-- Continuing with installation after rustup install does not work (needs fix)
-- Finish nvim appimage installation with method from page (/opt/nvim/nvim)
-- Source zshrc to run commands after install
-- rnvimr toggle shortcut (ranger nvim integration)
+All major planned improvements have been completed:
+- ✅ Fixed continuing installation after rustup install - Added proper cargo env sourcing
+- ✅ Completed nvim appimage installation - Now installs to /opt/nvim/ with symlink
+- ✅ Auto-source zshrc after installation - Implemented in both install and bootstrap scripts
+
+The repository is now feature-complete for personal use.
 
 ## Resources & References
 
@@ -635,8 +648,16 @@ Current known issues and planned improvements:
 - Keep interactive prompts with auto-yes flags for automation
 - Test suggestions with dry-run mode first
 - Preserve the modular structure (don't combine unrelated functionality)
-- Update documentation when adding new features
-- Consider existing user configurations (don't break working setups)
+- **Update this file** when making significant changes (see header for guidelines)
+- Update the "Last Updated" date in the header when modifying this file
+- Consider running `check-docs` script to verify documentation sync
+
+**Documentation Sync Tool:**
+The repository includes `scripts/check-docs` (alias: `check-docs`) to help identify when documentation may need updating. This script:
+- Checks if copilot-instructions.md exists
+- Compares modification dates of key files vs last documentation update
+- Provides warnings if important files have changed since last doc update
+- Can be run manually: `./scripts/check-docs` or `check-docs` (with alias)
 
 **Common Patterns to Follow:**
 - Use `_exists` before checking command availability

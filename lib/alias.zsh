@@ -162,6 +162,7 @@ alias oo='open .'
 # Script execution aliases with enhanced paths
 alias update="${DOTFILES:-$HOME/.dotfiles}/scripts/update"
 alias bootstrap="${DOTFILES:-$HOME/.dotfiles}/scripts/bootstrap"
+alias check-docs="${DOTFILES:-$HOME/.dotfiles}/scripts/check-docs"
 
 # Quick jump to dotfiles
 alias dotfiles='e ${DOTFILES:-$HOME/.dotfiles}'
