@@ -313,62 +313,66 @@ arch_packages=(
 
 # Rust packages (Cargo) - Only packages not available or better via cargo
 cargo_packages=(
+	# Python tooling (Rust-based, installed first for Python package management)
+	uv # Fast Python package manager (replaces pip/venv)
+
 	# Core utilities (newer/better than system packages)
 	fd-find
 	ripgrep
+	bat    # Better cat with syntax highlighting
+	lsd    # Better ls (LSDeluxe)
+	du-dust # Better du
+	sd     # Better sed
+	procs  # Better ps
 
 	# Shell management
-	sheldon
+	sheldon  # Zsh plugin manager
+	starship # Cross-shell prompt
+	zoxide   # Smarter cd
+
+	# File utilities
+	broot # File tree browser
 
 	# Development tools
-	cargo-update
-	cargo-watch
-	cargo-edit
-	cargo-outdated
+	cargo-update  # Update cargo packages
+	cargo-watch   # Watch for file changes
+	cargo-edit    # Add/remove cargo dependencies
+	cargo-expand  # Expand macros
+	cargo-outdated # Check for outdated dependencies
 
-	# File tools (cargo versions are more up-to-date)
-	lsd
-	du-dust
-
-	# Shell utilities
-	shellharden
-
-	# Additional tools (cargo-exclusive or better versions)
+	# Utilities
+	tealdeer  # tldr client (tldr)
 	tokei     # Count lines of code
 	hyperfine # Benchmarking tool
 	bandwhich # Network utilization by process
-	bottom    # System monitor (cargo version is better)
-	starship  # Cross-shell prompt
+	bottom    # System monitor (btm)
+	shellharden # Shell script linter
 )
 
-# Python packages (pip)
-pip_packages=(
-	# Core tools
-	wheel
-	setuptools
-
-	# Development tools
-	black
-	isort
-	flake8
-	mypy
-	pylint
-	pytest
+# Python packages (via uv tool install or pip fallback)
+# Note: uv is installed via cargo above
+uv_packages=(
+	# Development tools (Rust-based linter replaces black/isort/flake8/pylint)
+	ruff  # Fast Python linter and formatter
+	pytest # Testing framework
+	pylint # Code analysis tool
 
 	# Jupyter ecosystem
-	jupyter
-	jupyterlab
+	jupyter    # Jupyter notebook
+	jupyterlab # JupyterLab interface
+	ipython    # Enhanced Python shell
 
-	# Data science essentials
-	numpy
-	pandas
-	matplotlib
+	# Data science basics
+	pandas     # Data analysis
+	numpy      # Numerical computing
+	matplotlib # Plotting
 
 	# Other utilities
-	requests
-	pyyaml
-	rich
-	typer
+	requests   # HTTP requests
+	pyyaml	 # YAML parsing
+	jsonschema # JSON schema validation
+	rich	   # Rich text and formatting in terminal
+	typer	   # CLI application framework
 )
 
 # Node.js packages (npm) - Installed via nvm-managed Node.js
@@ -438,4 +442,4 @@ flatpak_packages=(
 
 # Export all package arrays
 export rpm_packages rpm_groups rpm_nonfree arch_packages cargo_packages
-export pip_packages apt_packages npm_packages wsl_packages snap_packages flatpak_packages
+export uv_packages apt_packages npm_packages wsl_packages snap_packages flatpak_packages

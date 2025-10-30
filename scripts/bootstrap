@@ -459,42 +459,48 @@ npm_install() {
 	return 0
 }
 
-# New function to install Python packages
-pip_install() {
-	if [[ ${#pip_packages[@]} -eq 0 ]]; then
-		info "No pip packages to install."
+# Install Python packages using uv only
+uv_install() {
+	if [[ ${#uv_packages[@]} -eq 0 ]]; then
+		info "No Python packages to install."
 		return 0
-	fi
-
-	if ! _exists pip3 && ! _exists pip; then
-		warn "pip not found. Make sure Python is installed."
-		return 1
 	fi
 
 	if ! confirm_action "Would you like to install Python packages?"; then
-		info "Skipping pip packages installation."
+		info "Skipping Python packages installation."
 		return 0
 	fi
 
-	info "Installing Python packages."
-
-	# Use pip3 if available, fallback to pip
-	local pip_cmd="pip3"
-	if ! _exists pip3; then
-		pip_cmd="pip"
+	# Check if uv is available (should be installed via cargo)
+	if ! _exists uv; then
+		warn "uv not found. Install uv via cargo first."
+		return 1
 	fi
 
-	# Upgrade pip first
-	run_command "$pip_cmd install --upgrade pip"
+	info "Installing Python packages with uv."
 
-	# Install packages
-	if [[ "$DRY_RUN" == true ]]; then
-		info "[DRY RUN] Would install: $pip_cmd install --user ${pip_packages[*]}"
-	else
-		# Install to user directory to avoid system conflicts
-		run_command "$pip_cmd install --user ${pip_packages[*]}"
+	# Install each package with uv tool install
+	local failed_packages=()
+	for pkg in "${uv_packages[@]}"; do
+		if [[ "$DRY_RUN" == true ]]; then
+			info "[DRY RUN] Would install: uv tool install $pkg"
+		else
+			info "Installing $pkg..."
+			if ! run_command "uv tool install $pkg"; then
+				warn "Failed to install $pkg with uv, continuing..."
+				failed_packages+=("$pkg")
+			fi
+		fi
+	done
+
+	# Report any failures
+	if [[ ${#failed_packages[@]} -gt 0 ]]; then
+		warn "Failed to install the following Python packages:"
+		printf '  - %s\n' "${failed_packages[@]}"
+		return 1
 	fi
 
+	success "Python packages installed with uv!"
 	return 0
 }
 
@@ -669,7 +675,7 @@ on_finish() {
 	info ""
 
 	# Auto-source zshrc if zsh is installed and this is a zsh session
-	if _exists zsh && [[ -n "$ZSH_VERSION" ]] && [[ -f "$HOME/.zshrc" ]]; then
+	if _exists zsh && [[ -n "${ZSH_VERSION:-}" ]] && [[ -f "$HOME/.zshrc" ]]; then
 		info "Reloading shell configuration..."
 		if [[ "$DRY_RUN" == false ]]; then
 			source "$HOME/.zshrc"

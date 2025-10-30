@@ -133,10 +133,7 @@ _extend_path "$HOME/.rvm/bin"                              # Ruby Version Manage
 _extend_path "$HOME/perl5/bin"                             # Perl
 
 # Python paths
-_extend_path "$HOME/.local/bin" back # pipx and pip user installs
-if [[ -d "$HOME/.pyenv/bin" ]]; then
-    _extend_path "$HOME/.pyenv/bin"
-fi
+_extend_path "$HOME/.local/bin" back # uv, pipx and pip user installs
 
 # Node.js configuration
 if [[ -d "$HOME/.npm-global" ]]; then
