@@ -306,11 +306,31 @@ fi
 if _exists python3; then
 	alias py='python3'
 	alias python='python3'
-	alias pip='pip3'
+	# Use uv if available, otherwise pip3
+	if _exists uv; then
+		alias pip='uv pip'
+		alias pip3='uv pip'
+		alias venv='uv venv'
+		alias pyproject='uv init'
+	else
+		alias pip='pip3'
+	fi
 fi
 
 if _exists ipython; then
 	alias ipy='ipython'
+fi
+
+# UV Python package manager aliases
+if _exists uv; then
+	alias uvtool='uv tool'
+	alias uvinstall='uv tool install'
+	alias uvlist='uv tool list'
+	alias uvupgrade='uv tool upgrade --all'
+	alias uvrun='uv run'
+	alias uvsync='uv sync'
+	alias uvadd='uv add'
+	alias uvhelp='uv-helper'
 fi
 
 # Node.js development
