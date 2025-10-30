@@ -1,0 +1,115 @@
+# Ruff configuration for dotfiles repository
+# Enforces strict Python coding standards aligned with Google Style Guide
+
+# Core settings
+indent-width = 4
+fix = true
+
+# Enable preview features for latest rules
+preview = true
+
+[lint]
+# Enable comprehensive linting rules
+select = [
+    "N",      # pep8-naming
+    "W",      # pycodestyle warnings
+    "E",      # pycodestyle errors
+    "F",      # Pyflakes
+    "D",      # pydocstyle
+    "DOC",    # pydoclint
+    "UP",     # pyupgrade
+    "C90",    # mccabe complexity
+    "PTH",    # flake8-use-pathlib (strict enforcement)
+    "PERF",   # perflint
+    "LOG",    # flake8-logging
+    "G",      # flake8-logging-format
+    "C4",     # flake8-comprehensions
+    "S",      # flake8-bandit (strict security)
+    "FBT",    # flake8-boolean-trap
+    "B",      # flake8-bugbear
+    "A",      # flake8-builtins
+    "DTZ",    # flake8-datetimez
+    "ICN",    # flake8-import-conventions
+    "PIE",    # flake8-pie (lower priority in conflicts)
+    "PT",     # flake8-pytest-style
+    "Q",      # flake8-quotes
+    "RSE",    # flake8-raise
+    "RET",    # flake8-return
+    "SIM",    # flake8-simplify
+    "I",      # isort
+    "ANN",    # flake8-annotations (enforce type hints)
+]
+
+# Ignore specific rules for practical reasons and conflicts with other rules
+ignore = [
+    # Docstring formatting (Google style)
+    "D212",    # Multi-line docstring summary should start at first line
+    "D203",    # 1 blank line required before class docstring
+
+    # Error message formatting (too strict for utility scripts)
+    "EM101",   # Exception must not use string literal
+    "EM102",   # Exception must not use f-string literal
+
+    # Print statements (OK for CLI utilities)
+    "T201",    # print found
+    "T203",    # pprint found
+
+    # Return statement style (prefer explicit else for readability)
+    "RET505",  # Unnecessary else after return
+    "RET506",  # Unnecessary elif after raise
+    "RET507",  # Unnecessary else after continue
+    "RET508",  # Unnecessary else after break
+
+    # Subprocess security (needed for dotfiles automation)
+    "S603",    # subprocess without shell=False audit
+    "S607",    # Starting process with partial path
+
+    # PIE rules (lower priority, can reduce readability)
+    "PIE790",  # Unnecessary pass statement
+    "PIE808",  # Unnecessary start argument in range
+
+    "ANN401",  # Dynamically typed expressions (Any) disallowed
+]
+
+# Organize imports automatically
+[lint.isort]
+force-single-line = false
+lines-after-imports = 2
+known-first-party = ["config", "packages", "get_packages"]
+
+# Pydocstyle configuration (Google style)
+[lint.pydocstyle]
+convention = "google"
+
+# McCabe complexity threshold
+[lint.mccabe]
+max-complexity = 10
+
+# Flake8-quotes configuration
+[lint.flake8-quotes]
+docstring-quotes = "double"
+inline-quotes = "double"
+
+# Format configuration
+[format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+docstring-code-format = true
+docstring-code-line-length = 72
+
+# Per-file ignores for specific scenarios
+[lint.per-file-ignores]
+# Test files can use assert and relative imports
+"test_*.py" = ["S101", "TID252"]
+"*_test.py" = ["S101", "TID252"]
+
+# __init__.py files don't need docstrings and can have unused imports
+"__init__.py" = ["D104", "F401"]
+
+# Scripts in bin/ may need subprocess and print
+"bin/*.py" = ["S603", "S607", "T201"]
+
+# Allow print in main blocks
+"__main__.py" = ["T201"]
