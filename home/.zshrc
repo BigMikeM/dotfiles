@@ -331,14 +331,14 @@ fi
 # WSL-specific configuration (since wsl plugin doesn't exist)
 if _is_wsl; then
     # WSL-specific environment variables
-    export BROWSER="/mnt/c/Program Files/Google/Chrome/Application/chrome.exe"
-    export DISPLAY="${DISPLAY:-:0}"
-
-    # WSL-specific aliases
-    alias cmd='cmd.exe'
-    alias powershell='powershell.exe'
-    alias explorer='explorer.exe'
-    alias code='code.exe'
+    # export BROWSER="/mnt/c/Program Files/Google/Chrome/Application/chrome.exe"
+    # export DISPLAY="${DISPLAY:-:0}"
+    #
+    # # WSL-specific aliases
+    # alias cmd='cmd.exe'
+    # alias powershell='powershell.exe'
+    # alias explorer='explorer.exe'
+    # alias code='code.exe'
 
     # Fix for WSL path issues
     appendpath() {
@@ -506,13 +506,6 @@ fi
 # ==============================================================================
 # DEVELOPMENT TOOLS
 # ==============================================================================
-
-# pipx completion
-if _exists pipx; then
-    autoload -U bashcompinit
-    bashcompinit
-    eval "$(register-python-argcomplete pipx)"
-fi
 
 # GitHub CLI completion
 if _exists gh; then
