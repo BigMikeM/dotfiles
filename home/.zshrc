@@ -26,9 +26,6 @@ _is_wsl() {
     [[ "$(uname -r)" == *WSL* ]] || [[ -n "${WSL_DISTRO_NAME:-}" ]]
 }
 
-_is_macos() {
-    [[ "$OSTYPE" == darwin* ]]
-}
 
 _is_linux() {
     [[ "$OSTYPE" == linux* ]]
@@ -323,10 +320,6 @@ plugins=(
     cp
 )
 
-# Add platform-specific plugins
-if _is_macos; then
-    plugins+=(macos)
-fi
 
 # WSL-specific configuration (since wsl plugin doesn't exist)
 if _is_wsl; then
@@ -592,6 +585,9 @@ fi
 # ==============================================================================
 # FINAL SETUP
 # ==============================================================================
+
+# VSCode terminal integration
+[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
 
 # Display system info on new terminal (optional)
 if [[ "${SHOW_SYSINFO_ON_START:-false}" == "true" ]] && _exists neofetch; then
