@@ -14,11 +14,12 @@ shell = "zsh"
 
 [plugins]
 
-[plugins.oh-my-zsh]
-github = "ohmyzsh/ohmyzsh"
-
 [plugins.zsh-defer]
 github = "romkatv/zsh-defer"
+
+[plugins.zsh-history-substring-search]
+github = "zsh-users/zsh-history-substring-search"
+apply = ["defer"]
 
 [plugins.alias-tips]
 github = 'djui/alias-tips'
