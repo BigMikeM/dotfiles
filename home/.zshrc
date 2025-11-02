@@ -4,18 +4,11 @@
 # Based on: https://github.com/denysdovhan/dotfiles
 
 # ==============================================================================
-# PROFILING (Enable for performance debugging)
-# ==============================================================================
-# Uncomment to enable profiling
-# zmodload zsh/zprof
-
-# ==============================================================================
 # EARLY INITIALIZATION
 # ==============================================================================
 
 # Export path to root of dotfiles repo
-export DOTFILES="$HOME/.dotfiles"
-export DOTFILES=${DOTFILES:="$HOME/.dotfiles"}
+export DOTFILES="${DOTFILES:-$HOME/.dotfiles}"
 
 # Utility functions
 _exists() {
@@ -114,7 +107,6 @@ _extend_path "/bin"
 
 # Development tools
 _extend_path "/usr/local/go/bin"     # Go manual installation
-_extend_path "/usr/local/bin/nvim"   # Neovim AppImage
 _extend_path "/opt/neovide"          # Neovide AppImage
 _extend_path "/opt/nvim-linux64/bin" # Neovim alternative location
 
@@ -124,13 +116,11 @@ _extend_path "$DOTFILES/bin"
 _extend_path "$HOME/bin"
 
 # Language-specific paths
-_extend_path "$HOME/.cargo/bin"                            # Rust
-_extend_path "$HOME/go/bin"                                # Go
-_extend_path "$HOME/.npm-global/bin"                       # npm global
-_extend_path "$HOME/.yarn/bin"                             # Yarn
-_extend_path "$HOME/.config/yarn/global/node_modules/.bin" # Yarn global
-_extend_path "$HOME/.rvm/bin"                              # Ruby Version Manager
-_extend_path "$HOME/perl5/bin"                             # Perl
+_extend_path "$HOME/.cargo/bin"      # Rust
+_extend_path "$HOME/go/bin"          # Go
+_extend_path "$HOME/.npm-global/bin" # npm global
+_extend_path "$HOME/.rvm/bin"        # Ruby Version Manager
+_extend_path "$HOME/perl5/bin"       # Perl
 
 # Python paths
 _extend_path "$HOME/.local/bin" back # uv, pipx and pip user installs
@@ -283,17 +273,17 @@ zstyle ':completion:*:corrections' format '%B%d (errors: %e)%b'
 
 # Case-insensitive completion
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+# Performance: only check once per day
+local zcompdump="${XDG_CACHE_HOME}/zsh/zcompdump"
 
-# Process completion
-zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -w -w"
-zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
-
-# ==============================================================================
-# OH MY ZSH CONFIGURATION
-# ==============================================================================
-
-# Oh My Zsh settings
-export ZSH_DISABLE_COMPFIX=true
+# Check if we need to regenerate the completion dump
+if [[ -f "$zcompdump" ]] && [[ -n "$zcompdump"(#qN.mh+24) ]]; then
+    # File exists and is older than 24 hours, regenerate
+    compinit -d "$zcompdump"
+else
+    # File is recent, load it quickly
+    compinit -C -d "$zcompdump"
+fi
 export ZSH_THEME='gozilla'
 
 # OMZ is managed by Sheldon
@@ -323,29 +313,6 @@ plugins=(
 # Add platform-specific plugins
 if _is_macos; then
     plugins+=(macos)
-fi
-
-# WSL-specific configuration (since wsl plugin doesn't exist)
-if _is_wsl; then
-    # WSL-specific environment variables
-    # export BROWSER="/mnt/c/Program Files/Google/Chrome/Application/chrome.exe"
-    # export DISPLAY="${DISPLAY:-:0}"
-    #
-    # # WSL-specific aliases
-    # alias cmd='cmd.exe'
-    # alias powershell='powershell.exe'
-    # alias explorer='explorer.exe'
-    # alias code='code.exe'
-
-    # Fix for WSL path issues
-    appendpath() {
-        case ":$PATH:" in
-            *:"$1":*)
-                ;;
-            *)
-                PATH="${PATH:+$PATH:}$1"
-        esac
-    }
 fi
 
 # Export the plugins array
@@ -411,82 +378,6 @@ if _exists python3; then
     [[ ! -d "$(dirname "$PYTHONHISTFILE")" ]] && mkdir -p "$(dirname "$PYTHONHISTFILE")"
 fi
 
-# Node.js version manager setup
-_setup_node() {
-    # NVM
-    if [[ -d "$HOME/.nvm" ]]; then
-        export NVM_DIR="$HOME/.nvm"
-
-        # Load nvm immediately if node is not available
-        if ! command -v node >/dev/null 2>&1; then
-            [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
-            # Use default node version if available
-            [[ -s "$NVM_DIR/bash_completion" ]] && source "$NVM_DIR/bash_completion"
-        else
-            # Lazy load NVM for better performance when node is already available
-            nvm() {
-                unfunction nvm
-                [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
-                [[ -s "$NVM_DIR/bash_completion" ]] && source "$NVM_DIR/bash_completion"
-                nvm "$@"
-            }
-        fi
-    fi
-
-    # Volta
-    if [[ -d "$HOME/.volta" ]]; then
-        export VOLTA_HOME="$HOME/.volta"
-        _extend_path "$VOLTA_HOME/bin"
-    fi
-
-    # fnm (fast node manager)
-    if _exists fnm; then
-        eval "$(fnm env --use-on-cd)"
-    fi
-
-    # Ensure node is available - auto-use default if none active
-    if [[ -d "$HOME/.nvm" ]] && ! command -v node >/dev/null 2>&1; then
-        # Try to use the default node version if nvm is available
-        if command -v nvm >/dev/null 2>&1; then
-            nvm use default 2>/dev/null || nvm use node 2>/dev/null || true
-        fi
-    fi
-}
-
-_setup_node
-
-# Node.js diagnostic function
-node_diagnose() {
-    echo "=== Node.js Environment Diagnostic ==="
-    echo
-    echo "PATH check:"
-    echo "$PATH" | tr ':' '\n' | grep -E "(node|nvm)" || echo "No node/nvm paths found in PATH"
-    echo
-    echo "Command availability:"
-    command -v nvm >/dev/null 2>&1 && echo "✓ nvm: $(type nvm)" || echo "✗ nvm: not found"
-    command -v node >/dev/null 2>&1 && echo "✓ node: $(which node)" || echo "✗ node: not found"
-    command -v npm >/dev/null 2>&1 && echo "✓ npm: $(which npm)" || echo "✗ npm: not found"
-    echo
-    echo "NVM status:"
-    if [[ -n "${NVM_DIR:-}" ]]; then
-        echo "NVM_DIR: $NVM_DIR"
-        if [[ -s "$NVM_DIR/nvm.sh" ]]; then
-            echo "✓ nvm.sh exists"
-        else
-            echo "✗ nvm.sh not found"
-        fi
-        if command -v nvm >/dev/null 2>&1; then
-            echo "Current node: $(nvm current 2>/dev/null || echo 'none')"
-            echo "Default: $(nvm version default 2>/dev/null || echo 'not set')"
-        fi
-    else
-        echo "✗ NVM_DIR not set"
-    fi
-    echo
-    echo "Versions:"
-    node --version 2>/dev/null && npm --version 2>/dev/null || echo "Node/npm not available"
-}
-
 # Rust configuration
 if [[ -d "$HOME/.cargo" ]]; then
     export CARGO_HOME="$HOME/.cargo"
@@ -525,22 +416,6 @@ if _exists kubectl; then
 fi
 
 # ==============================================================================
-# PERFORMANCE MONITORING
-# ==============================================================================
-
-# Function to show zsh startup time
-zsh_bench() {
-    for i in $(seq 1 10); do
-        time zsh -i -c exit
-    done
-}
-
-# Function to profile zsh startup
-zsh_profile() {
-    zsh -i -c 'zmodload zsh/zprof && zprof'
-}
-
-# ==============================================================================
 # PLUGIN MANAGEMENT
 # ==============================================================================
 
@@ -552,7 +427,7 @@ _safe_source() {
 
 # Load custom functions (with error handling)
 if [[ -d "${ZDOTDIR:-$HOME}/.zsh_functions" ]]; then
-    fpath=("${ZDOTDIR:-$HOME}/.zsh_functions" $fpath)
+    fpath=("${ZDOTDIR:-$HOME}/.zsh_functions" "$fpath")
     autoload -Uz "${ZDOTDIR:-$HOME}/.zsh_functions"/*(:t) 2>/dev/null
 fi
 
@@ -565,6 +440,18 @@ if [[ -d "$DOTFILES/lib" ]]; then
             }
         fi
     done
+fi
+
+if _is_wsl; then
+    if [[ -z "$XDG_RUNTIME_DIR" ]]; then
+        export "$XDG_RUNTIME_DIR"="$HOME/.fnm_multishells"
+        mkdir -p "$XDG_RUNTIME_DIR"
+    fi
+else
+
+# Load fnm
+if _exists fnm; then
+    eval "$(fnm env --use-on-cd --version-file-strategy=recursive --shell zsh)"
 fi
 
 # Load local configuration (keep this near the end)
@@ -589,7 +476,4 @@ if [[ "${SHOW_SYSINFO_ON_START:-false}" == "true" ]] && _exists neofetch; then
 fi
 
 # Cleanup functions
-unfunction _extend_path _setup_editor _setup_pager _setup_node _safe_source 2>/dev/null
-
-# Enable profiling output (uncomment if profiling was enabled at the top)
-# zprof
+unfunction _extend_path _setup_editor _setup_pager _safe_source 2>/dev/null

@@ -83,7 +83,7 @@ editors, and GUI applications.
 - **Language-Specific:**
   - **Rust:** Cargo (`cargo_packages`) - Includes uv, sheldon, fd-find, ripgrep,
     lsd, etc.
-  - **Python:** uv (`pip_packages`) - Fast Python package manager (Rust-based),
+  - **Python:** uv (`uv_packages`) - Fast Python package manager (Rust-based),
     development tools, Jupyter, data science basics
   - **Node.js:** npm (`npm_packages`) - Via NVM, includes TypeScript, build
     tools, global utilities
@@ -175,11 +175,10 @@ Comprehensive terminal color support with fallback for non-color terminals:
 2. UV (via cargo)
 3. Python packages (via uv tool install)
    - ruff (linter)
-   - mypy (type checker)
    - jupyter/jupyterlab
    - ipython
    - pandas, numpy, matplotlib
-   - pipx (for legacy compatibility)
+   - uv
 
 **Benefits:**
 - Fast: 10-100x faster than pip
@@ -224,7 +223,7 @@ Comprehensive terminal color support with fallback for non-color terminals:
 - `cargo_install()` - Batch install cargo packages
 - `install_nvm()` - NVM with Node LTS and optional latest
 - `npm_install()` - Global npm packages with error tracking
-- `pip_install()` - Python packages to user directory
+- `uv_install()` - Python packages to user directory
 - `install_neovim()` - Latest stable Neovim AppImage to `/usr/local/bin/nvim`
 - `install_astronvim()` - AstroNvim with backup of existing config
 - `install_go()` - Latest Go from official source
