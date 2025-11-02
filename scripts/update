@@ -209,16 +209,6 @@ apt-wsl_update() {
     apt_update
 }
 
-homebrew_update() {
-    if _exists brew; then
-        info "Updating Homebrew packages..."
-        run_command "brew update && brew upgrade"
-        run_command "brew cleanup"
-        return 0
-    fi
-    return 1
-}
-
 snap_update() {
     if _exists snap; then
         info "Updating Snap packages..."
@@ -248,76 +238,60 @@ cargo_update() {
     fi
 }
 
-nvm_node_version() {
-    printf %s "$(nvm ls "$1" | cut -s -d'.' -f'1,2' | cut -d'v' -f2 | cut -d'.' -f'1')"
-}
-
-system_node_version() {
-    printf %s "$(node --version | cut -s -d'.' -f'1,2' | cut -d'v' -f2 | cut -d'.' -f'1')"
-}
-
-get_node_version() {
-    if _exists nvm; then
-        printf %s "$(nvm_node_version "$1")"
-    else
-        printf %s "$(system_node_version)"
-    fi
-}
-
-nvm_lts_versions() {
-    printf "%s\n" "$(nvm ls | grep "lts" | grep -Fv 'N/A' | grep -Fv '*' | cut -d'v' -f2 | cut -d'.' -f'1')"
-}
-
 update_all_node() {
-    if ! _exists nvm; then
-        info "Node Version Manager (nvm) not found. Unable to automatically update NodeJS."
+    if ! _exists fnm; then
+        info "Fast Node Manager (fnm) not found. Unable to automatically update NodeJS."
         return 1
     fi
 
-    local start
-    local default
-    start=$(get_node_version "current")
-    default=$(get_node_version "default")
-
-    info "Updating current active version of NodeJS."
+    info "Updating Node.js versions managed by fnm."
     echo
 
-    run_command "nvm install '$start' --latest-npm"
+    # Get currently active version
+    local current_version
+    current_version=$(fnm current 2>/dev/null || echo "")
 
-    if [[ "$default" != "$start" ]]; then
-        info "Updating default version of NodeJS."
-        echo
-
-        run_command "nvm install '$default' --latest-npm"
-    fi
-
+    # Update all installed versions
     if [[ "$DRY_RUN" == false ]]; then
-        nvm_lts_versions | while read -r lts; do
-            echo
+        # Get list of installed versions
+        local versions
+        versions=$(fnm list | grep -v "system" | awk '{print $2}' | tr -d 'v')
 
-            if [[ "$lts" != "$start" ]] &&
-                [[ "$lts" != "$default" ]]; then
-                info "Updating Node LTS ${lts}."
-                run_command "nvm install '$lts' --latest-npm"
-            fi
+        for version in $versions; do
+            info "Updating Node.js v$version"
+            # fnm doesn't have a direct "update" command, but we can reinstall
+            run_command "fnm install $version --latest-npm"
         done
+
+        # Install/update LTS if not already installed
+        info "Ensuring LTS version is up to date."
+        run_command "fnm install --lts --latest-npm"
     else
-        info "[DRY RUN] Would update LTS versions: $(nvm_lts_versions | tr '\n' ' ')"
+        info "[DRY RUN] Would update all installed Node.js versions"
+        info "[DRY RUN] Would ensure LTS version is up to date"
     fi
 
-    current="$(get_node_version "current")"
-    if [[ "$current" != "$start" ]]; then
-        # Ensure we are using the version of node we started with
-        info "Switching back to the version of NodeJS we started with."
-        echo
-
-        run_command "nvm use '$current'"
+    # Restore the originally active version if it changed
+    if [[ -n "$current_version" ]] && [[ "$DRY_RUN" == false ]]; then
+        info "Switching back to originally active version: $current_version"
+        run_command "fnm use $current_version" || true
     fi
 
     return 0
 }
 
 npm_update() {
+    if ! _exists npm; then
+        info "npm not found. Skipping npm package updates."
+        return 1
+    fi
+
+    # Ensure fnm environment is loaded if available
+    if _exists fnm; then
+        export PATH="$HOME/.local/share/fnm:$PATH"
+        eval "$(fnm env --use-on-cd)" 2>/dev/null || true
+    fi
+
     info "Updating software installed globally with NPM."
     run_command "npm update -g"
     return 0
@@ -330,11 +304,9 @@ uv_update() {
 
     info "Updating Python packages managed by uv."
 
-    # Update uv itself first (if installed via cargo)
-    if _exists cargo; then
-        info "Updating uv via cargo..."
-        run_command "cargo install uv"
-    fi
+    # Update uv itself first using its self-update command
+    info "Updating uv..."
+    run_command "uv self update"
 
     # Update all uv-managed tools
     info "Upgrading all uv tool installations..."
@@ -400,7 +372,6 @@ main() {
         track_task "System Update" update_system
         track_task "Flatpak Update" flatpak_update
         track_task "Snap Update" snap_update
-        track_task "Homebrew Update" homebrew_update
     fi
 
     if [[ "$SKIP_RUST" == false ]]; then

@@ -41,9 +41,9 @@ rpm_packages=(
 	shellcheck
 	shfmt
 	python3
-	python3-pip
 	python3-devel
-	# Note: nodejs and npm are managed via nvm
+	# Note: nodejs and npm are managed via fnm
+	# Note: Python packages are managed via uv (installed via official script)
 
 	# Git tools
 	gitui
@@ -120,14 +120,13 @@ wsl_packages=(
 
 	# Python ecosystem
 	python3
-	python3-pip
 	python-is-python3
-	python3-venv
 	python3-dev
 
-	# Note: Node.js and npm are managed via nvm
+	# Note: Node.js and npm are managed via fnm
+	# Note: Python packages are managed via uv (installed via official script)
 
-	# Libraries
+	# Libraries and dependencies
 	pkg-config
 	libssl-dev
 	ca-certificates
@@ -189,14 +188,11 @@ apt_packages=(
 
 	# Python ecosystem
 	python3
-	python3-pip
 	python-is-python3
-	python3-venv
 	python3-dev
 
-	# Node.js
-	nodejs
-	npm
+	# Note: Node.js and npm are managed via fnm
+	# Note: Python packages are managed via uv (installed via official script)
 
 	# Libraries and dependencies
 	pkg-config
@@ -283,11 +279,7 @@ arch_packages=(
 
 	# Python ecosystem
 	python
-	python-pip
-	python-black
-	python-pynvim
-	python-pylint
-	python-isort
+	# Note: Python packages are managed via uv (installed via official script)
 
 	# Additional tools
 	jrnl
@@ -312,10 +304,8 @@ arch_packages=(
 )
 
 # Rust packages (Cargo) - Only packages not available or better via cargo
+# Note: uv is NOT installed via cargo - it has its own installer (see install_uv in bootstrap)
 cargo_packages=(
-	# Python tooling (Rust-based, installed first for Python package management)
-	uv # Fast Python package manager (replaces pip/venv)
-
 	# Core utilities (newer/better than system packages)
 	fd-find
 	ripgrep
@@ -349,33 +339,43 @@ cargo_packages=(
 	shellharden # Shell script linter
 )
 
-# Python packages (via uv tool install or pip fallback)
-# Note: uv is installed via cargo above
-uv_packages=(
-	# Development tools (Rust-based linter replaces black/isort/flake8/pylint)
-	ruff  # Fast Python linter and formatter
-	pytest # Testing framework
-	pylint # Code analysis tool
+# Python CLI tools (via uv tool install)
+# Note: uv is installed via its own installer script (https://astral.sh/uv/install.sh)
+# uv tool install is ONLY for packages that provide CLI executables
+uv_tools=(
+	# Development tools
+	ruff       # Fast Python linter and formatter (provides: ruff)
+	pytest     # Testing framework (provides: pytest, py.test)
+	pylint     # Code analysis tool (provides: pylint, pyreverse, etc.)
 
-	# Jupyter ecosystem
-	jupyter    # Jupyter notebook
-	jupyterlab # JupyterLab interface
-	ipython    # Enhanced Python shell
+	# Jupyter ecosystem - CLI tools only
+	jupyterlab # JupyterLab interface (provides: jupyter-lab, jupyter-labextension)
+	ipython    # Enhanced Python shell (provides: ipython, ipython3)
 
-	# Data science basics
-	pandas     # Data analysis
-	numpy      # Numerical computing
-	matplotlib # Plotting
-
-	# Other utilities
-	requests   # HTTP requests
-	pyyaml	 # YAML parsing
-	jsonschema # JSON schema validation
-	rich	   # Rich text and formatting in terminal
-	typer	   # CLI application framework
+	# Utilities with executables
+	jsonschema # JSON schema validation (provides: jsonschema)
+	typer      # CLI application framework (provides: typer)
 )
 
-# Node.js packages (npm) - Installed via nvm-managed Node.js
+# Python libraries (installed system-wide or in projects via uv pip/venv)
+# These are libraries without CLI executables - don't use uv tool install for these
+# Instead, install them in project virtual environments with: uv venv && uv pip install <package>
+# Or create a global virtual environment if needed
+uv_libraries_reference=(
+	# Note: These should NOT be installed globally with uv tool install
+	# They're listed here for reference only
+	#
+	# Data science:
+	#   pandas, numpy, matplotlib, scipy, scikit-learn
+	#
+	# Utilities:
+	#   requests, pyyaml, rich (as library), jinja2
+	#
+	# Install in projects with:
+	#   cd your-project && uv venv && uv pip install pandas numpy matplotlib
+)
+
+# Node.js packages (npm) - Installed via fnm-managed Node.js
 npm_packages=(
 	# Package management
 	npm-check-updates
@@ -442,4 +442,4 @@ flatpak_packages=(
 
 # Export all package arrays
 export rpm_packages rpm_groups rpm_nonfree arch_packages cargo_packages
-export uv_packages apt_packages npm_packages wsl_packages snap_packages flatpak_packages
+export uv_tools uv_libraries_reference apt_packages npm_packages wsl_packages snap_packages flatpak_packages

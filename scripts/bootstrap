@@ -7,7 +7,7 @@
 # Configuration
 SKIP_CONFIRMATION=false
 SKIP_GO=false
-SKIP_NVM=false
+SKIP_FNM=false
 SKIP_RUST=false
 SKIP_NEOVIM=false
 SKIP_ASTRONVIM=false
@@ -52,7 +52,7 @@ OPTIONS:
     -d, --dry-run       Show what would be installed without executing
     -v, --verbose       Enable verbose output
     --skip-go           Skip Go installation
-    --skip-nvm          Skip NVM/Node.js installation (also skips npm packages)
+    --skip-fnm          Skip fnm/Node.js installation (also skips npm packages)
     --skip-rust         Skip Rust installation
     --skip-neovim       Skip Neovim installation
     --skip-astronvim    Skip AstroNvim installation
@@ -65,7 +65,7 @@ Examples:
     $0 --dry-run        # Show what would be installed
     $0 --skip-go --skip-gitui  # Skip specific components
 
-Note: npm packages are installed via nvm-managed Node.js. If you skip NVM
+Note: npm packages are installed via fnm-managed Node.js. If you skip fnm
 installation, npm packages will also be skipped.
 EOF
 }
@@ -93,8 +93,8 @@ while [[ $# -gt 0 ]]; do
 		SKIP_GO=true
 		shift
 		;;
-	--skip-nvm)
-		SKIP_NVM=true
+	--skip-fnm)
+		SKIP_FNM=true
 		shift
 		;;
 	--skip-rust)
@@ -300,37 +300,37 @@ install_gitui() {
 	return 0
 }
 
-install_nvm() {
-	if _exists nvm; then
-		info "NVM is already installed."
+install_fnm() {
+	if _exists fnm; then
+		info "fnm is already installed."
 		return 0
 	fi
 
-	if [[ "$SKIP_NVM" == true ]]; then
-		info "Skipping NVM installation (--skip-nvm flag)."
+	if [[ "$SKIP_FNM" == true ]]; then
+		info "Skipping fnm installation (--skip-fnm flag)."
 		return 0
 	fi
 
-	if ! confirm_action "Would you like to install Node Version Manager (NVM)?"; then
-		info "Skipping NVM installation."
+	if ! confirm_action "Would you like to install Fast Node Manager (fnm)?"; then
+		info "Skipping fnm installation."
 		return 0
 	fi
 
-	info "Installing Node Version Manager."
-	run_command "export PROFILE=/dev/null; curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash"
+	info "Installing Fast Node Manager (fnm)."
+	run_command "curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell"
 
 	if [[ "$DRY_RUN" == false ]]; then
-		# Source the nvm script to make nvm available in the current shell session
-		export NVM_DIR="$HOME/.nvm"
-		[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+		# Source fnm to make it available in the current shell session
+		export PATH="$HOME/.local/share/fnm:$PATH"
+		eval "$(fnm env --use-on-cd)"
 
 		info "Installing Node LTS."
-		run_command "nvm install --lts"
-		run_command "nvm use --lts"
-		run_command "nvm alias default lts/*"
+		run_command "fnm install --lts"
+		run_command "fnm use lts-latest"
+		run_command "fnm default lts-latest"
 
 		if confirm_action "Would you also like to install the latest version of Node?"; then
-			run_command "nvm install node"
+			run_command "fnm install latest"
 		fi
 	else
 		info "[DRY RUN] Would install Node LTS and optionally latest Node"
@@ -382,6 +382,27 @@ install_rustup() {
 	return 0
 }
 
+install_uv() {
+	if _exists uv; then
+		info "uv is already installed."
+		return 0
+	fi
+
+	info "Installing uv (fast Python package manager)."
+	run_command "curl -LsSf https://astral.sh/uv/install.sh | sh"
+
+	if [[ "$DRY_RUN" == false ]]; then
+		# Source uv env to make it available in the current shell session
+		if [[ -f "$HOME/.local/bin/uv" ]]; then
+			export PATH="$HOME/.local/bin:$PATH"
+		elif [[ -f "$HOME/.cargo/bin/uv" ]]; then
+			export PATH="$HOME/.cargo/bin:$PATH"
+		fi
+	fi
+
+	return 0
+}
+
 cargo_install() {
 	info "Installing extras with Cargo."
 	if [[ "$DRY_RUN" == false ]]; then
@@ -394,17 +415,17 @@ cargo_install() {
 	return 0
 }
 
-# New function to install npm packages via nvm
+# Install npm packages via fnm
 npm_install() {
 	# Check if we should skip npm installation
-	if [[ "$SKIP_NVM" == true ]]; then
-		info "Skipping NPM packages installation (NVM was skipped)."
+	if [[ "$SKIP_FNM" == true ]]; then
+		info "Skipping NPM packages installation (fnm was skipped)."
 		return 0
 	fi
 
-	# Check if npm is available (either via nvm or system)
+	# Check if npm is available (either via fnm or system)
 	if ! _exists npm; then
-		warn "npm not found. Make sure Node.js is installed via nvm."
+		warn "npm not found. Make sure Node.js is installed via fnm."
 		return 1
 	fi
 
@@ -418,13 +439,14 @@ npm_install() {
 		return 0
 	fi
 
-	info "Installing npm packages globally via nvm-managed Node.js."
+	info "Installing npm packages globally via fnm-managed Node.js."
 
-	# Ensure we're using the nvm environment
-	if [[ "$DRY_RUN" == false ]] && [[ -s "$HOME/.nvm/nvm.sh" ]]; then
-		source "$HOME/.nvm/nvm.sh"
+	# Ensure we're using the fnm environment
+	if [[ "$DRY_RUN" == false ]] && _exists fnm; then
+		export PATH="$HOME/.local/share/fnm:$PATH"
+		eval "$(fnm env --use-on-cd)"
 		# Use the default version
-		nvm use default 2>/dev/null || nvm use node 2>/dev/null || nvm use lts/* 2>/dev/null
+		fnm use default 2>/dev/null || fnm use lts-latest 2>/dev/null
 	fi
 
 	# Show current node/npm versions
@@ -459,48 +481,55 @@ npm_install() {
 	return 0
 }
 
-# Install Python packages using uv only
+# Install Python CLI tools using uv tool install
 uv_install() {
-	if [[ ${#uv_packages[@]} -eq 0 ]]; then
-		info "No Python packages to install."
+	if [[ ${#uv_tools[@]} -eq 0 ]]; then
+		info "No Python CLI tools to install."
 		return 0
 	fi
 
-	if ! confirm_action "Would you like to install Python packages?"; then
-		info "Skipping Python packages installation."
+	if ! confirm_action "Would you like to install Python CLI tools?"; then
+		info "Skipping Python CLI tools installation."
 		return 0
 	fi
 
-	# Check if uv is available (should be installed via cargo)
+	# Ensure uv is installed first
 	if ! _exists uv; then
-		warn "uv not found. Install uv via cargo first."
-		return 1
+		warn "uv not found. Installing uv first..."
+		if ! install_uv; then
+			error "Failed to install uv. Cannot install Python CLI tools."
+			return 1
+		fi
 	fi
 
-	info "Installing Python packages with uv."
+	info "Installing Python CLI tools with uv."
+	info "Note: Python libraries (pandas, numpy, etc.) should be installed per-project with 'uv pip install'"
 
-	# Install each package with uv tool install
-	local failed_packages=()
-	for pkg in "${uv_packages[@]}"; do
+	# Install each tool with uv tool install
+	local failed_tools=()
+	for tool in "${uv_tools[@]}"; do
 		if [[ "$DRY_RUN" == true ]]; then
-			info "[DRY RUN] Would install: uv tool install $pkg"
+			info "[DRY RUN] Would install: uv tool install $tool"
 		else
-			info "Installing $pkg..."
-			if ! run_command "uv tool install $pkg"; then
-				warn "Failed to install $pkg with uv, continuing..."
-				failed_packages+=("$pkg")
+			info "Installing $tool..."
+			# Use --force for tools that might already exist (like ruff)
+			if ! run_command "uv tool install --force $tool"; then
+				warn "Failed to install $tool with uv, continuing..."
+				failed_tools+=("$tool")
 			fi
 		fi
 	done
 
 	# Report any failures
-	if [[ ${#failed_packages[@]} -gt 0 ]]; then
-		warn "Failed to install the following Python packages:"
-		printf '  - %s\n' "${failed_packages[@]}"
+	if [[ ${#failed_tools[@]} -gt 0 ]]; then
+		warn "Failed to install the following Python CLI tools:"
+		printf '  - %s\n' "${failed_tools[@]}"
 		return 1
 	fi
 
-	success "Python packages installed with uv!"
+	success "Python CLI tools installed with uv!"
+	info "To install Python libraries in a project, use:"
+	info "  cd your-project && uv venv && uv pip install pandas numpy matplotlib"
 	return 0
 }
 
@@ -638,15 +667,17 @@ install_external_required() {
 		track_task "Rust Installation" install_rustup
 		track_task "Cargo Packages" cargo_install
 	fi
+	# Install uv for Python package management
+	track_task "uv Installation" install_uv
 }
 
 install_external_optional() {
 	if [[ "$SKIP_NEOVIM" == false ]]; then
 		track_task "Neovim Installation" install_neovim
 	fi
-	if [[ "$SKIP_NVM" == false ]]; then
-		track_task "NVM Installation" install_nvm
-		# Install npm packages after nvm is set up
+	if [[ "$SKIP_FNM" == false ]]; then
+		track_task "fnm Installation" install_fnm
+		# Install npm packages after fnm is set up
 		track_task "NPM Packages" npm_install
 	fi
 	if [[ "$SKIP_GO" == false ]]; then
@@ -659,8 +690,8 @@ install_external_optional() {
 		track_task "AstroNvim Installation" install_astronvim
 	fi
 
-	# Install Python packages
-	track_task "Python Packages" pip_install
+	# Install Python CLI tools via uv
+	track_task "Python CLI Tools (uv)" uv_install
 }
 
 install_external() {
@@ -688,7 +719,7 @@ on_finish() {
 
 	info "Next steps:"
 	info "1. If not using zsh: Restart your terminal or run 'exec zsh'"
-	info "2. If NVM was installed, run 'node --version' to verify"
+	info "2. If fnm was installed, run 'node --version' to verify"
 	info "3. If AstroNvim was installed, run 'nvim' to complete setup"
 	info "4. Customize your configuration in ~/.zshlocal"
 	info ""
