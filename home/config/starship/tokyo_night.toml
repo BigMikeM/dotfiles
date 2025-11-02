@@ -1,0 +1,55 @@
+# ~/.config/starship.toml
+
+format = """
+$directory\
+$git_branch\
+$git_status\
+$nodejs\
+$python\
+$rust\
+$golang\
+$line_break\
+$character
+"""
+
+[character]
+success_symbol = "[❯](bold #7dcfff)"
+error_symbol = "[❯](bold #f7768e)"
+
+[directory]
+style = "bold #bb9af7"
+truncation_length = 3
+truncate_to_repo = true
+
+[git_branch]
+symbol = " "
+style = "bold #9ece6a"
+
+[git_status]
+style = "bold #e0af68"
+conflicted = "="
+ahead = "⇡${count}"
+behind = "⇣${count}"
+diverged = "⇕"
+untracked = "?${count}"
+stashed = "$${count}"
+modified = "!${count}"
+staged = "+${count}"
+renamed = "»"
+deleted = "✘${count}"
+
+[nodejs]
+symbol = " "
+style = "#9ece6a"
+
+[python]
+symbol = " "
+style = "#7dcfff"
+
+[rust]
+symbol = " "
+style = "#ff9e64"
+
+[golang]
+symbol = " "
+style = "#7dcfff"
