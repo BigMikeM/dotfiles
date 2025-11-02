@@ -1,0 +1,70 @@
+# ~/.config/starship.toml
+# Optimized for performance and minimal visual noise
+
+format = """
+$directory\
+$git_branch\
+$git_status\
+$python\
+$nodejs\
+$rust\
+ $character
+"""
+
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+
+[directory]
+truncation_length = 3
+truncate_to_repo = true
+style = "cyan bold"
+read_only = " "
+
+[git_branch]
+symbol = " "
+style = "purple bold"
+truncation_length = 20
+
+[git_status]
+style = "yellow bold"
+format = '([\[$all_status$ahead_behind\]]($style) )'
+conflicted = "="
+ahead = "⇡"
+behind = "⇣"
+diverged = "⇕"
+untracked = "?"
+stashed = "\\$"
+modified = "!"
+staged = "+"
+deleted = "✘"
+
+# Only show languages when in relevant project
+[python]
+symbol = " "
+format = '[${symbol}${pyenv_prefix}(${version} )]($style)'
+detect_extensions = ['py']
+detect_files = ['requirements.txt', 'pyproject.toml', 'setup.py']
+
+[nodejs]
+symbol = " "
+format = '[${symbol}(${version} )]($style)'
+detect_files = ['package.json', '.node-version']
+
+[rust]
+symbol = " "
+format = '[${symbol}(${version} )]($style)'
+detect_files = ['Cargo.toml']
+
+# Disable slow/unnecessary modules
+[aws]
+disabled = true
+
+[gcloud]
+disabled = true
+
+[package]
+disabled = true
+
+[cmd_duration]
+disabled = true

@@ -1,4 +1,5 @@
 #!/bin/bash
+# -*- mode: sh -*-
 
 # Get System Updates, Update NodeJS/NPM, Update Rust/Rustup, etc...
 # Source: https://github.com/sapegin/dotfiles/blob/master/setup/update.sh
@@ -33,6 +34,7 @@ set -euo pipefail
 trap on_error ERR SIGTERM SIGINT
 
 source "${SCRIPT_DIR}/utils"
+source "${SCRIPT_DIR}/package_list"
 
 usage() {
     cat <<EOF
@@ -321,6 +323,26 @@ npm_update() {
     return 0
 }
 
+uv_update() {
+    if ! _exists uv; then
+        return 1
+    fi
+
+    info "Updating Python packages managed by uv."
+
+    # Update uv itself first (if installed via cargo)
+    if _exists cargo; then
+        info "Updating uv via cargo..."
+        run_command "cargo install uv"
+    fi
+
+    # Update all uv-managed tools
+    info "Upgrading all uv tool installations..."
+    run_command "uv tool upgrade --all"
+
+    return 0
+}
+
 update_rust() {
     if ! _exists rustup; then
         return 1
@@ -390,6 +412,9 @@ main() {
         track_task "Node.js Update" update_all_node
         track_task "NPM Update" npm_update
     fi
+
+    # Update Python packages managed by uv
+    track_task "UV Python Update" uv_update
 
     show_summary
     on_finish
