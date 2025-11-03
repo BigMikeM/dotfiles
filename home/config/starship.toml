@@ -1,5 +1,6 @@
 # ~/.config/starship.toml
-# Enhanced developer configuration
+# Get editor completions based on the config schema
+"$schema" = 'https://starship.rs/config-schema.json'
 
 format = """
 $username\
@@ -36,13 +37,13 @@ success_symbol = "[➜](bold cyan)"
 error_symbol = "[✗](bold red)"
 
 [directory]
+read_only = " 󰌾"
 style = "bold purple"
 truncation_length = 3
 truncate_to_repo = true
 
 [git_branch]
-# symbol = "󰊢 "
-symbol = "git:"
+symbol = " "
 style = "bold green"
 format = "on [$symbol$branch]($style) "
 
@@ -60,7 +61,7 @@ renamed = "»"
 deleted = "✘${count}"
 
 [nodejs]
-symbol = " "
+symbol = " "
 style = "bold green"
 format = "via [$symbol($version )]($style)"
 detect_extensions = ['js', 'mjs', 'cjs', 'ts', 'tsx']
@@ -69,18 +70,25 @@ detect_folders = ['node_modules']
 # Note: npm version shown via package module
 
 [python]
-symbol = " "
+symbol = " "
 style = "bold yellow"
 format = 'via [$symbol$pyenv_prefix($version )(\($virtualenv\) )]($style)'
 pyenv_version_name = false
 pyenv_prefix = ""
 python_binary = ['python3', 'python']
 detect_extensions = ['py', 'pyi']
-detect_files = ['requirements.txt', 'pyproject.toml', 'setup.py', 'Pipfile', 'setup.cfg', 'tox.ini']
+detect_files = [
+  'requirements.txt',
+  'pyproject.toml',
+  'setup.py',
+  'Pipfile',
+  'setup.cfg',
+  'tox.ini',
+]
 detect_folders = ['.venv', 'venv', 'env']
 
 [rust]
-symbol = " "
+symbol = "󱘗 "
 style = "bold red"
 format = "via [$symbol($version )]($style)"
 detect_extensions = ['rs']
@@ -88,7 +96,7 @@ detect_files = ['Cargo.toml', 'Cargo.lock']
 detect_folders = []
 
 [golang]
-symbol = " "
+symbol = " "
 style = "cyan"
 
 # ==============================================================================
@@ -96,21 +104,21 @@ style = "cyan"
 # ==============================================================================
 
 [java]
-symbol = " "
+symbol = " "
 style = "red"
 detect_extensions = ['java', 'class', 'jar', 'gradle', 'kt', 'kts']
 
 [c]
-symbol = " "
+symbol = " "
 style = "blue"
 detect_extensions = ['c', 'h']
 
 [cmake]
-symbol = "△ "
+symbol = " "
 style = "blue"
 
 [package]
-symbol = "📦 "
+symbol = "󰏗 "
 style = "bold 208"
 format = "is [$symbol$version]($style) "
 display_private = false
@@ -121,8 +129,8 @@ disabled = false
 # ==============================================================================
 
 [git_commit]
+tag_symbol = '  '
 commit_hash_length = 7
-tag_symbol = " 🏷 "
 tag_disabled = false
 only_detached = false
 style = "bold yellow"
@@ -149,7 +157,7 @@ format = '[+$added]($added_style)/[-$deleted]($deleted_style) '
 # ==============================================================================
 
 [docker_context]
-symbol = " "
+symbol = " "
 style = "blue"
 format = 'via [$symbol$context]($style) '
 only_with_files = true
@@ -168,7 +176,7 @@ detect_folders = ['k8s']
 "prod.local.cluster.k8s" = "prod"
 
 [aws]
-symbol = " "
+symbol = " "
 style = "bold yellow"
 format = 'on [$symbol($profile )(\($region\) )]($style)'
 disabled = false
@@ -189,16 +197,16 @@ disabled = false
 show_always = false
 
 [hostname]
+ssh_symbol = " "
 ssh_only = true
-ssh_symbol = "🌐 "
 format = "on [$ssh_symbol$hostname]($style) "
 style = "bold dimmed green"
 disabled = false
 
 [memory_usage]
+symbol = "󰍛 "
 disabled = false
 threshold = 75
-symbol = " "
 style = "bold dimmed white"
 format = "via $symbol[$ram( | $swap)]($style) "
 
@@ -234,15 +242,15 @@ style = "bold yellow"
 
 [time]
 disabled = false
-format = "🕙 [$time]($style) "
+format = "[$time]($style) "
 style = "bold white"
 use_12hr = false
 time_format = "%T"
 utc_time_offset = "local"
 
 [status]
+symbol = " "
 style = "bold red"
-symbol = "✖ "
 success_symbol = ""
 not_executable_symbol = "🚫 "
 not_found_symbol = "🔍 "
@@ -253,20 +261,158 @@ map_symbol = true
 disabled = false
 
 # ==============================================================================
-# PERFORMANCE OPTIMIZATIONS
+# Nerd Fonts SYMBOLS FOR LANGUAGES & TOOLS
 # ==============================================================================
 
+[buf]
+symbol = " "
+
+[bun]
+symbol = " "
+
+[cpp]
+symbol = " "
+
+[conda]
+symbol = " "
+
+[crystal]
+symbol = " "
+
+[dart]
+symbol = " "
+
+[deno]
+symbol = " "
+
+[elixir]
+symbol = " "
+
+[elm]
+symbol = " "
+
+[fennel]
+symbol = " "
+
+[fortran]
+symbol = " "
+
+[fossil_branch]
+symbol = " "
+
 [gcloud]
-disabled = true
+symbol = " "
+
+[gradle]
+symbol = " "
+
+[guix_shell]
+symbol = " "
+
+[haskell]
+symbol = " "
+
+[haxe]
+symbol = " "
+
+[hg_branch]
+symbol = " "
+
+[julia]
+symbol = " "
+
+[kotlin]
+symbol = " "
+
+[lua]
+symbol = " "
+
+[meson]
+symbol = "󰔷 "
+
+[nim]
+symbol = "󰆥 "
+
+[nix_shell]
+symbol = " "
+
+[ocaml]
+symbol = " "
+
+[os.symbols]
+Alpaquita = " "
+Alpine = " "
+AlmaLinux = " "
+Amazon = " "
+Android = " "
+# AOSC = " "
+Arch = " "
+Artix = " "
+CachyOS = " "
+CentOS = " "
+Debian = " "
+DragonFly = " "
+Emscripten = " "
+EndeavourOS = " "
+Fedora = " "
+FreeBSD = " "
+Garuda = "󰛓 "
+Gentoo = " "
+HardenedBSD = "󰞌 "
+Illumos = "󰈸 "
+Kali = " "
+Linux = " "
+Mabox = " "
+Macos = " "
+Manjaro = " "
+Mariner = " "
+MidnightBSD = " "
+Mint = " "
+NetBSD = " "
+NixOS = " "
+Nobara = " "
+OpenBSD = "󰈺 "
+openSUSE = " "
+OracleLinux = "󰌷 "
+Pop = " "
+Raspbian = " "
+Redhat = " "
+RedHatEnterprise = " "
+RockyLinux = " "
+Redox = "󰀘 "
+Solus = "󰠳 "
+SUSE = " "
+Ubuntu = " "
+Unknown = " "
+Void = " "
+Windows = "󰍲 "
 
 [perl]
-disabled = true
+symbol = " "
 
 [php]
-disabled = true
+symbol = " "
+
+[pijul_channel]
+symbol = " "
+
+[pixi]
+symbol = "󰏗 "
+
+[rlang]
+symbol = "󰟔 "
 
 [ruby]
-disabled = true
+symbol = " "
 
-[terraform]
-disabled = true
+[scala]
+symbol = " "
+
+[swift]
+symbol = " "
+
+[xmake]
+symbol = " "
+
+[zig]
+symbol = " "
