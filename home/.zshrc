@@ -347,7 +347,6 @@ fi
 # DEVELOPMENT TOOLS - COMPLETIONS
 # ==============================================================================
 
-# Lazy-load completions with zsh-defer for better performance
 # These will be loaded after shell initialization completes
 
 if _exists gh; then
@@ -399,20 +398,15 @@ fi
 
 # fnm setup
 if _exists fnm; then
-    # Disable --use-on-cd in WSL for performance
     if _is_wsl; then
-    		export XDG_RUNTIME_DIR="${TMPDIR:-/tmp}/fnm_multishells}"
-        eval "$(fnm env --use-on-cd --shell zsh)"
-    else
-        eval "$(fnm env --use-on-cd --shell zsh)"
-    fi
+      export XDG_RUNTIME_DIR="${TMPDIR:-/tmp}/fnm_multishells}"
+	  mkdir -p "$XDG_RUNTIME_DIR"
+  	fi
+    eval "$(fnm env --use-on-cd --shell zsh)"
 fi
 
-# Load local configuration (keep this near the end)
-_safe_source "$HOME/.zshlocal"
-
 # ==============================================================================
-# SHELL PLUGINS (Keep at the end for proper initialization)
+# FINAL SETUP
 # ==============================================================================
 
 # Initialize Sheldon (plugin manager)
@@ -420,17 +414,8 @@ if _exists sheldon; then
 	eval "$(sheldon source)"
 fi
 
-# ==============================================================================
-# FINAL SETUP
-# ==============================================================================
-
 # VSCode terminal integration
 [[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
-
-# Display system info on new terminal (optional)
-if [[ "${SHOW_SYSINFO_ON_START:-false}" == "true" ]] && _exists neofetch; then
-	neofetch
-fi
 
 # Cleanup functions
 unfunction _extend_path _setup_editor _setup_pager _safe_source 2>/dev/null
