@@ -148,26 +148,26 @@ setopt HIST_VERIFY            # Do not execute immediately upon history expansio
 setopt INC_APPEND_HISTORY     # Append to history file immediately.
 
 # Directory options
-setopt AUTO_CD           # Change to directory without cd
-setopt AUTO_PUSHD        # Push the old directory onto the stack on cd
-setopt PUSHD_IGNORE_DUPS # Do not store duplicates in the stack
-setopt PUSHD_SILENT      # Do not print the directory stack after pushd or popd
+setopt AUTO_CD           	  # Change to directory without cd
+setopt AUTO_PUSHD        	  # Push the old directory onto the stack on cd
+setopt PUSHD_IGNORE_DUPS 	  # Do not store duplicates in the stack
+setopt PUSHD_SILENT      	  # Do not print the directory stack after pushd or popd
 
 # Completion options
-setopt COMPLETE_IN_WORD # Complete from both ends of a word
-setopt ALWAYS_TO_END    # Move cursor to the end of a completed word
-setopt PATH_DIRS        # Perform path search even on command names with slashes
-setopt AUTO_MENU        # Show completion menu on a successive tab press
-setopt AUTO_LIST        # Automatically list choices on ambiguous completion
-setopt AUTO_PARAM_SLASH # If completed parameter is a directory, add a trailing slash
-setopt EXTENDED_GLOB    # Use extended globbing syntax
+setopt COMPLETE_IN_WORD       # Complete from both ends of a word
+setopt ALWAYS_TO_END          # Move cursor to the end of a completed word
+setopt PATH_DIRS              # Perform path search even on command names with slashes
+setopt AUTO_MENU              # Show completion menu on a successive tab press
+setopt AUTO_LIST              # Automatically list choices on ambiguous completion
+setopt AUTO_PARAM_SLASH       # If completed parameter is a directory, add a trailing slash
+setopt EXTENDED_GLOB          # Use extended globbing syntax
 
 # Other useful options
-setopt CORRECT              # Try to correct the spelling of commands
-setopt INTERACTIVE_COMMENTS # Allow comments in interactive shells
-setopt MULTIOS              # Write to multiple descriptors
-setopt NO_BEEP              # Don't beep on error
-setopt PROMPT_SUBST         # Enable parameter expansion in prompts
+setopt CORRECT                # Try to correct the spelling of commands
+setopt INTERACTIVE_COMMENTS   # Allow comments in interactive shells
+setopt MULTIOS                # Write to multiple descriptors
+setopt NO_BEEP                # Don't beep on error
+setopt PROMPT_SUBST           # Enable parameter expansion in prompts
 
 # ==============================================================================
 # COMPLETION SYSTEM
