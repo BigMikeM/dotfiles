@@ -260,12 +260,12 @@ update_all_node() {
         for version in $versions; do
             info "Updating Node.js v$version"
             # fnm doesn't have a direct "update" command, but we can reinstall
-            run_command "fnm install $version --latest-npm"
+            run_command "fnm install $version"
         done
 
         # Install/update LTS if not already installed
         info "Ensuring LTS version is up to date."
-        run_command "fnm install --lts --latest-npm"
+        run_command "fnm install --lts"
     else
         info "[DRY RUN] Would update all installed Node.js versions"
         info "[DRY RUN] Would ensure LTS version is up to date"
