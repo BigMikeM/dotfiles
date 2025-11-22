@@ -35,9 +35,9 @@ if [[ -z "$last_updated" ]]; then
 	echo "  Please update the header with the current date"
 	copilot_date="1900-01-01"
 else
-	echo -e "${GREEN}✓ Last Updated: $last_updated${NC}"
-	# Convert "October 29, 2025" to "2025-10-29" format
-	copilot_date=$(date -d "$last_updated" +"%Y-%m-%d" 2>/dev/null || echo "1900-01-01")
+    echo -e "${GREEN}✓ Last Updated: $last_updated${NC}"
+    # Convert "October 29, 2025" to "2025-10-29" format
+    copilot_date=$(date -d "$last_updated" +"%Y-%m-%d" 2>/dev/null || echo "1900-01-01")
 fi
 
 # Check for recently modified key files

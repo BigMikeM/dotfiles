@@ -150,7 +150,8 @@ show_summary() {
 }
 
 create_backup() {
-    local backup_dir="$HOME/.dotfiles_backup_$(date +%Y%m%d_%H%M%S)"
+    local backup_dir
+    backup_dir="$HOME/.dotfiles_backup_$(date +%Y%m%d_%H%M%S)"
 
     if [[ "$DRY_RUN" == false ]]; then
         info "Creating backup at: $backup_dir"
