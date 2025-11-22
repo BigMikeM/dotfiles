@@ -52,7 +52,7 @@ update
 - **Version Control:** Git with custom utilities (gh CLI, gitui)
 - **Languages:**
   - **Rust:** Via rustup (stable toolchain)
-  - **Node.js:** Via NVM (multiple LTS versions supported)
+  - **Node.js:** Via fnm (Fast Node Manager, multiple LTS versions supported)
   - **Python:** System Python 3 with development packages
   - **Go:** Latest stable version (optional)
 
@@ -144,8 +144,8 @@ The `bootstrap` script performs a complete system setup:
 
 1. System packages (via distro package manager)
 2. Rustup and Cargo packages (required)
-3. NVM and Node.js (optional, LTS + latest)
-4. NPM global packages (if NVM installed)
+3. fnm and Node.js (optional, LTS + latest)
+4. NPM global packages (if fnm installed)
 5. Python pip packages (optional)
 6. Neovim AppImage (optional, v0.11.3+)
 7. AstroNvim (optional)
@@ -181,7 +181,7 @@ The `update` script keeps everything current:
 - Snap packages
 - Rust toolchain (rustup)
 - Cargo packages
-- All Node.js versions (via NVM)
+- All Node.js versions (via fnm)
 - NPM global packages
 - Shell plugins (Sheldon)
 
@@ -266,7 +266,6 @@ Key variables set by the dotfiles:
 
 - `$DOTFILES` - Path to dotfiles repository (`~/.dotfiles`)
 - `$EDITOR` - Preferred editor (defaults to `nvim`)
-- `$NVM_DIR` - NVM installation directory (`~/.nvm`)
 
 ## 🚨 Troubleshooting
 
@@ -276,10 +275,10 @@ Key variables set by the dotfiles:
 
 ```bash
 # Install Rustup first
-./scripts/bootstrap --skip-nvm --skip-go --skip-astronvim
+./scripts/bootstrap --skip-fnm --skip-go --skip-astronvim
 ```
 
-**NVM not available after installation:**
+**fnm not available after installation:**
 
 ```bash
 # Restart your shell or source zshrc

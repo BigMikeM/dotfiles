@@ -12,7 +12,7 @@
 > - Changing coding standards or best practices
 > - Updating supported distributions or requirements
 >
-> **Last Updated:** October 29, 2025
+> **Last Updated:** November 22, 2025
 
 ## Project Overview
 
@@ -85,7 +85,7 @@ editors, and GUI applications.
     lsd, etc.
   - **Python:** uv (`uv_packages`) - Fast Python package manager (Rust-based),
     development tools, Jupyter, data science basics
-  - **Node.js:** npm (`npm_packages`) - Via NVM, includes TypeScript, build
+  - **Node.js:** npm (`npm_packages`) - Via fnm (Fast Node Manager), includes TypeScript, build
     tools, global utilities
   - **Snap:** (`snap_packages`) - Currently only VS Code
   - **Flatpak:** (`flatpak_packages`) - Discord, Spotify, Flatseal
@@ -102,7 +102,7 @@ editors, and GUI applications.
 - **Version Control:** Git with custom utilities (gh CLI)
 - **Languages:**
   - **Go:** Managed via official installer (optional)
-  - **Node.js:** Managed via NVM (multiple LTS versions)
+  - **Node.js:** Managed via fnm (Fast Node Manager, multiple LTS versions)
   - **Rust:** Managed via rustup (required for cargo packages)
   - **Python:** System Python 3 with [uv](https://docs.astral.sh/uv/) for package management (fast pip replacement)
 
@@ -201,10 +201,10 @@ Comprehensive terminal color support with fallback for non-color terminals:
 - Component installation order:
   1. System packages (via distro package manager)
   2. Rustup and Cargo packages (required)
-  3. NVM and Node.js (optional, LTS + latest)
-  4. NPM packages (only if NVM installed)
+  3. fnm and Node.js (optional, LTS + latest)
+  4. NPM packages (only if fnm installed)
   5. Go (optional, latest version)
-  6. Python pip packages (optional)
+  6. Python uv packages (optional)
   7. Neovim AppImage (optional, v0.11.3+)
   8. AstroNvim (optional)
   9. GitUI (optional)
@@ -221,9 +221,10 @@ Comprehensive terminal color support with fallback for non-color terminals:
 - `install_software()` - System packages via detected package manager
 - `install_rustup()` - Rust toolchain installation
 - `cargo_install()` - Batch install cargo packages
-- `install_nvm()` - NVM with Node LTS and optional latest
+- `install_fnm()` - fnm (Fast Node Manager) with Node LTS and optional latest
 - `npm_install()` - Global npm packages with error tracking
-- `uv_install()` - Python packages to user directory
+- `install_uv()` - uv Python package manager installation
+- `uv_install()` - Python CLI tools via uv tool install
 - `install_neovim()` - Latest stable Neovim AppImage to `/usr/local/bin/nvim`
 - `install_astronvim()` - AstroNvim with backup of existing config
 - `install_go()` - Latest Go from official source
@@ -248,8 +249,9 @@ Comprehensive terminal color support with fallback for non-color terminals:
 - `update_system()` - System package updates via distro package manager
 - `update_rust()` - `rustup update`
 - `cargo_update()` - `cargo install-update -a` (requires cargo-update package)
-- `update_all_node()` - Updates all installed Node versions via NVM
+- `update_all_node()` - Updates all installed Node versions via fnm
 - `npm_update()` - `npm update -g` for global packages
+- `uv_update()` - `uv self update` and `uv tool upgrade --all` for Python tools
 - `flatpak_update()`, `snap_update()`, `homebrew_update()` - Additional package
   managers
 
@@ -577,7 +579,16 @@ def process_files(
 7. **Functions:** Use lowercase with underscores: `install_package()`
 8. **Private Functions:** Prefix with underscore: `_exists()`
 9. **Return Codes:** 0 for success, non-zero for failure, explicit returns
-10. **Documentation:** Function comments explaining purpose, parameters, return
+10. **Variable Declarations:** Separate `local` declarations from command substitution (SC2155):
+    ```bash
+    # Bad: Exit code from 'local', not from command
+    local var=$(command)
+    
+    # Good: Exit code from command is properly captured
+    local var
+    var=$(command)
+    ```
+11. **Documentation:** Function comments explaining purpose, parameters, return
     values
 
 ### Shell Scripts (Zsh)
@@ -732,7 +743,6 @@ track_task "System Packages" install_software
 - `$SCRIPTS` - Path to scripts directory (`$DOTFILES/scripts/`)
 - `$EDITOR` - Preferred editor (defaults to nvim)
 - `$SHELL` - Current shell
-- `$NVM_DIR` - NVM installation directory (`~/.nvm`)
 - `$HOME` - User home directory
 
 **Debug/Verbose Modes:**
@@ -792,7 +802,7 @@ track_task "System Packages" install_software
 ./scripts/bootstrap --dry-run --verbose
 
 # 2. Selective install
-./scripts/bootstrap --skip-nvm --skip-go --skip-astronvim
+./scripts/bootstrap --skip-fnm --skip-go --skip-astronvim
 
 # 3. Full install (if confident)
 ./scripts/bootstrap --yes
@@ -823,7 +833,8 @@ The repository is now feature-complete for personal use.
 - [Dotbot](https://github.com/anishathalye/dotbot) - Installation framework
 - [Sheldon](https://sheldon.cli.rs/) - Zsh plugin manager
 - [AstroNvim](https://astronvim.com/) - Neovim distribution
-- [NVM](https://github.com/nvm-sh/nvm) - Node Version Manager
+- [fnm](https://github.com/Schniz/fnm) - Fast Node Manager (Rust-based)
+- [uv](https://docs.astral.sh/uv/) - Fast Python package manager (Rust-based)
 - [rustup](https://rustup.rs/) - Rust toolchain installer
 
 **Online Generators:**
