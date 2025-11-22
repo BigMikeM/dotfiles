@@ -244,37 +244,75 @@ update_all_node() {
         return 1
     fi
 
-    info "Updating Node.js versions managed by fnm."
+    info "Checking for Node.js updates..."
     echo
 
     # Get currently active version
     local current_version
     current_version=$(fnm current 2>/dev/null || echo "")
 
-    # Update all installed versions
     if [[ "$DRY_RUN" == false ]]; then
-        # Get list of installed versions
-        local versions
-        versions=$(fnm list | grep -v "system" | awk '{print $2}' | tr -d 'v')
+        # Get list of installed versions (just major.minor, no patch)
+        local installed_versions
+        installed_versions=$(fnm list | grep -v "system" | awk '{print $2}' | tr -d 'v')
 
-        for version in $versions; do
-            info "Updating Node.js v$version"
-            # fnm doesn't have a direct "update" command, but we can reinstall
-            run_command "fnm install $version"
+        # Get latest LTS version
+        local latest_lts
+        latest_lts=$(fnm list-remote --lts | tail -1 | awk '{print $1}' | tr -d 'v')
+
+        # Track which versions we've already processed
+        local -A processed_versions
+
+        # Check each installed version for updates
+        for version in $installed_versions; do
+            local major_minor="${version%.*}"  # Extract major.minor (e.g., 20.11)
+
+            # Skip if we've already processed this major.minor version
+            if [[ -n "${processed_versions[$major_minor]:-}" ]]; then
+                continue
+            fi
+
+            # Get the latest version for this major.minor
+            local latest_in_series
+            latest_in_series=$(fnm list-remote | grep "^v${major_minor}" | tail -1 | awk '{print $1}' | tr -d 'v')
+
+            if [[ -n "$latest_in_series" ]] && [[ "$latest_in_series" != "$version" ]]; then
+                info "Updating Node.js v$version → v$latest_in_series"
+                run_command "fnm install $latest_in_series"
+                processed_versions[$major_minor]=1
+            else
+                info "Node.js v$version is up to date"
+            fi
         done
 
-        # Install/update LTS if not already installed
-        info "Ensuring LTS version is up to date."
-        run_command "fnm install --lts"
+        # Check if we need to install/update LTS
+        local lts_installed=false
+        for version in $installed_versions; do
+            if [[ "$version" == "$latest_lts" ]]; then
+                lts_installed=true
+                break
+            fi
+        done
+
+        if [[ "$lts_installed" == false ]]; then
+            info "Installing latest LTS version: v$latest_lts"
+            run_command "fnm install --lts"
+        else
+            info "Latest LTS version (v$latest_lts) is already installed"
+        fi
     else
-        info "[DRY RUN] Would update all installed Node.js versions"
+        info "[DRY RUN] Would check for Node.js version updates"
         info "[DRY RUN] Would ensure LTS version is up to date"
     fi
 
-    # Restore the originally active version if it changed
+    # Restore the originally active version if it exists and changed
     if [[ -n "$current_version" ]] && [[ "$DRY_RUN" == false ]]; then
-        info "Switching back to originally active version: $current_version"
-        run_command "fnm use $current_version" || true
+        local new_current
+        new_current=$(fnm current 2>/dev/null || echo "")
+        if [[ "$new_current" != "$current_version" ]]; then
+            info "Restoring active version: $current_version"
+            run_command "fnm use $current_version" || true
+        fi
     fi
 
     return 0
