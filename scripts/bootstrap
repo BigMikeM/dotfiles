@@ -11,7 +11,6 @@ SKIP_FNM=false
 SKIP_RUST=false
 SKIP_NEOVIM=false
 SKIP_ASTRONVIM=false
-SKIP_GITUI=false
 DRY_RUN=false
 VERBOSE=false
 AUTO_YES=false
@@ -56,14 +55,13 @@ OPTIONS:
     --skip-rust         Skip Rust installation
     --skip-neovim       Skip Neovim installation
     --skip-astronvim    Skip AstroNvim installation
-    --skip-gitui        Skip GitUI installation
     --dotfiles-path     Specify dotfiles path (default: $HOME/.dotfiles)
 
 Examples:
     $0                  # Interactive installation
     $0 --yes            # Auto-install everything
     $0 --dry-run        # Show what would be installed
-    $0 --skip-go --skip-gitui  # Skip specific components
+    $0 --skip-go --skip-fnm  # Skip specific components
 
 Note: npm packages are installed via fnm-managed Node.js. If you skip fnm
 installation, npm packages will also be skipped.
@@ -107,10 +105,6 @@ while [[ $# -gt 0 ]]; do
 		;;
 	--skip-astronvim)
 		SKIP_ASTRONVIM=true
-		shift
-		;;
-	--skip-gitui)
-		SKIP_GITUI=true
 		shift
 		;;
 	--dotfiles-path)
@@ -274,28 +268,6 @@ install_go() {
 
 	# Remove the downloaded tarball
 	run_command "rm '${latest_version}.linux-amd64.tar.gz'"
-
-	return 0
-}
-
-install_gitui() {
-	if _exists gitui; then
-		info "GitUI is already installed."
-		return 0
-	fi
-
-	if [[ "$SKIP_GITUI" == true ]]; then
-		info "Skipping GitUI installation (--skip-gitui flag)."
-		return 0
-	fi
-
-	if ! confirm_action "Would you like to install GitUI?"; then
-		info "Skipping GitUI installation."
-		return 0
-	fi
-
-	info "GitUI will be installed via system package manager."
-	info "Make sure 'gitui' is included in your package lists."
 
 	return 0
 }
@@ -682,9 +654,6 @@ install_external_optional() {
 	fi
 	if [[ "$SKIP_GO" == false ]]; then
 		track_task "Go Installation" install_go
-	fi
-	if [[ "$SKIP_GITUI" == false ]]; then
-		track_task "GitUI Installation" install_gitui
 	fi
 	if [[ "$SKIP_ASTRONVIM" == false ]]; then
 		track_task "AstroNvim Installation" install_astronvim
