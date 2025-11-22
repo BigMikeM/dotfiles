@@ -269,10 +269,9 @@ if _exists code; then
 	alias vsc='code .'
 fi
 
-# Git UI tools
+# Git UI tools (gitui with vim keybindings configured in ~/.config/gitui/)
 if _exists gitui; then
 	alias lg='gitui'
-	alias lazygit='gitui' # Backward compatibility
 	alias gu='gitui'
 fi
 
@@ -380,12 +379,15 @@ if _exists cargo; then
 fi
 
 # System monitoring
-if _exists htop; then
+if _exists btm; then
+	alias top='btm'
+	alias ht='btm'
+elif _exists bottom; then
+	alias top='bottom'
+	alias ht='bottom'
+elif _exists htop; then
 	alias top='htop'
 	alias ht='htop'
-elif _exists btop; then
-	alias top='btop'
-	alias bt='btop'
 fi
 
 if _exists iostat; then
