@@ -50,7 +50,13 @@ if vim.g.vscode then
   vim.keymap.set("n", "K", function() vscode.action("editor.action.showHover") end, { desc = "Hover" })
   vim.keymap.set("n", "<Leader>ca", function() vscode.action("editor.action.quickFix") end, { desc = "Code action" })
   vim.keymap.set("n", "<Leader>cr", function() vscode.action("editor.action.rename") end, { desc = "Rename" })
-  vim.keymap.set("n", "<Leader>cf", function() vscode.action("editor.action.formatDocument") end, { desc = "Format" })
+
+  -- Formatting
+  vim.keymap.set("n", "<Leader>cf", function() vscode.action("editor.action.formatDocument") end, { desc = "Format document" })
+  vim.keymap.set("x", "<Leader>cf", function() vscode.action("editor.action.formatSelection") end, { desc = "Format selection" })
+  vim.keymap.set("n", "<Leader>cF", function() vscode.action("editor.action.formatDocument.none") end, { desc = "Format (no formatter)" })
+  vim.keymap.set("n", "=", function() vscode.action("editor.action.formatDocument") end, { desc = "Format" })
+  vim.keymap.set("x", "=", function() vscode.action("editor.action.formatSelection") end, { desc = "Format selection" })
 
   -- Diagnostics
   vim.keymap.set("n", "[d", function() vscode.action("editor.action.marker.prev") end, { desc = "Previous diagnostic" })
