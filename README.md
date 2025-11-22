@@ -350,6 +350,7 @@ This is a personal dotfiles repository, but you're welcome to:
 **⚠️ IMPORTANT:** When making significant changes, update the [Copilot Instructions](.github/copilot-instructions.md) file.
 
 **Update the Copilot Instructions when:**
+
 - ✏️ Adding/removing scripts or utilities
 - 🔧 Changing core functionality in bootstrap/update scripts
 - 📦 Modifying package lists or installation strategies
@@ -359,6 +360,7 @@ This is a personal dotfiles repository, but you're welcome to:
 - 📝 Adding new shell aliases or functions
 
 **Also update:**
+
 - `README.md` - User-facing documentation
 - `TODO.md` - Track completed/planned features
 - Function comments in scripts for significant logic changes

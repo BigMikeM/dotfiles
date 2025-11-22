@@ -85,8 +85,8 @@ editors, and GUI applications.
     lsd, etc.
   - **Python:** uv (`uv_packages`) - Fast Python package manager (Rust-based),
     development tools, Jupyter, data science basics
-  - **Node.js:** npm (`npm_packages`) - Via fnm (Fast Node Manager), includes TypeScript, build
-    tools, global utilities
+  - **Node.js:** npm (`npm_packages`) - Via fnm (Fast Node Manager), includes
+    TypeScript, build tools, global utilities
   - **Snap:** (`snap_packages`) - Currently only VS Code
   - **Flatpak:** (`flatpak_packages`) - Discord, Spotify, Flatseal
 
@@ -104,7 +104,8 @@ editors, and GUI applications.
   - **Go:** Managed via official installer (optional)
   - **Node.js:** Managed via fnm (Fast Node Manager, multiple LTS versions)
   - **Rust:** Managed via rustup (required for cargo packages)
-  - **Python:** System Python 3 with [uv](https://docs.astral.sh/uv/) for package management (fast pip replacement)
+  - **Python:** System Python 3 with [uv](https://docs.astral.sh/uv/) for
+    package management (fast pip replacement)
 
 ### Custom Utilities in `scripts/utils`
 
@@ -149,12 +150,16 @@ Comprehensive terminal color support with fallback for non-color terminals:
 
 ### UV Python Package Manager
 
-**Why UV?** Fast, Rust-based Python package manager that replaces pip, virtualenv, and poetry with a single tool. Up to 10-100x faster than traditional pip.
+**Why UV?** Fast, Rust-based Python package manager that replaces pip,
+virtualenv, and poetry with a single tool. Up to 10-100x faster than traditional
+pip.
 
 **Installation:** Installed via cargo as part of `cargo_packages`
 
 **Key Commands:**
-- `uv tool install <package>` - Install Python CLI tools in isolated environments
+
+- `uv tool install <package>` - Install Python CLI tools in isolated
+  environments
 - `uv tool upgrade --all` - Upgrade all installed tools
 - `uv tool list` - List installed tools
 - `uv pip install <package>` - Drop-in pip replacement
@@ -164,6 +169,7 @@ Comprehensive terminal color support with fallback for non-color terminals:
 - `uv add <package>` - Add dependency to pyproject.toml
 
 **Integration:**
+
 - Replaces `pip install --user` with `uv tool install` for CLI tools
 - Bootstrap script uses uv if available, falls back to pip
 - Update script upgrades all uv-managed tools
@@ -171,6 +177,7 @@ Comprehensive terminal color support with fallback for non-color terminals:
 - Aliases in `lib/alias.zsh`: `uvinstall`, `uvupgrade`, `uvlist`, `uvrun`
 
 **Package Installation Strategy:**
+
 1. System Python 3 (via distro package manager)
 2. UV (via cargo)
 3. Python packages (via uv tool install)
@@ -181,6 +188,7 @@ Comprehensive terminal color support with fallback for non-color terminals:
    - uv
 
 **Benefits:**
+
 - Fast: 10-100x faster than pip
 - Isolated: Each tool in its own environment (no conflicts)
 - Reproducible: Lock files ensure consistent installs
@@ -504,13 +512,17 @@ configuration
 **CRITICAL: All Python code must use strict and thorough type hinting.**
 
 1. **Shebang:** Use `#!/usr/bin/env python3`
-2. **Future Imports:** Always include `from __future__ import annotations` at the top
-3. **Type Hints:** **MANDATORY** - All functions, methods, and variables must have complete type annotations
+2. **Future Imports:** Always include `from __future__ import annotations` at
+   the top
+3. **Type Hints:** **MANDATORY** - All functions, methods, and variables must
+   have complete type annotations
    - Function parameters: `def func(name: str, count: int) -> bool:`
    - Return types: Always specify, use `-> None` for procedures
    - Variable annotations: Use when type isn't obvious from assignment
-   - Use modern syntax: `list[str]`, `dict[str, int]`, `Type | None` (not `Optional[Type]`)
+   - Use modern syntax: `list[str]`, `dict[str, int]`, `Type | None` (not
+     `Optional[Type]`)
 4. **Docstrings:** Google-style docstrings with blank line after opening quotes
+
    ```python
    def function(arg: str) -> int:
        """
@@ -529,6 +541,7 @@ configuration
 
        """
    ```
+
 5. **Line Length:** Maximum 80 characters (Google Style Guide)
 6. **Imports:** Group in order: standard library, third-party, local
 7. **Boolean Arguments:** Use keyword-only arguments with `*` for clarity
@@ -546,10 +559,13 @@ configuration
     - All rules enabled except explicitly ignored
     - D213/D211 docstring style (Google-aligned)
     - Security rules (bandit) enforced with selective script exceptions
-    - Configuration: `home/config/ruff/ruff.toml` (installed to `~/.config/ruff/`)
-11. **Type Checking:** Enable `python.analysis.typeCheckingMode: "strict"` in VS Code
+    - Configuration: `home/config/ruff/ruff.toml` (installed to
+      `~/.config/ruff/`)
+11. **Type Checking:** Enable `python.analysis.typeCheckingMode: "strict"` in VS
+    Code
 
 **Type Hint Examples:**
+
 ```python
 from __future__ import annotations
 
@@ -579,15 +595,18 @@ def process_files(
 7. **Functions:** Use lowercase with underscores: `install_package()`
 8. **Private Functions:** Prefix with underscore: `_exists()`
 9. **Return Codes:** 0 for success, non-zero for failure, explicit returns
-10. **Variable Declarations:** Separate `local` declarations from command substitution (SC2155):
+10. **Variable Declarations:** Separate `local` declarations from command
+    substitution (SC2155):
+
     ```bash
     # Bad: Exit code from 'local', not from command
     local var=$(command)
-    
+
     # Good: Exit code from command is properly captured
     local var
     var=$(command)
     ```
+
 11. **Documentation:** Function comments explaining purpose, parameters, return
     values
 
