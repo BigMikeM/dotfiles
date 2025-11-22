@@ -105,8 +105,7 @@ Located in `bin/`:
 │   └── fg_colors          # Terminal color definitions
 ├── lib/
 │   ├── alias.zsh          # Shell aliases (480+ lines)
-│   ├── lscolors.zsh       # LS_COLORS configuration
-│   └── smartdots.zsh      # Smart directory navigation
+│   └── lscolors.zsh       # LS_COLORS configuration
 ├── home/
 │   └── config/
 │       ├── alacritty/     # Alacritty terminal config
@@ -204,7 +203,7 @@ rm          # Safe delete with trash-cli
 
 ```bash
 ..          # Up one directory
-...         # Up two directories (via smartdots)
+...         # Up two directories
 ....        # Up three directories
 pc          # Jump to ~/Projects
 pcw         # Jump to ~/Projects/Work
@@ -232,14 +231,6 @@ check-docs  # Check if documentation needs updating
 dotfiles    # Edit dotfiles repo
 reload      # Reload shell config
 ```
-
-### Smart Dots
-
-Type multiple dots to navigate up directories automatically:
-
-- `..` → `cd ..`
-- `...` → `cd ../..`
-- `....` → `cd ../../..`
 
 ## 🔧 Configuration
 

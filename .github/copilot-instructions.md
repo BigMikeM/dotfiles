@@ -60,8 +60,7 @@ editors, and GUI applications.
 │   └── fg_colors             # Terminal color definitions (158 lines, bash)
 ├── lib/                       # Zsh configuration libraries
 │   ├── alias.zsh             # Comprehensive shell aliases (480 lines)
-│   ├── lscolors.zsh          # LS_COLORS configuration (190 lines)
-│   └── smartdots.zsh         # Smart directory navigation (267 lines)
+│   └── lscolors.zsh          # LS_COLORS configuration (190 lines)
 ├── home/                      # User home directory configurations
 │   └── config/               # XDG config directory files
 │       ├── alacritty/        # Alacritty terminal config
@@ -387,24 +386,6 @@ pip.
 - Custom colors for descriptions, corrections, warnings
 - Enhanced process, host, and git completion colors
 
-### Smart Dots (`lib/smartdots.zsh`)
-
-**Feature:** Intelligent directory navigation with dot expansion
-
-**Behavior:**
-
-- Type `..` → normal parent directory navigation
-- Type `...` → automatically converts to `../../`
-- Type `....` → automatically converts to `../../../`
-- And so on...
-
-**Configuration:**
-
-- `SMARTDOTS_MAX_DEPTH` - Maximum depth (default: 10)
-- `SMARTDOTS_SHOW_PATH` - Show path preview (default: true)
-
-**Safety:** Prevents excessive depth with terminal bell/flash
-
 ## Dotbot Configuration (`install.conf.yaml`)
 
 **Installation Steps:**
@@ -473,8 +454,7 @@ upstream
 7. **zsh-better-npm-completion** - Enhanced npm completions [deferred]
 8. **auto-notify** - Desktop notifications for long-running commands [deferred]
 9. **z** - Frecency-based directory jumping (agkozak/zsh-z) [deferred]
-10. **lib** - Local custom library (loads alias.zsh, lscolors.zsh,
-    smartdots.zsh)
+10. **lib** - Local custom library (loads alias.zsh, lscolors.zsh)
 
 **Defer Template:** Uses `zsh-defer source` for performance optimization
 
