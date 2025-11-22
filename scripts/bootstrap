@@ -15,6 +15,9 @@ DRY_RUN=false
 VERBOSE=false
 AUTO_YES=false
 
+# Raspberry Pi detection (set automatically, can be overridden)
+IS_RASPBERRY_PI=false
+
 # Progress tracking
 declare -a COMPLETED_TASKS=()
 declare -a FAILED_TASKS=()
@@ -197,6 +200,18 @@ confirm_action() {
 }
 
 on_start() {
+	# Detect Raspberry Pi early
+	if _is_raspberry_pi; then
+		IS_RASPBERRY_PI=true
+		PACKAGE_MANAGER="rpi"
+		info "     |-|                                             |-|     "
+		info "     |-|      🥧 RASPBERRY PI DETECTED 🥧           |-|     "
+		info "     |-|                                             |-|     "
+		info "     |-|   Lightweight mode will be used to         |-|     "
+		info "     |-|   optimize for limited resources.          |-|     "
+		info "     |-|                                             |-|     "
+	fi
+
 	info "     |-|                                             |-|     "
 	info "     |-|         Custom dotfiles bootstrap.          |-|     "
 	info "     |-|                                             |-|     "
@@ -377,11 +392,21 @@ install_uv() {
 
 cargo_install() {
 	info "Installing extras with Cargo."
+
+	# Use lightweight package set for Raspberry Pi
+	local packages_to_install
+	if [[ "$IS_RASPBERRY_PI" == true ]]; then
+		packages_to_install="${rpi_cargo_packages[*]}"
+		info "Using lightweight Cargo package set for Raspberry Pi."
+	else
+		packages_to_install="${cargo_packages[*]}"
+	fi
+
 	if [[ "$DRY_RUN" == false ]]; then
-		run_command "cargo install ${cargo_packages[*]}"
+		run_command "cargo install $packages_to_install"
 		run_command "sheldon lock --update"
 	else
-		info "[DRY RUN] Would install: ${cargo_packages[*]}"
+		info "[DRY RUN] Would install: $packages_to_install"
 		info "[DRY RUN] Would run: sheldon lock --update"
 	fi
 	return 0
@@ -524,6 +549,12 @@ arch_install() {
 	run_command "sudo pacman -Sy --needed --noconfirm ${arch_packages[*]}"
 }
 
+rpi_install() {
+	info "Installing minimal package set for Raspberry Pi."
+	run_command "sudo apt update"
+	run_command "sudo apt install -y ${rpi_packages[*]}"
+}
+
 install_astronvim() {
 	if [[ "$SKIP_ASTRONVIM" == true ]]; then
 		info "Skipping AstroNvim installation (--skip-astronvim flag)."
@@ -644,6 +675,25 @@ install_external_required() {
 }
 
 install_external_optional() {
+	# Skip heavy optional components on Raspberry Pi
+	if [[ "$IS_RASPBERRY_PI" == true ]]; then
+		info "Skipping optional heavy components on Raspberry Pi (fnm, npm, Go, Neovim AppImage)."
+		info "AstroNvim installation is available if you have Neovim from system packages."
+
+		if [[ "$SKIP_ASTRONVIM" == false ]]; then
+			if _exists nvim; then
+				track_task "AstroNvim Installation" install_astronvim
+			else
+				info "Neovim not found - install via system package manager first for AstroNvim."
+			fi
+		fi
+
+		# Python CLI tools are lightweight enough for RPi
+		track_task "Python CLI Tools (uv)" uv_install
+		return 0
+	fi
+
+	# Standard installation for non-RPi systems
 	if [[ "$SKIP_NEOVIM" == false ]]; then
 		track_task "Neovim Installation" install_neovim
 	fi

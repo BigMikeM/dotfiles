@@ -149,6 +149,56 @@ wsl_packages=(
 	# Note: No GUI apps in WSL (use Windows apps or WSLg with Flatpak)
 )
 
+# Raspberry Pi packages (Debian-based - Raspberry Pi OS)
+# Note: Ultra-lightweight - RPi has limited resources (CPU, RAM)
+# Skip: Heavy GUI apps, resource-intensive tools, unnecessary libraries
+rpi_packages=(
+	# Core development tools (minimal set)
+	zsh
+	git
+	cmake
+	gcc
+	g++
+	make
+	build-essential
+
+	# Essential system utilities only
+	tree
+	curl
+	wget
+	unzip
+	zip
+	bc
+	jq
+
+	# Shell utilities (lightweight)
+	shellcheck
+	# Note: Skip shfmt - can be slow on RPi
+
+	# Python (system) - needed for many tools
+	python3
+	python-is-python3
+	python3-dev
+
+	# Lua (for Neovim)
+	luarocks
+	luacheck
+
+	# Minimal libraries only
+	pkg-config
+	libssl-dev
+	ca-certificates
+	gnupg
+
+	# Note: Skip terminal emulators - use default terminal or lightweight alternatives
+	# Note: Skip ghostty - too resource intensive for RPi
+	# Note: Skip development libraries - install only when needed
+	# Note: Skip brightnessctl, playerctl - typically not needed on headless RPi
+	# Note: All GUI apps via Flatpak (if running desktop) or skip entirely
+	# Note: Modern CLI tools (bat, fd, rg) via Cargo but limited subset
+	# Note: Neovim can be installed but avoid heavy plugins
+)
+
 # Ubuntu/Debian packages (APT)
 # Note: Keep minimal - prefer Cargo/uv/Flatpak for cross-platform consistency
 apt_packages=(
@@ -330,6 +380,37 @@ cargo_packages=(
 	zenith     # Process viewer (like top/htop)
 )
 
+# Raspberry Pi Cargo packages - Lightweight subset only
+# Skip resource-intensive tools that would be slow on RPi
+rpi_cargo_packages=(
+	# Essential CLI replacements (lightweight and useful)
+	fd-find    # Better find
+	ripgrep    # Better grep (rg)
+	bat        # Better cat with syntax highlighting
+	lsd        # Better ls (LSDeluxe)
+
+	# Shell management (essential)
+	sheldon    # Zsh plugin manager (Rust-based, fast)
+	starship   # Cross-shell prompt (lightweight)
+	zoxide     # Smarter cd (z)
+
+	# Basic development tools only
+	gitui         # Git TUI (useful even on RPi)
+	cargo-update  # Update cargo packages
+
+	# Lightweight utilities
+	tealdeer   # tldr client (fast and small)
+
+	# Note: Skip heavy tools to preserve RPi performance:
+	# - du-dust, procs, exa (redundant, use standard tools)
+	# - atuin (history sync - resource intensive)
+	# - broot, ranger-rs (file browsers - slow on RPi)
+	# - cargo-watch, cargo-edit, cargo-expand, cargo-outdated (development - compile intensive)
+	# - just, sccache (build tools - RPi rarely used for compilation)
+	# - tokei, hyperfine, bandwhich, bottom, zenith (monitoring - resource intensive)
+	# - shellharden, ron-lsp, grex, choose (niche tools, can install manually if needed)
+)
+
 # Python CLI tools (via uv tool install)
 # Note: uv is installed via its own installer script (https://astral.sh/uv/install.sh)
 # uv tool install is ONLY for packages that provide CLI executables
@@ -451,6 +532,21 @@ flatpak_packages=(
 	# - No dependency conflicts
 )
 
+# Raspberry Pi Flatpak packages - Minimal GUI apps if running desktop
+# Most RPi setups are headless, but for desktop setups use minimal apps only
+rpi_flatpak_packages=(
+	# Essential browser (if running desktop)
+	org.mozilla.firefox        # Firefox - lightweight enough for RPi 4+
+
+	# Note: Skip heavy apps on RPi:
+	# - GIMP, Audacity (resource intensive)
+	# - VLC (use mpv or omxplayer instead)
+	# - Discord, Slack, Spotify (too heavy for RPi)
+	# - VSCodium (use vim/neovim instead)
+	# - Chrome (too heavy, use Firefox)
+)
+
 # Export all package arrays
 export rpm_packages rpm_groups rpm_nonfree arch_packages cargo_packages
 export uv_tools uv_libraries_reference apt_packages npm_packages wsl_packages snap_packages flatpak_packages
+export rpi_packages rpi_cargo_packages rpi_flatpak_packages

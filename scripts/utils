@@ -19,6 +19,29 @@ _is_wsl() {
 	[[ "$(uname -r)" == *WSL* ]] || [[ -n "${WSL_DISTRO_NAME:-}" ]]
 }
 
+# Check if running on Raspberry Pi
+_is_raspberry_pi() {
+	local arch
+	arch="$(_get_arch)"
+
+	# Check architecture (RPi uses ARM)
+	if [[ "$arch" != "arm64" && "$arch" != "armv7" ]]; then
+		return 1
+	fi
+
+	# Check for Raspberry Pi specific files/identifiers
+	if [[ -f /proc/device-tree/model ]]; then
+		grep -qi "raspberry pi" /proc/device-tree/model 2>/dev/null && return 0
+	fi
+
+	# Check for BCM SoC (Broadcom, used in Raspberry Pi)
+	if [[ -f /proc/cpuinfo ]]; then
+		grep -qi "bcm" /proc/cpuinfo 2>/dev/null && return 0
+	fi
+
+	return 1
+}
+
 # Check if running as root
 _is_root() {
 	[[ $EUID -eq 0 ]]
@@ -263,7 +286,7 @@ retry() {
 }
 
 # Export functions for use in other scripts
-export -f _exists _is_container _is_wsl _is_root _is_writable _is_readable
+export -f _exists _is_container _is_wsl _is_raspberry_pi _is_root _is_writable _is_readable
 export -f _get_distro _get_arch _current_shell _user_default_shell _has_sudo
 export -f info success error warn debug progress finish on_finish on_error
 export -f find_package_manager backup_file ensure_dir download_file retry

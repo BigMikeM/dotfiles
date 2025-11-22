@@ -77,17 +77,18 @@ editors, and GUI applications.
 ### Package Managers by Distribution
 
 - **Fedora/RHEL/CentOS:** DNF 5 (modern Fedora default) (`rpm_packages`, `rpm_groups`, `rpm_nonfree`)
-- **Ubuntu/Debian:** APT (`apt_packages`, `wsl_packages` for WSL)
+- **Ubuntu/Debian:** APT (`apt_packages`, `wsl_packages` for WSL, `rpi_packages` for Raspberry Pi)
 - **Arch Linux:** Pacman/Paru (`arch_packages`)
+- **Raspberry Pi:** Lightweight package sets (`rpi_packages`, `rpi_cargo_packages`, `rpi_flatpak_packages`)
 - **Language-Specific:**
-  - **Rust:** Cargo (`cargo_packages`) - Includes uv, sheldon, fd-find, ripgrep,
+  - **Rust:** Cargo (`cargo_packages`, `rpi_cargo_packages` for RPi) - Includes uv, sheldon, fd-find, ripgrep,
     lsd, etc.
   - **Python:** uv (`uv_packages`) - Fast Python package manager (Rust-based),
     development tools, Jupyter, data science basics
   - **Node.js:** npm (`npm_packages`) - Via fnm (Fast Node Manager), includes
-    TypeScript, build tools, global utilities
+    TypeScript, build tools, global utilities (skipped on RPi)
   - **Snap:** (`snap_packages`) - Currently only VS Code
-  - **Flatpak:** (`flatpak_packages`) - Discord, Spotify, Flatseal
+  - **Flatpak:** (`flatpak_packages`, `rpi_flatpak_packages` for RPi) - Discord, Spotify, Flatseal
 
 ### Development Environment Stack
 
@@ -96,7 +97,7 @@ editors, and GUI applications.
 - **Shell Plugins:** oh-my-zsh, zsh-syntax-highlighting, zsh-autosuggestions,
   zsh-autopair, zsh-z, alias-tips
 - **Editor:** Neovim with [AstroNvim v5+](https://astronvim.com/)
-- **Terminal Emulators:** Kitty (primary), Alacritty (alternative)
+- **Terminal Emulators:** Ghostty (primary, Wayland-native)
 - **File Manager:** Ranger (CLI)
 - **Version Control:** Git with custom utilities (gh CLI)
 - **Languages:**
@@ -113,9 +114,10 @@ editors, and GUI applications.
 - `_exists()` - Check if command exists
 - `_is_container()` - Detect container environment
 - `_is_wsl()` - Detect Windows Subsystem for Linux
+- `_is_raspberry_pi()` - Detect Raspberry Pi hardware
 - `_is_root()` - Check root privileges
 - `_get_distro()` - Get distribution name
-- `_get_arch()` - Get system architecture (amd64, arm64, etc.)
+- `_get_arch()` - Get system architecture (amd64, arm64, armv7, 386)
 - `find_package_manager()` - Auto-detect system package manager
 
 **Output Functions:**
@@ -784,6 +786,26 @@ track_task "System Packages" install_software
 - **Package List:** Use `wsl_packages` (lighter set)
 - **Special Notes:** Different clipboard utilities (wl-copy), different open
   command
+
+### Raspberry Pi
+
+- **Detection:** `_is_raspberry_pi()` checks `/proc/device-tree/model` and BCM SoC in `/proc/cpuinfo`
+- **Package Manager:** APT with lightweight package sets
+- **Package Lists:**
+  - `rpi_packages` (~20 packages vs ~40+ desktop) - Essential only: zsh, git, gcc, make, python3, luarocks
+  - `rpi_cargo_packages` (~11 tools vs ~30 desktop) - fd, rg, bat, lsd, sheldon, starship, zoxide, gitui
+  - `rpi_flatpak_packages` (Firefox only vs 10+ desktop apps)
+- **Skipped Components:**
+  - Terminal emulators (ghostty, kitty, alacritty) - use system default
+  - Heavy development tools (shfmt, brightnessctl, playerctl)
+  - Resource-intensive monitoring (bottom, zenith, bandwhich)
+  - Language toolchains (fnm/Node.js, Go, Neovim AppImage)
+  - Cargo build tools (cargo-watch, cargo-edit, just, sccache)
+- **Optimization Strategy:** Minimal system packages, essential CLI tools only, skip GUI apps unless needed
+- **Special Notes:**
+  - AstroNvim available if Neovim installed via system packages
+  - Python uv tools still installed (lightweight enough)
+  - Designed for low-power ARM hardware with limited CPU/RAM
 
 ## Testing & Validation
 
