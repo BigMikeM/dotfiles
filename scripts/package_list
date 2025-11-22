@@ -287,7 +287,6 @@ arch_packages=(
 )
 
 # Rust packages (Cargo) - Only packages not available or better via cargo
-# Note: uv is NOT installed via cargo - it has its own installer (see install_uv in bootstrap)
 cargo_packages=(
 	# Core utilities (newer/better than system packages)
 	fd-find
