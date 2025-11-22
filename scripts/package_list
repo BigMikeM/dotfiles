@@ -321,6 +321,7 @@ cargo_packages=(
 	bandwhich # Network utilization by process
 	bottom    # System monitor (btm)
 	shellharden # Shell script linter
+	ron-lsp   # RON (Rusty Object Notation) LSP and CLI - provides formatting and validation
 )
 
 # Python CLI tools (via uv tool install)

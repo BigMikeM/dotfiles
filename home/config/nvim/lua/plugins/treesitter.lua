@@ -12,6 +12,7 @@ return {
       "bash",
       "rust",
       "toml",
+      "ron",
       "markdown",
       "yaml",
       "gitignore",
