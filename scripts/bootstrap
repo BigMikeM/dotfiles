@@ -544,8 +544,8 @@ apt-wsl_install() {
 }
 
 rpm_install() {
-	run_command "sudo dnf install --refresh -y ${rpm_packages[*]}"
-	run_command "sudo dnf group install -y ${rpm_groups[*]}"
+	# DNF 5 syntax: install packages and groups with @ prefix in single command
+	run_command "sudo dnf install --refresh -y ${rpm_packages[*]} ${rpm_groups[*]}"
 }
 
 arch_install() {

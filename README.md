@@ -236,7 +236,7 @@ reload      # Reload shell config
 
 ### Supported Distributions
 
-- **Fedora/RHEL/CentOS** - DNF/YUM package manager
+- **Fedora/RHEL/CentOS** - DNF 5 package manager
 - **Ubuntu/Debian** - APT package manager
 - **Arch Linux** - Pacman/Paru package manager
 - **WSL** - Windows Subsystem for Linux (Ubuntu/Debian-based)

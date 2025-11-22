@@ -1,17 +1,43 @@
 #!/bin/bash
 # Package definitions for different distributions and package managers
-# Enhanced with better organization and additional packages
+# Cross-platform consistency strategy for unified experience across all distros
 #
-# Package Priority Strategy:
-# 1. System packages (rpm, apt, pacman) - Highest priority
-# 2. Cargo packages - For tools better maintained via Rust ecosystem
-# 3. Python/Node packages - For development tools
-# 4. Snap packages - Only for apps that work better as snaps (VS Code)
-# 5. Flatpak packages - Only for apps exclusive to flatpak or officially supported
+# Package Priority Strategy (for maximum cross-platform consistency):
+# 1. System packages (rpm, apt, pacman) - ONLY for:
+#    - Core system tools (gcc, make, git, zsh)
+#    - System libraries and development headers
+#    - Shell utilities (shellcheck, shfmt)
+#    - Terminal emulators (ghostty - native Wayland)
+#
+# 2. Cargo packages (Rust) - PRIMARY choice for CLI tools:
+#    - Modern CLI replacements (fd, rg, bat, lsd, dust, etc.)
+#    - Development tools (gitui, cargo-*, just, etc.)
+#    - Cross-platform with consistent versions
+#    - Fast and reliable
+#
+# 3. Flatpak packages - ALL GUI applications:
+#    - Web browsers (Firefox, Chrome)
+#    - Media apps (GIMP, VLC, Audacity)
+#    - Communication (Discord, Slack)
+#    - Ensures same versions across all distros
+#    - Sandboxed and secure
+#
+# 4. Language-specific package managers:
+#    - fnm → Node.js and npm packages
+#    - uv → Python CLI tools (ruff, pytest, jupyter, etc.)
+#
+# 5. Snap packages - AVOID (prefer Flatpak for GUI apps)
+#
+# This strategy ensures:
+# - Identical user experience across Fedora, Ubuntu/Debian, Arch, and WSL
+# - Latest versions of tools without distro-specific packaging delays
+# - Minimal system package dependencies
+# - Easy updates and maintenance
 
 # Fedora/RHEL/CentOS packages (DNF/YUM)
+# Note: Keep minimal - prefer Cargo/uv/Flatpak for cross-platform consistency
 rpm_packages=(
-	# Core development tools
+	# Core development tools (system package manager is best for these)
 	zsh
 	git
 	cmake
@@ -20,127 +46,7 @@ rpm_packages=(
 	gcc-c++
 	make
 
-	# System utilities
-	tree
-	gh
-	trash-cli
-	bc
-	curl
-	wget
-	unzip
-	zip
-
-	# Development tools
-	neovim
-	ranger
-	luarocks
-	atool
-	highlight
-	shellcheck
-	shfmt
-	python3
-	python3-devel
-	# Note: nodejs and npm are managed via fnm
-	# Note: Python packages are managed via uv (installed via official script)
-	# Note: bat, tldr (tealdeer), gitui installed via cargo for better cross-distro support
-
-	# Terminal emulators
-	kitty
-	alacritty
-
-	# GUI Applications
-	firefox
-	gimp
-	vlc
-
-	# Libraries and dependencies
-	pkg-config
-	openssl-devel
-	fontconfig-devel
-	freetype-devel
-	libX11-devel
-	libXext-devel
-	libXrandr-devel
-	libXi-devel
-	libXcursor-devel
-	mesa-libGL-devel
-	alsa-lib-devel
-)
-
-# RPM Fusion repositories (if available)
-if command -v rpm >/dev/null 2>&1; then
-	rpm_nonfree=(
-		"https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm"
-		"https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
-	)
-fi
-
-# DNF package groups
-rpm_groups=(
-	"C Development Tools and Libraries"
-	"Development Tools"
-)
-
-# WSL-specific packages (lighter set)
-wsl_packages=(
-	# Core essentials
-	git
-	cmake
-	openssh-client
-	gcc
-	g++
-	make
-	build-essential
-
-	# Utilities
-	tree
-	gh
-	trash-cli
-	bc
-	curl
-	wget
-	unzip
-	zip
-	jq
-	# Note: bat, tldr (tealdeer), bottom (btm) installed via cargo
-
-	# Development tools
-	ranger
-	luarocks
-	lua-check
-	atool
-	highlight
-	shellcheck
-	shfmt
-
-	# Python ecosystem
-	python3
-	python-is-python3
-	python3-dev
-
-	# Note: Node.js and npm are managed via fnm
-	# Note: Python packages are managed via uv (installed via official script)
-
-	# Libraries and dependencies
-	pkg-config
-	libssl-dev
-	ca-certificates
-	gnupg
-)
-
-# Ubuntu/Debian packages (APT)
-apt_packages=(
-	# Core development
-	build-essential
-	zsh
-	git
-	cmake
-	openssh-client
-	gcc
-	g++
-	make
-
-	# System utilities
+	# Basic system utilities
 	tree
 	gh
 	trash-cli
@@ -152,38 +58,142 @@ apt_packages=(
 	jq
 	fastfetch
 
-	# Desktop utilities (if not WSL)
-	brightnessctl
-	playerctl
-	pulseaudio-utils
-
-	# Development tools
-	ranger
-	luarocks
-	lua-check
-	atool
-	highlight
+	# Shell utilities
 	shellcheck
 	shfmt
 
-	# Note: bat, tldr (tealdeer), gitui, bottom (btm) installed via cargo for better versions
+	# Python (system)
+	python3
+	python3-devel
 
-	# Terminal emulators
-	kitty
+	# Lua (for Neovim)
+	luarocks
 
-	# GUI Applications
-	firefox
-	firefox-esr
-	gimp
-	vlc
+	# Terminal emulator (native Wayland support)
+	ghostty
 
-	# Python ecosystem
+	# Libraries and dependencies
+	pkg-config
+	openssl-devel
+	fontconfig-devel
+	freetype-devel
+	mesa-libGL-devel
+	alsa-lib-devel
+
+	# Note: GUI apps (Firefox, GIMP, VLC) now via Flatpak for consistency
+	# Note: Modern CLI tools (bat, fd, rg, etc.) via Cargo
+	# Note: Neovim installed via AppImage for latest version
+	# Note: ranger, atool, highlight via Cargo/pip where better
+)
+
+# RPM Fusion repositories (if available)
+if command -v rpm >/dev/null 2>&1; then
+	rpm_nonfree=(
+		"https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm"
+		"https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
+	)
+fi
+
+rpm_groups=(
+	"@c-development"
+	"@development-tools"
+	"@development-libs"
+)
+
+# WSL-specific packages (Debian/Ubuntu-based)
+# Note: Keep minimal - prefer Cargo/uv for cross-platform consistency
+wsl_packages=(
+	# Core development tools
+	build-essential
+	zsh
+	git
+	cmake
+	openssh-client
+	gcc
+	g++
+	make
+
+	# Basic system utilities
+	tree
+	gh
+	trash-cli
+	bc
+	curl
+	wget
+	unzip
+	zip
+	jq
+	fastfetch
+
+	# Shell utilities
+	shellcheck
+	shfmt
+
+	# Python (system)
 	python3
 	python-is-python3
 	python3-dev
 
-	# Note: Node.js and npm are managed via fnm
-	# Note: Python packages are managed via uv (installed via official script)
+	# Lua (for Neovim)
+	luarocks
+	luacheck
+
+	# Libraries and dependencies
+	pkg-config
+	libssl-dev
+	ca-certificates
+	gnupg
+
+	# Note: Modern CLI tools (bat, fd, rg, etc.) via Cargo
+	# Note: Neovim installed via AppImage for latest version
+	# Note: No GUI apps in WSL (use Windows apps or WSLg with Flatpak)
+)
+
+# Ubuntu/Debian packages (APT)
+# Note: Keep minimal - prefer Cargo/uv/Flatpak for cross-platform consistency
+apt_packages=(
+	# Core development tools
+	build-essential
+	zsh
+	git
+	cmake
+	openssh-client
+	gcc
+	g++
+	make
+
+	# Basic system utilities
+	tree
+	gh
+	trash-cli
+	bc
+	curl
+	wget
+	unzip
+	zip
+	jq
+	fastfetch
+
+	# Desktop utilities
+	brightnessctl
+	playerctl
+	pulseaudio-utils
+
+	# Shell utilities
+	shellcheck
+	shfmt
+
+	# Python (system)
+	python3
+	python-is-python3
+	python3-dev
+
+	# Lua (for Neovim)
+	luarocks
+	luacheck
+
+	# Terminal emulator (native Wayland support)
+	ghostty
 
 	# Libraries and dependencies
 	pkg-config
@@ -195,27 +205,25 @@ apt_packages=(
 	libfreetype6-dev
 	libasound2-dev
 	libexpat1-dev
-	libxcb-composite0-dev
 	libbz2-dev
 	libsndio-dev
 	freeglut3-dev
-	libxmu-dev
-	libxi-dev
 	libfontconfig1-dev
-	libxcursor-dev
-	libx11-dev
-	libxext-dev
-	libxrandr-dev
 	mesa-common-dev
 	libgl1-mesa-dev
+
+	# Note: GUI apps (Firefox, GIMP, VLC) now via Flatpak for consistency
+	# Note: Modern CLI tools (bat, fd, rg, etc.) via Cargo
+	# Note: Neovim installed via AppImage for latest version
 )
 
 # Arch Linux packages (Pacman)
+# Note: Keep minimal - prefer Cargo/uv/Flatpak for cross-platform consistency
 arch_packages=(
-	# AUR helper
-	yay
+	# AUR helper (Arch-specific)
+	paru
 
-	# Core development
+	# Core development tools
 	base-devel
 	zsh
 	git
@@ -224,7 +232,7 @@ arch_packages=(
 	make
 	cmake
 
-	# System utilities
+	# Basic system utilities
 	tree
 	github-cli
 	trash-cli
@@ -240,36 +248,19 @@ arch_packages=(
 	brightnessctl
 	playerctl
 
-	# Development tools
-	neovim
-	ranger
-	luarocks
-	luacheck
-	lua-lanes
-	atool
-	ueberzug
-	highlight
+	# Shell utilities
 	shellcheck
 	shfmt
 
-	# Terminal emulators
-	kitty
-	wezterm
-	alacritty
-
-	# GUI Applications
-	firefox
-	gimp
-	vlc
-
-	# Python ecosystem
+	# Python (system)
 	python
-	# Note: Python packages are managed via uv (installed via official script)
 
-	# Additional tools
-	jrnl
+	# Lua (for Neovim)
+	luarocks
+	luacheck
 
-	# Note: bat, tldr (tealdeer), sheldon, gitui, bottom (btm), ruff installed via cargo/uv for better versions
+	# Terminal emulator (native Wayland support)
+	ghostty
 
 	# Libraries
 	pkg-config
@@ -280,47 +271,63 @@ arch_packages=(
 	sndio
 	gtk3
 	sdl2
-	libxkbcommon-x11
 
-	# Gaming (optional)
-	# arch-gaming-meta
+	# Note: GUI apps (Firefox, GIMP, VLC) now via Flatpak for consistency
+	# Note: Modern CLI tools (bat, fd, rg, etc.) via Cargo
+	# Note: Neovim installed via AppImage for latest version
+	# Note: ghostty is the primary terminal emulator (Wayland-native, GPU-accelerated)
 )
 
-# Rust packages (Cargo) - Only packages not available or better via cargo
+# Rust packages (Cargo) - Cross-platform CLI tools
+# These provide consistent versions across all distributions
 cargo_packages=(
-	# Core utilities (newer/better than system packages)
-	fd-find
-	ripgrep
-	bat    # Better cat with syntax highlighting
-	lsd    # Better ls (LSDeluxe)
-	du-dust # Better du
-	sd     # Better sed
-	procs  # Better ps
+	# Modern CLI replacements (cross-platform, better than system versions)
+	fd-find    # Better find
+	ripgrep    # Better grep (rg)
+	bat        # Better cat with syntax highlighting
+	lsd        # Better ls (LSDeluxe)
+	du-dust    # Better du
+	sd         # Better sed
+	procs      # Better ps
+	exa        # Another better ls (eza fork)
 
 	# Shell management
-	sheldon  # Zsh plugin manager
-	starship # Cross-shell prompt
-	zoxide   # Smarter cd
+	sheldon    # Zsh plugin manager (Rust-based, fast)
+	starship   # Cross-shell prompt (fast, customizable)
+	zoxide     # Smarter cd (z)
+	atuin      # Shell history sync and search
 
 	# File utilities
-	broot # File tree browser
+	broot      # File tree browser
+	ranger-rs  # Rust implementation of ranger file manager
 
 	# Development tools
-	gitui         # Git TUI with vim keybindings (configured in ~/.config/gitui/)
+	gitui         # Git TUI with vim keybindings
 	cargo-update  # Update cargo packages
 	cargo-watch   # Watch for file changes
 	cargo-edit    # Add/remove cargo dependencies
 	cargo-expand  # Expand macros
 	cargo-outdated # Check for outdated dependencies
 
+	# Build and development utilities
+	just       # Command runner (like make but better)
+	sccache    # Compiler cache for faster builds
+
 	# Utilities
-	tealdeer  # tldr client (tldr)
-	tokei     # Count lines of code
-	hyperfine # Benchmarking tool
-	bandwhich # Network utilization by process
-	bottom    # System monitor (btm)
+	tealdeer   # tldr client (faster than nodejs version)
+	tokei      # Count lines of code
+	hyperfine  # Benchmarking tool
+	bandwhich  # Network utilization by process
+	bottom     # System monitor (btm) - better than htop
 	shellharden # Shell script linter
-	ron-lsp   # RON (Rusty Object Notation) LSP and CLI - provides formatting and validation
+	ron-lsp    # RON (Rusty Object Notation) LSP and CLI
+
+	# Text processing
+	grex       # Generate regex from examples
+	choose     # Better cut/awk
+
+	# System monitoring
+	zenith     # Process viewer (like top/htop)
 )
 
 # Python CLI tools (via uv tool install)
@@ -417,11 +424,31 @@ snap_packages=(
 	code # VS Code - better as snap for auto-updates and extensions
 )
 
-# Flatpak packages - only for packages that work better as flatpaks or are only available as flatpaks
+# Flatpak packages - GUI applications for cross-platform consistency
+# Using Flatpak ensures same versions across all distros with sandboxing
 flatpak_packages=(
+	# System utilities
 	com.github.tchx84.Flatseal # Flatpak permission manager
-	com.discordapp.Discord     # Discord - official flatpak support
+
+	# Media applications
+	org.gimp.GIMP              # GIMP - image editor
+	org.videolan.VLC           # VLC - media player
+	org.audacityteam.Audacity  # Audacity - audio editor
+
+	# Communication
+	com.discordapp.Discord     # Discord - official flatpak
+
+	# Music streaming
 	com.spotify.Client         # Spotify - only available as flatpak
+
+	# Development tools (GUI)
+	com.vscodium.codium        # VSCodium (alternative to VS Code snap)
+
+	# Note: All GUI apps moved to Flatpak for:
+	# - Consistent versions across distros
+	# - Sandboxing and security
+	# - Automatic updates
+	# - No dependency conflicts
 )
 
 # Export all package arrays

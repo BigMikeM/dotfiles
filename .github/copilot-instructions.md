@@ -76,7 +76,7 @@ editors, and GUI applications.
 
 ### Package Managers by Distribution
 
-- **Fedora/RHEL/CentOS:** DNF/YUM (`rpm_packages`, `rpm_groups`, `rpm_nonfree`)
+- **Fedora/RHEL/CentOS:** DNF 5 (modern Fedora default) (`rpm_packages`, `rpm_groups`, `rpm_nonfree`)
 - **Ubuntu/Debian:** APT (`apt_packages`, `wsl_packages` for WSL)
 - **Arch Linux:** Pacman/Paru (`arch_packages`)
 - **Language-Specific:**
@@ -754,8 +754,9 @@ track_task "System Packages" install_software
 
 ### Fedora/RHEL/CentOS
 
-- **Package Manager:** DNF (or YUM on older systems)
-- **Package Groups:** Use dnf groups for bulk installs
+- **Package Manager:** DNF 5 (modern Fedora default)
+- **Package Groups:** Use `dnf install @group-name` with lowercase-hyphenated group names
+- **Group Format:** DNF 5 uses `@c-development` and `@development-tools` (not quoted legacy names)
 - **RPM Fusion:** Third-party repository for non-free software
 - **Special Notes:** Python package names often include version (python3,
   python3-pip)

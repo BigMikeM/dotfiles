@@ -185,6 +185,7 @@ update_system() {
 }
 
 rpm_update() {
+    # DNF 5 syntax: upgrade is the preferred command
     run_command "sudo dnf upgrade --refresh -y"
 }
 
