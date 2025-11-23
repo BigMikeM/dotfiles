@@ -12,8 +12,6 @@ _is_wsl() {
 	[[ "$(uname -r)" == *WSL* ]] || [[ -n "${WSL_DISTRO_NAME:-}" ]]
 }
 
-
-
 _is_linux() {
 	[[ "$OSTYPE" == linux* ]]
 }
