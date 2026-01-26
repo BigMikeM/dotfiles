@@ -7,7 +7,8 @@
 >
 > - Adding/removing scripts or utilities
 > - Changing core functionality in bootstrap/update scripts
-> - Modifying package lists or installation strategies
+- Modifying package lists or installation strategies (including Flatpak/Flathub changes)
+- Adding Pop!_OS-specific flows, gaming support (Steam/Proton/Lutris/Heroic), or Flatpak overrides
 > - Adding new configuration files or tools
 > - Changing coding standards or best practices
 > - Updating supported distributions or requirements
@@ -78,6 +79,7 @@ editors, and GUI applications.
 
 - **Fedora/RHEL/CentOS:** DNF 5 (modern Fedora default) (`rpm_packages`, `rpm_groups`, `rpm_nonfree`)
 - **Ubuntu/Debian:** APT (`apt_packages`, `wsl_packages` for WSL, `rpi_packages` for Raspberry Pi)
+- **Pop!_OS (Ubuntu-based):** Fully supported; has optional Pop-specific packages and Flatpak gaming options (`pop_packages`, `pop_flatpak_packages`)
 - **Arch Linux:** Pacman/Paru (`arch_packages`)
 - **Raspberry Pi:** Lightweight package sets (`rpi_packages`, `rpi_cargo_packages`, `rpi_flatpak_packages`)
 - **Language-Specific:**
@@ -115,10 +117,15 @@ editors, and GUI applications.
 - `_is_container()` - Detect container environment
 - `_is_wsl()` - Detect Windows Subsystem for Linux
 - `_is_raspberry_pi()` - Detect Raspberry Pi hardware
+- `_is_pop()` - Detect Pop!_OS (robust checks against `/etc/os-release`)
 - `_is_root()` - Check root privileges
 - `_get_distro()` - Get distribution name
 - `_get_arch()` - Get system architecture (amd64, arm64, armv7, 386)
 - `find_package_manager()` - Auto-detect system package manager
+
+**Flatpak Helpers:**
+
+- `_flatpak_find_first()` - Search Flatpak/Flathub for an app and return the first matching application id (used to find Heroic/ProtonUp/others)
 
 **Output Functions:**
 

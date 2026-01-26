@@ -267,6 +267,15 @@ apt_packages=(
 	# Note: Neovim installed via AppImage for latest version
 )
 
+# Pop!_OS-specific packages (Ubuntu-based; optional installs for System76 hardware)
+pop_packages=(
+	# System76 tools and desktop integration
+	system76-power
+	pop-desktop
+	pop-gtk-theme
+	# Optional: system76-driver-nvidia (installed manually after confirmation)
+)
+
 # Arch Linux packages (Pacman)
 # Note: Keep minimal - prefer Cargo/uv/Flatpak for cross-platform consistency
 arch_packages=(
@@ -532,6 +541,12 @@ flatpak_packages=(
 	# - No dependency conflicts
 )
 
+# Pop!_OS Flatpak gaming packages (offered during Pop bootstrap)
+# Keep minimal and opt-in: Steam provided via Flathub for newer Steam/Proton
+pop_flatpak_packages=(
+	com.valvesoftware.Steam
+)
+
 # Raspberry Pi Flatpak packages - Minimal GUI apps if running desktop
 # Most RPi setups are headless, but for desktop setups use minimal apps only
 rpi_flatpak_packages=(
@@ -548,5 +563,5 @@ rpi_flatpak_packages=(
 
 # Export all package arrays
 export rpm_packages rpm_groups rpm_nonfree arch_packages cargo_packages
-export uv_tools uv_libraries_reference apt_packages npm_packages wsl_packages snap_packages flatpak_packages
+export uv_tools uv_libraries_reference apt_packages npm_packages wsl_packages pop_packages pop_flatpak_packages snap_packages flatpak_packages
 export rpi_packages rpi_cargo_packages rpi_flatpak_packages

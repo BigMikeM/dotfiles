@@ -10,7 +10,8 @@ A comprehensive, cross-distribution Linux dotfiles repository for automating and
 - 🔄 **Easy Updates** - Keep all tools and packages current with a single script
 - 🎨 **Beautiful Terminal** - Enhanced Zsh with modern plugins and themes
 - ⚡ **Modern CLI Tools** - Rust-based replacements (fd, ripgrep, bat, lsd, etc.)
-- 🎯 **Cross-Distribution** - Works on Fedora, Ubuntu/Debian, Arch Linux, and WSL
+- 🎯 **Cross-Distribution** - Works on Fedora, Pop!_OS (Ubuntu-based), Ubuntu/Debian, Arch Linux, and WSL
+- 🎮 **Gaming & Steam** - Optional support for Steam, 32-bit compatibility libs, Flatpak Steam (recommended for newer Proton), Lutris, MangoHud, Gamemode, Proton management, and optional Flatpak overrides to improve controller/VR/audio support (prompted during bootstrap). Also offers optional installation of Heroic (game launcher) and ProtonUp-Qt (manage Proton GE) via Flatpak.
 - 🛡️ **Safe & Idempotent** - Scripts can be run multiple times safely
 - 🧪 **Dry-Run Mode** - Test changes before applying them
 - 📦 **Multi-Package Manager** - Handles system, Cargo, npm, pip, Snap, and Flatpak packages

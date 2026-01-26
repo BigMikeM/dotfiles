@@ -212,6 +212,11 @@ on_start() {
 		info "     |-|                                             |-|     "
 	fi
 
+	# Log distribution for debugging/clarity
+	local detected_distro
+	detected_distro="$(_get_distro)" || detected_distro="unknown"
+	info "Detected distro: ${detected_distro} (package manager: ${PACKAGE_MANAGER})"
+
 	info "     |-|                                             |-|     "
 	info "     |-|         Custom dotfiles bootstrap.          |-|     "
 	info "     |-|                                             |-|     "
@@ -535,6 +540,165 @@ apt_install() {
 	run_command "sudo apt install -y ${apt_packages[*]}"
 }
 
+# Conservative Pop!_OS installer flow (prompts, does NOT change drivers without confirmation)
+pop_install() {
+	info "Detected Pop!_OS — running Pop-specific package flow."
+
+	# Install base APT packages first
+	run_command "sudo apt update"
+	run_command "sudo apt install -y ${apt_packages[*]}"
+
+	# Offer Pop-specific packages (system76 tools, themes)
+	if [[ ${#pop_packages[@]} -gt 0 ]]; then
+		if confirm_action "Install Pop!_OS integration packages (system76-power, pop-desktop)?" "n"; then
+			run_command "sudo apt install -y ${pop_packages[*]}"
+			success "Installed Pop!_OS integration packages."
+		else
+			info "Skipping Pop!_OS integration packages."
+		fi
+	fi
+
+	# Gaming support (Steam, 32-bit libs, Lutris, MangoHud, Gamemode)
+	if confirm_action "Would you like gaming support (Steam, 32-bit libs, Lutris, MangoHud, Gamemode)?" "n"; then
+		info "Enabling i386 architecture and installing core 32-bit compatibility libraries."
+		# Enable i386 multiarch (safe operation)
+		run_command "sudo dpkg --add-architecture i386 || true"
+		run_command "sudo apt update"
+
+		# Core packages for Steam and 32-bit OpenGL/Vulkan support - conservative default
+		local steam_pkgs=(steam-installer libgl1-mesa-dri:i386 libgl1-mesa-glx:i386 libc6:i386 libvulkan1 libvulkan1:i386 mesa-vulkan-drivers mesa-vulkan-drivers:i386)
+		if confirm_action "Install Steam and core 32-bit libraries (recommended for gaming)?" "n"; then
+			run_command "sudo apt install -y ${steam_pkgs[*]}"
+			success "Installed Steam and core 32-bit libraries."
+		else
+			info "Skipping Steam and core 32-bit libraries."
+		fi
+
+		# Optional gaming utilities
+		if confirm_action "Install optional gaming utilities: Lutris, gamemode, mangohud?" "n"; then
+			run_command "sudo apt install -y lutris gamemoded gamemode mangohud || sudo apt install -y lutris gamemode mangohud || true"
+			success "Attempted to install Lutris, gamemode, and MangoHud (availability depends on distro repos)."
+		else
+			info "Skipping optional gaming utilities."
+		fi
+
+		# Flatpak-based Steam (preferred for newer Steam/Proton)
+		if confirm_action "Install Steam from Flathub via Flatpak (recommended for newest Steam/Proton)?" "n"; then
+			# Ensure flatpak is installed
+			if ! _exists flatpak; then
+				info "Flatpak not found. Installing 'flatpak' package via apt."
+				run_command "sudo apt update"
+				run_command "sudo apt install -y flatpak"
+			fi
+
+			# Ensure Flathub remote exists
+			if ! flatpak remotes | grep -q flathub; then
+				info "Adding Flathub remote."
+				run_command "sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo"
+			fi
+
+			# Install Steam via Flatpak
+			info "Installing Steam from Flathub via Flatpak."
+			run_command "flatpak install -y flathub com.valvesoftware.Steam"
+			success "Installed Flatpak Steam."
+
+			# Offer to apply recommended Flatpak overrides for Steam (controllers, audio, Wayland/pipewire, network)
+			if confirm_action "Apply recommended Flatpak overrides to Steam for controller/VR/audio support (xdg-download, pipewire/pulseaudio, wayland, network, device access)?" "y"; then
+				info "Applying Flatpak overrides to Steam (user scope)."
+				# Conservative, common overrides that improve controller/audio/VR integration
+				run_command "flatpak override --user com.valvesoftware.Steam --filesystem=xdg-download"
+				run_command "flatpak override --user com.valvesoftware.Steam --socket=pipewire --socket=pulseaudio --socket=wayland"
+				run_command "flatpak override --user com.valvesoftware.Steam --share=network"
+				# Some users need broader device access for VR/controllers; prompt before applying
+				if confirm_action "Grant broader device access to Steam (may be required for some VR setups)?" "n"; then
+					run_command "flatpak override --user com.valvesoftware.Steam --device=all"
+					info "Applied device access override to Steam."
+				else
+					info "Skipped granting broader device access."
+				fi
+				success "Recommended Flatpak overrides applied (or skipped by choice)."
+			else
+				info "Skipped applying Flatpak overrides for Steam."
+			fi
+
+			# Offer to install Heroic and ProtonUp-Qt via Flatpak (searched by name)
+			if confirm_action "Install Heroic (game launcher) and ProtonUp-Qt (manage community Proton builds) via Flatpak?" "n"; then
+				# Heroic
+				local heroic_id
+				heroic_id="$(_flatpak_find_first heroic)"
+				if [[ -n "${heroic_id}" ]]; then
+					info "Found Heroic Flatpak: ${heroic_id}. Installing..."
+					run_command "flatpak install -y flathub ${heroic_id}"
+					if confirm_action "Apply common overrides to Heroic (xdg-download, pipewire/pulseaudio, wayland)?" "y"; then
+						run_command "flatpak override --user ${heroic_id} --filesystem=xdg-download"
+						run_command "flatpak override --user ${heroic_id} --socket=pipewire --socket=pulseaudio --socket=wayland"
+						success "Applied overrides to Heroic."
+					else
+						info "Skipped applying overrides to Heroic."
+					fi
+				else
+					warn "Heroic not found on Flathub via search; skipping."
+				fi
+
+				# ProtonUp-Qt
+				local pup_id
+				pup_id="$(_flatpak_find_first protonup)"
+				if [[ -n "${pup_id}" ]]; then
+					info "Found ProtonUp Flatpak: ${pup_id}. Installing..."
+					run_command "flatpak install -y flathub ${pup_id}"
+					success "Installed ProtonUp via Flatpak. Use it to install Proton GE as needed."
+				else
+					warn "ProtonUp not found on Flathub via search; skipping."
+				fi
+			fi
+
+			# Offer to install Heroic and ProtonUp-Qt via Flatpak (searched by name)
+			if confirm_action "Install Heroic (game launcher) and ProtonUp-Qt (manage community Proton builds) via Flatpak?" "n"; then
+				# Heroic
+				local heroic_id
+				heroic_id="$(_flatpak_find_first heroic)"
+				if [[ -n "${heroic_id}" ]]; then
+					info "Found Heroic Flatpak: ${heroic_id}. Installing..."
+					run_command "flatpak install -y flathub ${heroic_id}"
+					if confirm_action "Apply common overrides to Heroic (xdg-download, pipewire/pulseaudio, wayland)?" "y"; then
+						run_command "flatpak override --user ${heroic_id} --filesystem=xdg-download"
+						run_command "flatpak override --user ${heroic_id} --socket=pipewire --socket=pulseaudio --socket=wayland"
+						success "Applied overrides to Heroic."
+					else
+						info "Skipped applying overrides to Heroic."
+					fi
+				else
+					warn "Heroic not found on Flathub via search; skipping."
+				fi
+
+				# ProtonUp-Qt
+				local pup_id
+				pup_id="$(_flatpak_find_first protonup)"
+				if [[ -n "${pup_id}" ]]; then
+					info "Found ProtonUp Flatpak: ${pup_id}. Installing..."
+					run_command "flatpak install -y flathub ${pup_id}"
+					success "Installed ProtonUp via Flatpak. Use it to install Proton GE as needed."
+				else
+					warn "ProtonUp not found on Flathub via search; skipping."
+				fi
+			fi
+		else
+			info "Skipping Flatpak Steam installation."
+		fi
+	fi
+
+	# NVIDIA detection and prompt (no automatic driver changes)
+	if command -v lspci >/dev/null 2>&1 && lspci | grep -i -q nvidia; then
+		warn "NVIDIA GPU detected. Drivers may be required for optimal performance."
+		if confirm_action "Would you like guidance on installing NVIDIA drivers (no automatic driver changes will be performed)?" "n"; then
+			info "On Pop!_OS we recommend using the System76 drivers or the official NVIDIA drivers via apt or Pop's graphics driver options."
+			info "Please review and install drivers manually (or reply to this issue and I can automate an opt-in install)."
+		fi
+	fi
+
+	return 0
+}
+
 apt-wsl_install() {
 	run_command "sudo apt update"
 	run_command "sudo apt install -y ${wsl_packages[*]}"
@@ -593,7 +757,15 @@ install_astronvim() {
 
 install_software() {
 	info "Installing software with system package manager."
-	"${PACKAGE_MANAGER}"_install
+	local distro
+	distro="$(_get_distro)"
+	# Route Pop!_OS to the conservative Pop installer using robust detection
+	if _is_pop; then
+		info "Pop!_OS detected via _is_pop(); using Pop-specific installer."
+		pop_install
+	else
+		"${PACKAGE_MANAGER}"_install
+	fi
 	return 0
 }
 

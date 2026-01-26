@@ -94,6 +94,33 @@ success() {
 	echo -e "${GREEN}${BOLD}${*}${NORMAL}"
 }
 
+# Detect Pop!_OS specifically (more robust than simple ID matching)
+_is_pop() {
+	if [[ -f /etc/os-release ]]; then
+		source /etc/os-release
+		local id_lc="${ID,,}"
+		local name_lc="${NAME,,}"
+		local pretty_lc="${PRETTY_NAME,,}"
+
+		# Common IDs/names for Pop!_OS
+		if [[ "$id_lc" == "pop" ]] || [[ "$id_lc" == "pop_os" ]] || [[ "$id_lc" == "pop-os" ]] || [[ "$name_lc" == *pop* ]] || [[ "$pretty_lc" == *pop* ]]; then
+			return 0
+		fi
+	fi
+	return 1
+}
+
+# Find the first matching Flatpak application id for a search term (uses local flatpak search)
+# Returns the application id (e.g., com.valvesoftware.Steam) or empty if not found
+_flatpak_find_first() {
+	local term="$1"
+	if ! _exists flatpak; then
+		return 1
+	fi
+	# Search and return the first column from the first matching line
+	flatpak search "$term" 2>/dev/null | awk 'NF && $1 ~ /[a-z]/ {print $1; exit}'
+}
+
 # Error reporter
 error() {
 	echo -e "${RED}${BOLD}${*}${NORMAL}" >&2
@@ -224,10 +251,10 @@ backup_file() {
 		return 1
 	fi
 
-    mkdir -p "$backup_dir"
-    local backup_name
-    backup_name="$(basename "$file").$(date +%Y%m%d_%H%M%S).bak"
-    local backup_path="$backup_dir/$backup_name"
+	mkdir -p "$backup_dir"
+	local backup_name
+	backup_name="$(basename "$file").$(date +%Y%m%d_%H%M%S).bak"
+	local backup_path="$backup_dir/$backup_name"
 
 	cp "$file" "$backup_path"
 	success "Backed up $file to $backup_path"
@@ -286,7 +313,7 @@ retry() {
 }
 
 # Export functions for use in other scripts
-export -f _exists _is_container _is_wsl _is_raspberry_pi _is_root _is_writable _is_readable
+export -f _exists _is_container _is_wsl _is_raspberry_pi _is_root _is_writable _is_readable _is_pop _flatpak_find_first
 export -f _get_distro _get_arch _current_shell _user_default_shell _has_sudo
 export -f info success error warn debug progress finish on_finish on_error
 export -f find_package_manager backup_file ensure_dir download_file retry
