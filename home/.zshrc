@@ -207,17 +207,17 @@ zstyle ':completion:*:warnings' format '%F{red}-- no matches found --%f'
 # Case-insensitive completion
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 
-# Performance: only check once per day
-local zcompdump="${XDG_CACHE_HOME}/zsh/zcompdump"
-
-# Check if we need to regenerate the completion dump
-if [[ -f "$zcompdump" ]] && [[ -n "$zcompdump"(#qN.mh+24) ]]; then
-    # File exists and is older than 24 hours, regenerate
-    compinit -d "$zcompdump"
-else
-    # File is recent, load it quickly
-    compinit -C -d "$zcompdump"
-fi
+# # Performance: only check once per day
+# local zcompdump="${XDG_CACHE_HOME}/zsh/zcompdump"
+#
+# # Check if we need to regenerate the completion dump
+# if [[ -f "$zcompdump" ]] && [[ -n "$zcompdump"(#qN.mh+24) ]]; then
+#     # File exists and is older than 24 hours, regenerate
+#     compinit -d "$zcompdump"
+# else
+#     # File is recent, load it quickly
+#     compinit -C -d "$zcompdump"
+# fi
 
 # ==============================================================================
 # PROMPT
@@ -347,27 +347,27 @@ fi
 # DEVELOPMENT TOOLS - COMPLETIONS
 # ==============================================================================
 
-# These will be loaded after shell initialization completes
-
-if _exists gh; then
-	# GitHub CLI completion (lazy-loaded)
-	_gh_completion() {
-		unfunction _gh_completion
-		eval "$(gh completion --shell zsh)"
-	}
-	compdef _gh_completion gh
-fi
-
-if _exists kubectl; then
-	# Kubernetes completion (lazy-loaded)
-	_kubectl_completion() {
-		unfunction _kubectl_completion
-		source <(kubectl completion zsh)
-	}
-	compdef _kubectl_completion kubectl
-fi
-
-# Additional completions can be added here following the same pattern
+# # These will be loaded after shell initialization completes
+#
+# if _exists gh; then
+# 	# GitHub CLI completion (lazy-loaded)
+# 	_gh_completion() {
+# 		unfunction _gh_completion
+# 		eval "$(gh completion --shell zsh)"
+# 	}
+# 	compdef _gh_completion gh
+# fi
+#
+# if _exists kubectl; then
+# 	# Kubernetes completion (lazy-loaded)
+# 	_kubectl_completion() {
+# 		unfunction _kubectl_completion
+# 		source <(kubectl completion zsh)
+# 	}
+# 	compdef _kubectl_completion kubectl
+# fi
+#
+# # Additional completions can be added here following the same pattern
 
 # ==============================================================================
 # PLUGIN MANAGEMENT
@@ -425,3 +425,5 @@ if [[ ! -f "${ZDOTDIR:-$HOME}/.zshrc.zwc" ]] ||
    [[ "${ZDOTDIR:-$HOME}/.zshrc" -nt "${ZDOTDIR:-$HOME}/.zshrc.zwc" ]]; then
     zcompile "${ZDOTDIR:-$HOME}/.zshrc"
 fi
+
+. "$HOME/.local/share/../bin/env"
