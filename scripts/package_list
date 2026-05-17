@@ -363,7 +363,7 @@ cargo_packages=(
 
 	# File utilities
 	broot      # File tree browser
-	ranger-rs  # Rust implementation of ranger file manager
+	joshuto    # Terminal file manager inspired by ranger
 
 	# Development tools
 	gitui         # Git TUI with vim keybindings
@@ -418,7 +418,7 @@ rpi_cargo_packages=(
 	# Note: Skip heavy tools to preserve RPi performance:
 	# - du-dust, procs, exa (redundant, use standard tools)
 	# - atuin (history sync - resource intensive)
-	# - broot, ranger-rs (file browsers - slow on RPi)
+	# - broot, joshuto (file browsers - slow on RPi)
 	# - cargo-watch, cargo-edit, cargo-expand, cargo-outdated (development - compile intensive)
 	# - just, sccache (build tools - RPi rarely used for compilation)
 	# - tokei, hyperfine, bandwhich, bottom, zenith (monitoring - resource intensive)
