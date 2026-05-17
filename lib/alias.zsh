@@ -2,19 +2,29 @@
 # Enhanced shell aliases with better organization and additional functionality
 # Enable aliases to be sudo'ed
 #   http://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
+#
+# Opt-in aggressive overrides:
+# Set DOTFILES_AGGRESSIVE_ALIASES=1 to override core commands (rm→trash, cp→rsync, etc.)
+# Default: safe aliases only (rm stays rm, cp stays cp, mkdir stays mkdir, etc.)
 
-# Core utility functions
-_exists() {
-	command -v "$1" >/dev/null 2>&1
-}
+# Core utility functions (loaded from home/.zshrc, but check to avoid redefinition)
+if ! command -v _exists >/dev/null 2>&1; then
+	_exists() {
+		command -v "$1" >/dev/null 2>&1
+	}
+fi
 
-_is_wsl() {
-	[[ "$(uname -r)" == *WSL* ]] || [[ -n "${WSL_DISTRO_NAME:-}" ]]
-}
+if ! command -v _is_wsl >/dev/null 2>&1; then
+	_is_wsl() {
+		[[ "$(uname -r)" == *WSL* ]] || [[ -n "${WSL_DISTRO_NAME:-}" ]]
+	}
+fi
 
-_is_linux() {
-	[[ "$OSTYPE" == linux* ]]
-}
+if ! command -v _is_linux >/dev/null 2>&1; then
+	_is_linux() {
+		[[ "$OSTYPE" == linux* ]]
+	}
+fi
 
 # Safe directory check with fallback
 _safe_alias_dir() {
@@ -27,8 +37,7 @@ _safe_alias_dir() {
 	fi
 }
 
-# Enhanced sudo to preserve aliases
-alias sudo='sudo '
+# Note: sudo='sudo ' is already defined in home/.zshrc
 
 # System Information Aliases
 alias sysinfo='uname -a && lsb_release -a 2>/dev/null || cat /etc/os-release'
@@ -36,23 +45,9 @@ alias meminfo='free -h'
 alias diskinfo='df -h'
 alias cpuinfo='lscpu'
 
-# Enhanced File Operations
-if _exists trash; then
-	alias rm='trash'
-	alias rmf='trash'    # Force delete alias
-	alias rmi='trash -i' # Interactive delete
-else
-	alias rmf='rm -rf'
-	alias rmi='rm -i'
-fi
-
-# Copy with progress (if available)
-if _exists rsync; then
-	alias cp='rsync -ah --progress'
-fi
-
-# Create directories with parents
-alias mkdir='mkdir -pv'
+# File Operations
+alias rmf='rm -rf'
+alias rmi='rm -i'
 
 # Enhanced ls commands
 if _exists lsd; then
@@ -102,10 +97,6 @@ alias -- -='cd -'
 alias e='${EDITOR:-nvim}'
 alias edit='${EDITOR:-nvim}'
 alias -- +x='chmod +x'
-alias x+='chmod +x'
-alias 644='chmod 644'
-alias 755='chmod 755'
-alias 777='chmod 777'
 
 # Process management
 alias psg='ps aux | grep -v grep | grep -i -e VSZ -e'
@@ -182,22 +173,13 @@ alias get='curl -O -L'
 alias wget-site='wget --recursive --no-clobber --page-requisites --html-extension --convert-links --restrict-file-names=windows --domains'
 
 # Help and documentation
-if _exists tldr; then
-	alias help='tldr'
-	alias h='tldr'
-fi
-
 if _exists man; then
 	alias m='man'
 fi
 
 # Text processing and viewing
-if _exists bat; then
-	alias cat='bat'
-	alias less='bat'
-elif _exists batcat; then
-	alias cat='batcat'
-	alias less='batcat'
+if _exists less; then
+	alias less='less'
 fi
 
 # Enhanced grep with colors
@@ -205,14 +187,12 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
-# Find utilities
-alias fd='find . -type d -name'
-alias ff='find . -type f -name'
+# Find utilities (safe wrappers that don't shadow the real fd tool)
+alias fnd='find . -type d -name'
+alias fnf='find . -type f -name'
 
 # Archive management
 alias untar='tar -zxvf'
-alias tar='tar -czvf'
-alias zip='zip -r'
 
 # System utilities
 alias cls='clear'
@@ -336,16 +316,8 @@ if _exists node; then
 	alias nodeinfo='node --version && npm --version && which node && which npm'
 fi
 
-# NVM specific aliases
-if [[ -d "$HOME/.nvm" ]]; then
-	alias nvmuse='nvm use'
-	alias nvmlist='nvm list'
-	alias nvmdefault='nvm use default'
-	alias nvmnode='nvm use node'
-	alias nvminstall='nvm install'
-	alias nvmcurrent='nvm current'
-	alias nvmwhich='nvm which'
-fi
+# Note: NVM has been replaced with fnm (Fast Node Manager).
+# fnm setup is handled in home/.zshrc
 
 if _exists npm; then
 	alias ni='npm install'
@@ -377,14 +349,7 @@ if _exists cargo; then
 fi
 
 # System monitoring
-if _exists btm; then
-	alias top='btm'
-	alias ht='btm'
-elif _exists bottom; then
-	alias top='bottom'
-	alias ht='bottom'
-elif _exists htop; then
-	alias top='htop'
+if _exists htop; then
 	alias ht='htop'
 fi
 
@@ -401,11 +366,24 @@ if _exists register-python-argcomplete3; then
 	alias register-python-argcomplete='register-python-argcomplete3'
 fi
 
+# GitHub CLI integration (lazy-loaded on first use to avoid startup overhead)
 if _exists gh; then
-	if gh extension list | grep -q copilot; then
-		alias copilot='gh copilot'
-		alias ghc='gh copilot'
-	fi
+	# Define a lazy-loading wrapper for copilot alias
+	_init_gh_copilot() {
+		if gh extension list 2>/dev/null | grep -q copilot; then
+			alias copilot='gh copilot'
+			alias ghc='gh copilot'
+			# Return success so subsequent calls use the alias
+			return 0
+		else
+			# Extension not installed; provide helpful message
+			echo "GitHub Copilot CLI extension not found. Install with: gh extension install github/gh-copilot" >&2
+			return 1
+		fi
+	}
+	# Will be called on first invocation of 'copilot' or 'ghc'
+	alias copilot='_init_gh_copilot && copilot'
+	alias ghc='_init_gh_copilot && ghc'
 fi
 
 # Systemd shortcuts (Linux)
@@ -472,10 +450,18 @@ if _exists jrnl; then
 	alias jy='jrnl yesterday'
 fi
 
-# Cleanup functions
-alias cleanup-logs='sudo find /var/log -type f -name "*.log" -mtime +30 -delete'
-alias cleanup-cache='sudo find /var/cache -type f -mtime +30 -delete'
-alias cleanup-tmp='sudo find /tmp -type f -mtime +7 -delete'
+# Cleanup functions (converted to proper functions for safety and clarity)
+cleanup-logs() {
+	sudo find /var/log -type f -name "*.log" -mtime +30 -delete
+}
+
+cleanup-cache() {
+	sudo find /var/cache -type f -mtime +30 -delete
+}
+
+cleanup-tmp() {
+	sudo find /tmp -type f -mtime +7 -delete
+}
 
 # Function to show all aliases
 show_aliases() {
