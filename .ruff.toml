@@ -1,0 +1,47 @@
+# Corrected Ruff configuration file
+
+[tool.ruff]
+line_length = 120
+select = [
+    "N",  # pep8-naming
+    "W",  # pycodestyle warnings
+    "D",  # pydocstyle
+    "DOC",  # pydoclint
+    "UP",  # pyupgrade
+    "C90",  # mccabe complexity
+    "PTH",  # flake8-use-pathlib (strict enforcement)
+    "PERF",  # perflint
+    "LOG",  # flake8-logging
+    "G",  # flake8-logging-format
+    "C4",  # flake8-comprehensions
+    "S",  # flake8-bandit (strict security)
+    "FBT",  # flake8-boolean-trap
+    "B",  # flake8-bugbear
+    "A",  # flake8-builtins
+    "DTZ",  # flake8-datetimez
+    "ICN",  # flake8-import-conventions
+    "PIE",  # flake8-pie (lower priority in conflicts)
+    "PT",  # flake8-pytest-style
+    "Q",  # flake8-quotes
+    "RSE",  # flake8-raise
+    "RET",  # flake8-return
+    "SIM",  # flake8-simplify
+]
+ignore = [
+    "D212",  # Multi-line docstring summary should start at the first line (conflicts with D213)
+    "D203",  # 1 blank line required before class docstring (conflicts with D211)
+    "EM101",  # Exception must not use string literal (too strict for scripts)
+    "EM102",  # Exception must not use f-string literal (too strict for scripts)
+    "T201",  # print found (OK for utility scripts)
+    "T203",  # pprint found (OK for utility scripts)
+    "RET505",  # Unnecessary else after return (prefer explicit for readability)
+    "RET506",  # Unnecessary elif after raise (prefer explicit for readability)
+    "RET507",  # Unnecessary else after continue (prefer explicit for readability)
+    "RET508",  # Unnecessary else after break (prefer explicit for readability)
+    "S603",  # subprocess without shell=False audit (needed for dotfiles scripts)
+    "S607",  # Starting process with partial path (needed for dotfiles scripts)
+    "PIE790",  # Unnecessary pass (conflicts with explicit placeholder style)
+    "PIE808",  # Unnecessary start argument in range (prefer explicit when clearer)
+]
+preview = true
+organize_imports = true

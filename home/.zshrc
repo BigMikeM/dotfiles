@@ -425,5 +425,3 @@ if [[ ! -f "${ZDOTDIR:-$HOME}/.zshrc.zwc" ]] ||
    [[ "${ZDOTDIR:-$HOME}/.zshrc" -nt "${ZDOTDIR:-$HOME}/.zshrc.zwc" ]]; then
     zcompile "${ZDOTDIR:-$HOME}/.zshrc"
 fi
-
-. "$HOME/.local/share/../bin/env"
