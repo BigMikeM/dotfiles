@@ -117,6 +117,7 @@ _extend_path "$HOME/bin"
 # Language-specific paths
 _extend_path "$HOME/.cargo/bin"      # Rust
 _extend_path "$HOME/go/bin"          # Go
+_extend_path "${XDG_DATA_HOME}/fnm"  # Fast Node Manager
 _extend_path "$HOME/.npm-global/bin" # npm global
 _extend_path "$HOME/.rvm/bin"        # Ruby Version Manager
 _extend_path "$HOME/perl5/bin"       # Perl
@@ -400,8 +401,8 @@ fi
 if _exists fnm; then
     if _is_wsl; then
       export XDG_RUNTIME_DIR="${TMPDIR:-/tmp}/fnm_multishells}"
-	  mkdir -p "$XDG_RUNTIME_DIR"
-  	fi
+         mkdir -p "$XDG_RUNTIME_DIR"
+       fi
     eval "$(fnm env --use-on-cd --shell zsh)"
 fi
 

@@ -312,8 +312,18 @@ install_fnm() {
 	run_command "curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell"
 
 	if [[ "$DRY_RUN" == false ]]; then
-		# Source fnm to make it available in the current shell session
-		export PATH="$HOME/.local/share/fnm:$PATH"
+		# Source fnm to make it available in the current shell session.
+		local fnm_dir
+		fnm_dir="${XDG_DATA_HOME:-$HOME/.local/share}/fnm"
+		if [[ -d "$fnm_dir" ]]; then
+			export PATH="$fnm_dir:$PATH"
+		fi
+
+		if ! _exists fnm; then
+			error "fnm installation completed but the command is not available in PATH (expected: $fnm_dir)."
+			return 1
+		fi
+
 		eval "$(fnm env --use-on-cd)"
 
 		info "Installing Node LTS."
@@ -322,7 +332,7 @@ install_fnm() {
 		run_command "fnm default lts-latest"
 
 		if confirm_action "Would you also like to install the latest version of Node?"; then
-			run_command "fnm install latest"
+			run_command "fnm install --latest"
 		fi
 	else
 		info "[DRY RUN] Would install Node LTS and optionally latest Node"
@@ -445,7 +455,11 @@ npm_install() {
 
 	# Ensure we're using the fnm environment
 	if [[ "$DRY_RUN" == false ]] && _exists fnm; then
-		export PATH="$HOME/.local/share/fnm:$PATH"
+		local fnm_dir
+		fnm_dir="${XDG_DATA_HOME:-$HOME/.local/share}/fnm"
+		if [[ -d "$fnm_dir" ]]; then
+			export PATH="$fnm_dir:$PATH"
+		fi
 		eval "$(fnm env --use-on-cd)"
 		# Use the default version
 		fnm use default 2>/dev/null || fnm use lts-latest 2>/dev/null

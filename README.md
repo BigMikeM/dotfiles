@@ -273,10 +273,13 @@ Key variables set by the dotfiles:
 **fnm not available after installation:**
 
 ```bash
-# Restart your shell or source zshrc
+# Restart your shell to load fnm from XDG data path
 exec zsh
 # or
 source ~/.zshrc
+
+# Verify fnm is available
+command -v fnm
 ```
 
 **Permission issues:**
