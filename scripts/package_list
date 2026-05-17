@@ -73,6 +73,8 @@ rpm_packages=(
 	ghostty
 
 	# Libraries and dependencies
+	perl
+	perl-core
 	pkg-config
 	openssl-devel
 	fontconfig-devel
@@ -139,6 +141,7 @@ wsl_packages=(
 	luacheck
 
 	# Libraries and dependencies
+	perl
 	pkg-config
 	libssl-dev
 	ca-certificates
@@ -246,6 +249,7 @@ apt_packages=(
 	ghostty
 
 	# Libraries and dependencies
+	perl
 	pkg-config
 	libssl-dev
 	ca-certificates
@@ -322,6 +326,7 @@ arch_packages=(
 	ghostty
 
 	# Libraries
+	perl
 	pkg-config
 	openssl
 	fontconfig
